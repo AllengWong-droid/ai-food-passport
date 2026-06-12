@@ -52,6 +52,13 @@ class ResultsScreen extends ConsumerWidget {
               'Ranked by taste,\nsafety, and value.',
               style: AppTextStyles.title.copyWith(fontSize: 36, height: 1.26),
             ),
+            if (aiRequest != null) ...[
+              const SizedBox(height: 18),
+              _TravelerContextSummary(
+                homeCurrency: aiRequest.userHomeCurrency,
+                homeCountry: aiRequest.userHomeCountry,
+              ),
+            ],
             const SizedBox(height: 34),
             for (var i = 0; i < dishes.length; i++) ...[
               ResultCard(
@@ -95,6 +102,72 @@ class ResultsScreen extends ConsumerWidget {
             const DisclaimerBanner(),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class _TravelerContextSummary extends StatelessWidget {
+  const _TravelerContextSummary({
+    required this.homeCurrency,
+    required this.homeCountry,
+  });
+
+  final String homeCurrency;
+  final String homeCountry;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.fromLTRB(18, 16, 18, 16),
+      decoration: BoxDecoration(
+        color: AppColors.accentSoft,
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(color: AppColors.border),
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: 38,
+            height: 38,
+            decoration: const BoxDecoration(
+              color: AppColors.accent,
+              shape: BoxShape.circle,
+            ),
+            child: const Icon(Icons.payments_outlined, color: Colors.white, size: 20),
+          ),
+          const SizedBox(width: 13),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Prices converted to $homeCurrency',
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    color: AppColors.ink,
+                    fontSize: 16,
+                    height: 1.1,
+                    fontWeight: FontWeight.w900,
+                  ),
+                ),
+                const SizedBox(height: 5),
+                Text(
+                  'Based on your traveler profile from $homeCountry',
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    color: AppColors.mutedInk,
+                    fontSize: 13,
+                    height: 1.25,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

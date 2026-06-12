@@ -96,9 +96,12 @@ class _PriceIntelligenceDetail extends StatelessWidget {
           ],
         ),
         const SizedBox(height: 18),
-        _PriceLine(label: 'Local price', value: _formatMoney(price.localPrice, price.localCurrency)),
         _PriceLine(
-          label: 'Home currency',
+          label: 'Local menu price',
+          value: _formatMoney(price.localPrice, price.localCurrency),
+        ),
+        _PriceLine(
+          label: 'Your ${price.homeCurrency} price',
           value: 'approx ${_formatMoney(price.homePrice, price.homeCurrency)}',
         ),
         _PriceLine(
@@ -116,7 +119,7 @@ class _PriceIntelligenceDetail extends StatelessWidget {
       PriceAssessment.cheap =>
         'This looks inexpensive for the local menu context and may be a budget-friendly pick.',
       PriceAssessment.fair =>
-        'This price looks reasonable after converting it into your home currency.',
+        'This price looks reasonable after converting it into your selected home currency.',
       PriceAssessment.expensive =>
         'This is relatively expensive, so order it for experience rather than pure value.',
       PriceAssessment.goodValue =>
