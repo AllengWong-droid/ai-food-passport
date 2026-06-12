@@ -18,9 +18,12 @@ class ScanScreen extends ConsumerStatefulWidget {
 }
 
 class _ScanScreenState extends ConsumerState<ScanScreen> {
+  static const _mockScanImagePath = 'mock-menu-image';
+
   final ImagePicker _imagePicker = ImagePicker();
   String? _selectedImagePath;
   Uint8List? _selectedImageBytes;
+  String? _processingMessage;
   bool _isProcessing = false;
 
   bool get _hasSelectedImage => _selectedImageBytes != null;
@@ -123,6 +126,10 @@ class _ScanScreenState extends ConsumerState<ScanScreen> {
                         ],
                       ),
                     ),
+                    if (_isProcessing)
+                      _ScanProcessingOverlay(
+                        message: _processingMessage ?? 'Reading menu image',
+                      ),
                   ],
                 );
               },
@@ -149,7 +156,7 @@ class _ScanScreenState extends ConsumerState<ScanScreen> {
   }
 
   void _startScan() {
-    _processSelectedImage(_selectedImagePath ?? 'mock-menu-image');
+    _processSelectedImage(_selectedImagePath ?? _mockScanImagePath);
   }
 
   Future<void> _processSelectedImage(String imagePath) async {
@@ -159,6 +166,7 @@ class _ScanScreenState extends ConsumerState<ScanScreen> {
 
     setState(() {
       _isProcessing = true;
+      _processingMessage = 'Reading menu image';
     });
 
     final scanRepository = ref.read(scanRepositoryProvider);
@@ -168,12 +176,15 @@ class _ScanScreenState extends ConsumerState<ScanScreen> {
     final tastePassport = ref.read(tastePassportProvider);
 
     try {
+      await _showProcessingStage('Reading menu image');
       final scan = scanRepository.createScanFromImage(imagePath);
       ref.read(latestScanProvider.notifier).state = scan;
 
+      await _showProcessingStage('Recognizing dishes', pause: Duration.zero);
       final ocrResult = await ocrRepository.extractText(scan.imagePath);
       ref.read(latestOcrResultProvider.notifier).state = ocrResult;
 
+      await _showProcessingStage('Checking taste and allergy fit', pause: Duration.zero);
       final analysisRequest = AiAnalysisRequest(
         ocrResult: ocrResult,
         tastePassport: tastePassport,
@@ -188,6 +199,9 @@ class _ScanScreenState extends ConsumerState<ScanScreen> {
       ref.read(dishAnalysesProvider.notifier).state =
           await aiRepository.analyzeMenu(analysisRequest);
 
+      await _showProcessingStage('Comparing local prices');
+      await _showProcessingStage('Preparing recommendations');
+
       if (mounted) {
         context.goNamed(RouteNames.results);
       }
@@ -195,11 +209,28 @@ class _ScanScreenState extends ConsumerState<ScanScreen> {
       if (mounted) {
         setState(() {
           _isProcessing = false;
+          _processingMessage = null;
         });
       }
     }
   }
 
+  Future<void> _showProcessingStage(
+    String message, {
+    Duration pause = const Duration(milliseconds: 180),
+  }) async {
+    if (!mounted) {
+      return;
+    }
+
+    setState(() {
+      _processingMessage = message;
+    });
+
+    if (pause != Duration.zero) {
+      await Future<void>.delayed(pause);
+    }
+  }
 }
 
 class _ScannerBackground extends StatelessWidget {
@@ -527,6 +558,67 @@ class _DisabledScanActionButton extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _ScanProcessingOverlay extends StatelessWidget {
+  const _ScanProcessingOverlay({required this.message});
+
+  final String message;
+
+  @override
+  Widget build(BuildContext context) {
+    return Positioned.fill(
+      child: AbsorbPointer(
+        child: DecoratedBox(
+          decoration: BoxDecoration(
+            color: Colors.black.withOpacity(0.72),
+          ),
+          child: SafeArea(
+            child: Center(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 42),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const SizedBox(
+                      width: 54,
+                      height: 54,
+                      child: CircularProgressIndicator(
+                        color: AppColors.accent,
+                        strokeWidth: 4,
+                      ),
+                    ),
+                    const SizedBox(height: 26),
+                    Text(
+                      message,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 22,
+                        height: 1.22,
+                        fontWeight: FontWeight.w900,
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    const Text(
+                      'Building your food passport match',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Color(0xFFC6C6C8),
+                        fontSize: 13,
+                        height: 1.35,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }
