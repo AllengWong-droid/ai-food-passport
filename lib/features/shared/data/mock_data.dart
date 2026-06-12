@@ -4,8 +4,8 @@ const mockUser = UserModel(
   id: 'guest-demo',
   email: 'sarah.demo@example.com',
   displayName: 'Sarah Lin',
-  homeCountry: 'United States',
-  homeCurrency: 'USD',
+  homeCountry: 'Germany',
+  homeCurrency: 'EUR',
 );
 
 const mockPassport = TastePassportModel(

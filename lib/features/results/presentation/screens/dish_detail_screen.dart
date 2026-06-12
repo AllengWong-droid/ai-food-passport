@@ -9,6 +9,7 @@ import '../../../../core/widgets/score_badge.dart';
 import '../../../../core/widgets/section_header.dart';
 import '../../../shared/data/mock_repositories.dart';
 import '../../../shared/domain/models/dish_analysis_model.dart';
+import '../../../shared/domain/models/price_intelligence_model.dart';
 
 class DishDetailScreen extends ConsumerWidget {
   const DishDetailScreen({required this.dishId, super.key});
@@ -59,16 +60,114 @@ class DishDetailScreen extends ConsumerWidget {
             ),
             _InfoPanel(
               title: 'Price Intelligence',
-              child: Text(
-                'Local price ${dish.priceIntelligence.localCurrency} ${dish.priceIntelligence.localPrice} converts to \$${dish.priceIntelligence.homePrice.toStringAsFixed(2)} ${dish.priceIntelligence.homeCurrency}. Value assessment: ${dish.priceIntelligence.assessment.label}.',
-                style: AppTextStyles.body,
-              ),
+              child: _PriceIntelligenceDetail(price: dish.priceIntelligence),
             ),
           ],
         ),
       ),
     );
   }
+}
+
+class _PriceIntelligenceDetail extends StatelessWidget {
+  const _PriceIntelligenceDetail({required this.price});
+
+  final PriceIntelligenceModel price;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Wrap(
+          spacing: 8,
+          runSpacing: 8,
+          children: [
+            ScoreBadge(label: price.assessment.label.toUpperCase(), tone: ScoreBadgeTone.value),
+            ScoreBadge(label: 'VALUE SIGNAL', tone: ScoreBadgeTone.muted),
+          ],
+        ),
+        const SizedBox(height: 18),
+        _PriceLine(label: 'Local price', value: _formatMoney(price.localPrice, price.localCurrency)),
+        _PriceLine(
+          label: 'Home currency',
+          value: 'approx ${_formatMoney(price.homePrice, price.homeCurrency)}',
+        ),
+        _PriceLine(
+          label: 'Exchange rate',
+          value: '1 ${price.localCurrency} = ${price.exchangeRate} ${price.homeCurrency}',
+        ),
+        const SizedBox(height: 12),
+        Text(_valueExplanation(price), style: AppTextStyles.body),
+      ],
+    );
+  }
+
+  String _valueExplanation(PriceIntelligenceModel price) {
+    return switch (price.assessment) {
+      PriceAssessment.cheap =>
+        'This looks inexpensive for the local menu context and may be a budget-friendly pick.',
+      PriceAssessment.fair =>
+        'This price looks reasonable after converting it into your home currency.',
+      PriceAssessment.expensive =>
+        'This is relatively expensive, so order it for experience rather than pure value.',
+      PriceAssessment.goodValue =>
+        'This looks like a strong value: the converted price is low for the dish quality and portion expectation.',
+    };
+  }
+}
+
+class _PriceLine extends StatelessWidget {
+  const _PriceLine({required this.label, required this.value});
+
+  final String label;
+  final String value;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8),
+      child: Row(
+        children: [
+          Expanded(
+            child: Text(
+              label,
+              style: const TextStyle(
+                color: AppColors.mutedInk,
+                fontSize: 14,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ),
+          Flexible(
+            child: Text(
+              value,
+              textAlign: TextAlign.right,
+              style: const TextStyle(
+                color: AppColors.ink,
+                fontSize: 16,
+                fontWeight: FontWeight.w900,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+String _formatMoney(num amount, String currency) {
+  final symbol = switch (currency.toUpperCase()) {
+    'JPY' => '¥',
+    'TWD' => 'NT\$',
+    'CNY' => '¥',
+    'USD' => '\$',
+    'EUR' => '€',
+    'GBP' => '£',
+    _ => '$currency ',
+  };
+  final decimals = amount % 1 == 0 ? 0 : 2;
+  return '$symbol${amount.toStringAsFixed(decimals)}';
 }
 
 class _HeroDishPanel extends StatelessWidget {

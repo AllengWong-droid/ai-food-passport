@@ -42,7 +42,10 @@ class OpenAiMenuResponseSchema {
                 'homePrice': {'type': 'number'},
                 'homeCurrency': {'type': 'string'},
                 'exchangeRate': {'type': 'number'},
-                'assessment': {'type': 'string', 'enum': ['Cheap', 'Fair', 'Expensive']},
+                'assessment': {
+                  'type': 'string',
+                  'enum': ['Cheap', 'Fair', 'Expensive', 'Good Value'],
+                },
               },
             },
           },

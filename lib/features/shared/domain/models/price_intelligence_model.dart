@@ -1,7 +1,8 @@
 enum PriceAssessment {
   cheap('Cheap'),
   fair('Fair'),
-  expensive('Expensive');
+  expensive('Expensive'),
+  goodValue('Good Value');
 
   const PriceAssessment(this.label);
 

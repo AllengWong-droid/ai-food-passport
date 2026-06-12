@@ -160,6 +160,8 @@ class OpenAiMenuResponseParser {
     return switch (value?.toLowerCase()) {
       'cheap' => PriceAssessment.cheap,
       'expensive' => PriceAssessment.expensive,
+      'good value' => PriceAssessment.goodValue,
+      'good_value' => PriceAssessment.goodValue,
       _ => PriceAssessment.fair,
     };
   }

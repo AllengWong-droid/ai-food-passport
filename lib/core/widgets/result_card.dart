@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../app/theme/app_colors.dart';
 import '../../features/shared/domain/models/dish_analysis_model.dart';
+import '../../features/shared/domain/models/price_intelligence_model.dart';
 import 'score_badge.dart';
 
 class ResultCard extends StatelessWidget {
@@ -20,6 +21,7 @@ class ResultCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final safetyTone = dish.safetyScore >= 85 ? ScoreBadgeTone.safe : ScoreBadgeTone.warning;
     final matchTone = dish.tasteScore >= 90 ? ScoreBadgeTone.match : ScoreBadgeTone.muted;
+    final price = dish.priceIntelligence;
 
     return Material(
       color: Colors.transparent,
@@ -48,31 +50,9 @@ class ResultCard extends StatelessWidget {
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  ScoreBadge(label: '${dish.tasteScore}% MATCH', tone: matchTone),
+                  ScoreBadge(label: 'TASTE ${dish.tasteScore}%', tone: matchTone),
                   const Spacer(),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      Text(
-                        '${dish.priceIntelligence.localCurrency} ${dish.priceIntelligence.localPrice}',
-                        style: const TextStyle(
-                          color: AppColors.ink,
-                          fontSize: 18,
-                          height: 1,
-                          fontWeight: FontWeight.w900,
-                        ),
-                      ),
-                      const SizedBox(height: 6),
-                      Text(
-                        '\$${dish.priceIntelligence.homePrice.toStringAsFixed(2)} ${dish.priceIntelligence.homeCurrency}',
-                        style: const TextStyle(
-                          color: AppColors.softInk,
-                          fontSize: 13,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ],
-                  ),
+                  _PriceSummary(price: price),
                 ],
               ),
               const SizedBox(height: 22),
@@ -132,11 +112,12 @@ class ResultCard extends StatelessWidget {
                 runSpacing: 8,
                 children: [
                   ScoreBadge(
-                    label: 'SAFETY ${(dish.safetyScore / 10).round()}/10',
+                    label: 'SAFETY ${dish.safetyScore}%',
                     tone: safetyTone,
                   ),
+                  ScoreBadge(label: 'VALUE ${dish.valueScore}%', tone: ScoreBadgeTone.value),
                   ScoreBadge(
-                    label: 'VALUE: ${dish.priceIntelligence.assessment.label.toUpperCase()}',
+                    label: price.assessment.label.toUpperCase(),
                     tone: ScoreBadgeTone.value,
                   ),
                   if (dish.hiddenIngredients.isNotEmpty)
@@ -171,6 +152,53 @@ class ResultCard extends StatelessWidget {
       ),
     );
   }
+}
+
+class _PriceSummary extends StatelessWidget {
+  const _PriceSummary({required this.price});
+
+  final PriceIntelligenceModel price;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: [
+        Text(
+          _formatMoney(price.localPrice, price.localCurrency),
+          style: const TextStyle(
+            color: AppColors.ink,
+            fontSize: 18,
+            height: 1,
+            fontWeight: FontWeight.w900,
+          ),
+        ),
+        const SizedBox(height: 6),
+        Text(
+          'approx ${_formatMoney(price.homePrice, price.homeCurrency)}',
+          style: const TextStyle(
+            color: AppColors.softInk,
+            fontSize: 13,
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+String _formatMoney(num amount, String currency) {
+  final symbol = switch (currency.toUpperCase()) {
+    'JPY' => '¥',
+    'TWD' => 'NT\$',
+    'CNY' => '¥',
+    'USD' => '\$',
+    'EUR' => '€',
+    'GBP' => '£',
+    _ => '$currency ',
+  };
+  final decimals = amount % 1 == 0 ? 0 : 2;
+  return '$symbol${amount.toStringAsFixed(decimals)}';
 }
 
 class _DishThumbnail extends StatelessWidget {

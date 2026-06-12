@@ -116,17 +116,17 @@ class MockScanRepository implements ScanRepository {
       scanId: 'scan-${DateTime.now().millisecondsSinceEpoch}',
       imagePath: imagePath,
       restaurantCountry: isChineseMenu
-          ? 'China'
+          ? 'Taiwan'
           : isEnglishMenu
               ? 'United States'
               : 'Japan',
       restaurantCity: isChineseMenu
-          ? 'Shanghai'
+          ? 'Taipei'
           : isEnglishMenu
               ? 'Seattle'
               : 'Tokyo',
       localCurrency: isChineseMenu
-          ? 'CNY'
+          ? 'TWD'
           : isEnglishMenu
               ? 'USD'
               : 'JPY',
@@ -195,27 +195,27 @@ class MockAiRepository implements AiRepository {
         rawText.contains('mapo')) {
       return [
         DishAnalysisModel(
-          dishName: 'Mapo Tofu',
-          localName: 'Mapo Doufu',
-          description: 'Silken tofu in a spicy bean paste sauce with Sichuan pepper.',
-          tasteScore: tasteSummary.toLowerCase().contains('savory') ? 91 : 84,
-          safetyScore: allergySummary.toLowerCase().contains('soy') ? 72 : 86,
-          valueScore: 88,
+          dishName: 'Beef Noodle Soup',
+          localName: 'Niu Rou Mian',
+          description: 'Braised beef noodle soup with rich broth and tender wheat noodles.',
+          tasteScore: tasteSummary.toLowerCase().contains('savory') ? 94 : 86,
+          safetyScore: allergySummary.toLowerCase().contains('wheat') ? 74 : 88,
+          valueScore: 93,
           foodConfidenceScore: 90,
           priceIntelligence: PriceIntelligenceModel(
-            localPrice: 42,
+            localPrice: 180,
             localCurrency: request.localCurrency,
-            homePrice: 5.80,
+            homePrice: _homePriceFor(request.userHomeCurrency, eur: 5.20, usd: 5.65),
             homeCurrency: request.userHomeCurrency,
-            exchangeRate: 0.138,
-            assessment: PriceAssessment.cheap,
+            exchangeRate: _exchangeRateFor(request.userHomeCurrency, localCurrency: 'TWD'),
+            assessment: PriceAssessment.goodValue,
           ),
           recommendationReason:
-              'Mock AI matched this against $tasteSummary and checked $allergySummary from the ${request.restaurantCountry} menu OCR.',
-          ingredients: ['Tofu', 'Chili bean paste', 'Scallion', 'Sichuan pepper'],
-          allergens: ['Soy'],
-          dietaryFlags: [dietarySummary],
-          hiddenIngredients: ['Bean paste may contain wheat'],
+              'Mock AI matched the savory broth profile against $tasteSummary and flagged wheat noodles for $allergySummary.',
+          ingredients: ['Beef', 'Wheat noodles', 'Soy-braised broth', 'Scallion'],
+          allergens: ['Wheat', 'Soy'],
+          dietaryFlags: ['Beef', dietarySummary],
+          hiddenIngredients: ['Broth may include soy sauce and spices'],
           imageSeed: 'skewer',
         ),
         DishAnalysisModel(
@@ -227,11 +227,11 @@ class MockAiRepository implements AiRepository {
           valueScore: 84,
           foodConfidenceScore: 87,
           priceIntelligence: PriceIntelligenceModel(
-            localPrice: 38,
+            localPrice: 120,
             localCurrency: request.localCurrency,
-            homePrice: 5.24,
+            homePrice: _homePriceFor(request.userHomeCurrency, eur: 3.45, usd: 3.77),
             homeCurrency: request.userHomeCurrency,
-            exchangeRate: 0.138,
+            exchangeRate: _exchangeRateFor(request.userHomeCurrency, localCurrency: 'TWD'),
             assessment: PriceAssessment.cheap,
           ),
           recommendationReason:
@@ -250,26 +250,26 @@ class MockAiRepository implements AiRepository {
         rawText.contains('risotto')) {
       return [
         DishAnalysisModel(
-          dishName: 'Roasted Mushroom Risotto',
-          description: 'Creamy rice with roasted mushrooms and herbs.',
-          tasteScore: 89,
-          safetyScore: allergySummary.toLowerCase().contains('dairy') ? 78 : 88,
-          valueScore: 79,
+          dishName: 'Fish and Chips',
+          description: 'Crisp battered fish with fries and tartar sauce.',
+          tasteScore: 87,
+          safetyScore: allergySummary.toLowerCase().contains('wheat') ? 70 : 84,
+          valueScore: 80,
           foodConfidenceScore: 91,
           priceIntelligence: PriceIntelligenceModel(
-            localPrice: 18,
+            localPrice: 14.90,
             localCurrency: request.localCurrency,
-            homePrice: 18,
+            homePrice: _homePriceFor(request.userHomeCurrency, eur: 13.70, usd: 14.90),
             homeCurrency: request.userHomeCurrency,
-            exchangeRate: 1,
+            exchangeRate: _exchangeRateFor(request.userHomeCurrency, localCurrency: 'USD'),
             assessment: PriceAssessment.fair,
           ),
           recommendationReason:
-              'Mock AI selected this as a strong fit for $tasteSummary while checking $allergySummary.',
-          ingredients: ['Rice', 'Mushrooms', 'Parmesan', 'Butter', 'Herbs'],
-          allergens: ['Dairy'],
-          dietaryFlags: [dietarySummary],
-          hiddenIngredients: ['Stock may contain meat or dairy'],
+              'Mock AI selected this familiar seafood option for $tasteSummary while checking wheat and fish risks.',
+          ingredients: ['White fish', 'Wheat batter', 'Potato', 'Tartar sauce'],
+          allergens: ['Fish', 'Wheat', 'Egg'],
+          dietaryFlags: ['Seafood', dietarySummary],
+          hiddenIngredients: ['Shared fryer oil'],
           imageSeed: 'cod',
         ),
         DishAnalysisModel(
@@ -282,9 +282,9 @@ class MockAiRepository implements AiRepository {
           priceIntelligence: PriceIntelligenceModel(
             localPrice: 12,
             localCurrency: request.localCurrency,
-            homePrice: 12,
+            homePrice: _homePriceFor(request.userHomeCurrency, eur: 11.05, usd: 12),
             homeCurrency: request.userHomeCurrency,
-            exchangeRate: 1,
+            exchangeRate: _exchangeRateFor(request.userHomeCurrency, localCurrency: 'USD'),
             assessment: PriceAssessment.cheap,
           ),
           recommendationReason:
@@ -299,32 +299,75 @@ class MockAiRepository implements AiRepository {
     }
 
     return [
-      for (final dish in mockDishAnalyses)
-        DishAnalysisModel(
-          dishName: dish.dishName,
-          localName: dish.localName,
-          description: dish.description,
-          ingredients: dish.ingredients,
-          allergens: dish.allergens,
-          tasteScore: dish.tasteScore,
-          safetyScore: dish.safetyScore,
-          valueScore: dish.valueScore,
-          recommendationReason:
-              '${dish.recommendationReason} Mock AI used $tasteSummary, $dietarySummary, and allergen checks for $allergySummary in ${request.restaurantCity}.',
-          priceIntelligence: PriceIntelligenceModel(
-            localPrice: dish.priceIntelligence.localPrice,
-            localCurrency: request.localCurrency,
-            homePrice: dish.priceIntelligence.homePrice,
-            homeCurrency: request.userHomeCurrency,
-            exchangeRate: dish.priceIntelligence.exchangeRate,
-            assessment: dish.priceIntelligence.assessment,
-          ),
-          foodConfidenceScore: dish.foodConfidenceScore,
-          dietaryFlags: dish.dietaryFlags,
-          hiddenIngredients: dish.hiddenIngredients,
-          imageSeed: dish.imageSeed,
+      DishAnalysisModel(
+        dishName: 'Tonkotsu Ramen',
+        localName: 'Pork Bone Ramen',
+        description: 'Rich pork broth with noodles, egg, scallion, and sliced chashu.',
+        ingredients: ['Pork broth', 'Wheat noodles', 'Egg', 'Scallion', 'Chashu'],
+        allergens: ['Wheat', 'Egg'],
+        tasteScore: tasteSummary.toLowerCase().contains('umami') ? 96 : 88,
+        safetyScore: allergySummary.toLowerCase().contains('egg') ? 74 : 86,
+        valueScore: 84,
+        recommendationReason:
+            'Mock AI found a strong umami match for $tasteSummary and checked $allergySummary before ranking this first.',
+        priceIntelligence: PriceIntelligenceModel(
+          localPrice: 980,
+          localCurrency: request.localCurrency,
+          homePrice: _homePriceFor(request.userHomeCurrency, eur: 6.10, usd: 6.62),
+          homeCurrency: request.userHomeCurrency,
+          exchangeRate: _exchangeRateFor(request.userHomeCurrency, localCurrency: 'JPY'),
+          assessment: PriceAssessment.fair,
         ),
+        foodConfidenceScore: 93,
+        dietaryFlags: ['Pork', dietarySummary],
+        hiddenIngredients: ['Broth may contain soy sauce or fish powder'],
+        imageSeed: 'porridge',
+      ),
+      DishAnalysisModel(
+        dishName: 'Miso Katsu Skewers',
+        localName: 'Miso Kushikatsu',
+        description: 'Panko-fried pork skewers with hatcho miso glaze.',
+        ingredients: ['Pork', 'Panko', 'Miso', 'Egg', 'Wheat'],
+        allergens: ['Soy', 'Wheat', 'Egg'],
+        tasteScore: 82,
+        safetyScore: 70,
+        valueScore: 89,
+        recommendationReason:
+            'Good local value, but mock AI flags soy, wheat, and egg for your allergy profile.',
+        priceIntelligence: PriceIntelligenceModel(
+          localPrice: 800,
+          localCurrency: request.localCurrency,
+          homePrice: _homePriceFor(request.userHomeCurrency, eur: 4.98, usd: 5.40),
+          homeCurrency: request.userHomeCurrency,
+          exchangeRate: _exchangeRateFor(request.userHomeCurrency, localCurrency: 'JPY'),
+          assessment: PriceAssessment.goodValue,
+        ),
+        foodConfidenceScore: 80,
+        dietaryFlags: ['Pork'],
+        hiddenIngredients: ['Fryer cross-contact', 'Wheat in panko', 'Egg wash'],
+        imageSeed: 'skewer',
+      ),
     ];
+  }
+
+  num _homePriceFor(String homeCurrency, {required num eur, required num usd}) {
+    return homeCurrency.toUpperCase() == 'EUR' ? eur : usd;
+  }
+
+  num _exchangeRateFor(String homeCurrency, {required String localCurrency}) {
+    final normalizedHome = homeCurrency.toUpperCase();
+    final normalizedLocal = localCurrency.toUpperCase();
+    if (normalizedHome == normalizedLocal) {
+      return 1;
+    }
+    return switch ((normalizedLocal, normalizedHome)) {
+      ('JPY', 'EUR') => 0.00622,
+      ('JPY', 'USD') => 0.00675,
+      ('TWD', 'EUR') => 0.0289,
+      ('TWD', 'USD') => 0.0314,
+      ('USD', 'EUR') => 0.919,
+      _ => 1,
+    };
   }
 
   @override

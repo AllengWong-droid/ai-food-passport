@@ -49,29 +49,10 @@ class ResultsScreen extends ConsumerWidget {
             const SectionHeader('Tokyo - Izakaya Gonpachi'),
             const SizedBox(height: 14),
             Text(
-              'Ranked for your\ntaste passport.',
+              'Ranked by taste,\nsafety, and value.',
               style: AppTextStyles.title.copyWith(fontSize: 36, height: 1.26),
             ),
             const SizedBox(height: 34),
-            if (kDebugMode && ocrResult != null) ...[
-              _OcrDebugSection(
-                rawText: ocrResult.rawText,
-                detectedLanguage: ocrResult.detectedLanguage,
-                confidence: ocrResult.confidence,
-                source: ocrResult.source,
-              ),
-              const SizedBox(height: 18),
-            ],
-            if (kDebugMode && aiRequest != null) ...[
-              _AiDebugSection(
-                ocrLanguage: aiRequest.ocrResult.detectedLanguage,
-                tastePreferences: aiRequest.tastePassport.tastePreferences,
-                allergies: aiRequest.tastePassport.allergies,
-                dietaryPreferences: aiRequest.tastePassport.dietaryPreferences,
-                dishCount: dishes.length,
-              ),
-              const SizedBox(height: 18),
-            ],
             for (var i = 0; i < dishes.length; i++) ...[
               ResultCard(
                 dish: dishes[i],
@@ -81,6 +62,29 @@ class ResultsScreen extends ConsumerWidget {
                   pathParameters: {'dishId': dishes[i].id},
                 ),
               ),
+              const SizedBox(height: 18),
+            ],
+            if (kDebugMode && (ocrResult != null || aiRequest != null)) ...[
+              const SizedBox(height: 8),
+              const SectionHeader('Developer Debug'),
+              const SizedBox(height: 12),
+              if (ocrResult != null) ...[
+                _OcrDebugSection(
+                  rawText: ocrResult.rawText,
+                  detectedLanguage: ocrResult.detectedLanguage,
+                  confidence: ocrResult.confidence,
+                  source: ocrResult.source,
+                ),
+                const SizedBox(height: 10),
+              ],
+              if (aiRequest != null)
+                _AiDebugSection(
+                  ocrLanguage: aiRequest.ocrResult.detectedLanguage,
+                  tastePreferences: aiRequest.tastePassport.tastePreferences,
+                  allergies: aiRequest.tastePassport.allergies,
+                  dietaryPreferences: aiRequest.tastePassport.dietaryPreferences,
+                  dishCount: dishes.length,
+                ),
               const SizedBox(height: 18),
             ],
             const SizedBox(height: 2),
@@ -182,8 +186,8 @@ class _DebugExpansionPanel extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: const Color(0xFFF7F4EF),
-        borderRadius: BorderRadius.circular(18),
+        color: const Color(0xFFF0EDE8),
+        borderRadius: BorderRadius.circular(14),
         border: Border.all(color: AppColors.border),
       ),
       child: ExpansionTile(
