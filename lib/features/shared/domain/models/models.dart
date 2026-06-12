@@ -1,5 +1,7 @@
 export 'ai_analysis_failure.dart';
 export 'ai_analysis_request.dart';
+export 'ai_provider_mode.dart';
+export 'ai_routing_decision.dart';
 export 'dish_analysis_model.dart';
 export 'ocr_result.dart';
 export 'price_intelligence_model.dart';

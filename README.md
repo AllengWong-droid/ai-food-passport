@@ -17,6 +17,8 @@ Travelers often face menus they cannot read, prices they cannot compare, and ing
 - AI Debug shows the context used by the mock AI adapter.
 - Results and Dish Detail navigation work.
 - OpenAI adapter skeleton exists, but is disabled by default.
+- Backend proxy contract and repository skeleton exist for future OpenAI integration, but are disabled by default.
+- OCR-first multi-provider routing skeleton exists for future China/global provider routing, but is disabled by default.
 - No real API calls, API keys, Firebase, real OCR, or subscriptions are implemented.
 
 ## Current User Flow
@@ -51,25 +53,30 @@ The MVP uses typed domain models and repository interfaces so mock implementatio
 - Future OpenAI adapter preparation lives under `lib/features/shared/data/ai/`.
 - The default AI provider is still `MockAiRepository`.
 - `OpenAiMenuAnalysisRepository` is a disabled skeleton and makes no network calls.
+- `BackendMenuAnalysisRepository` is a disabled backend proxy skeleton and is not wired into the app.
+- `MultiProviderMenuAnalysisRepository` is a disabled OCR-first routing skeleton for future Qwen, DeepSeek, and OpenAI backend routes.
 
 ## Current Limitations
 
 - OCR is mocked, not real device or cloud OCR.
 - AI analysis is mocked, not real OpenAI.
 - OpenAI prompt builder, schema, parser, and repository skeleton are preparation only.
+- Backend proxy contract and Flutter repository skeleton are preparation only.
+- OCR-first China/global provider routing is preparation only.
+- Qwen, DeepSeek, and OpenAI are not called.
 - No Firebase Auth, Firestore, Storage, Analytics, or Crashlytics.
-- No backend proxy yet.
+- No deployed or enabled backend proxy yet.
 - No API keys are stored in Flutter code.
 - No subscriptions or App Store purchase logic.
 - Price intelligence uses mock/static values.
 
 ## Roadmap
 
-- Phase 5D: Backend proxy plan
-- Phase 5E: Real OpenAI integration through backend
-- Phase 6: Real OCR strategy
-- Phase 7: Firebase persistence
-- Phase 8: Subscription and App Store preparation
+- Phase 6B: Backend proxy implementation plan
+- Phase 6C: Real OpenAI integration through backend
+- Phase 7: Real OCR strategy
+- Phase 8: Firebase persistence
+- Phase 9: Subscription and App Store preparation
 
 ## How To Run Locally
 
@@ -95,3 +102,5 @@ If the local analyzer crashes or hangs, verify the web-server flow manually and 
 - Phase 4B: OCR Adapter Preparation
 - Phase 5A: AI Engine Adapter Preparation
 - Phase 5B: OpenAI Adapter Skeleton
+- Phase 5D: UX Alignment + Price Intelligence
+- Phase 6A: OCR-First Multi-Provider Routing Contract
