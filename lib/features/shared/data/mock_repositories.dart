@@ -32,8 +32,26 @@ final priceRepositoryProvider = Provider<PriceRepository>((ref) {
   return MockPriceRepository();
 });
 
+final travelerSettingsProvider = StateProvider<TravelerSettingsModel>((ref) {
+  return const TravelerSettingsModel(
+    homeCountry: 'Germany',
+    homeCurrency: 'EUR',
+    outputLanguage: 'English',
+    providerMode: AiProviderMode.mock,
+  );
+});
+
 final currentUserProvider = Provider<UserModel>((ref) {
-  return ref.watch(authRepositoryProvider).currentUser();
+  final user = ref.watch(authRepositoryProvider).currentUser();
+  final settings = ref.watch(travelerSettingsProvider);
+
+  return UserModel(
+    id: user.id,
+    email: user.email,
+    displayName: user.displayName,
+    homeCountry: settings.homeCountry,
+    homeCurrency: settings.homeCurrency,
+  );
 });
 
 final tastePassportProvider = Provider<TastePassportModel>((ref) {

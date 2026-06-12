@@ -19,6 +19,7 @@ class ResultsScreen extends ConsumerWidget {
     final dishes = ref.watch(dishAnalysesProvider);
     final ocrResult = ref.watch(latestOcrResultProvider);
     final aiRequest = ref.watch(latestAiAnalysisRequestProvider);
+    final travelerSettings = ref.watch(travelerSettingsProvider);
 
     return Scaffold(
       body: SafeArea(
@@ -83,6 +84,9 @@ class ResultsScreen extends ConsumerWidget {
                   tastePreferences: aiRequest.tastePassport.tastePreferences,
                   allergies: aiRequest.tastePassport.allergies,
                   dietaryPreferences: aiRequest.tastePassport.dietaryPreferences,
+                  outputLanguage: travelerSettings.outputLanguage,
+                  homeCurrency: travelerSettings.homeCurrency,
+                  providerMode: travelerSettings.providerMode.name,
                   dishCount: dishes.length,
                 ),
               const SizedBox(height: 18),
@@ -102,6 +106,9 @@ class _AiDebugSection extends StatelessWidget {
     required this.tastePreferences,
     required this.allergies,
     required this.dietaryPreferences,
+    required this.outputLanguage,
+    required this.homeCurrency,
+    required this.providerMode,
     required this.dishCount,
   });
 
@@ -109,6 +116,9 @@ class _AiDebugSection extends StatelessWidget {
   final List<String> tastePreferences;
   final List<String> allergies;
   final List<String> dietaryPreferences;
+  final String outputLanguage;
+  final String homeCurrency;
+  final String providerMode;
   final int dishCount;
 
   @override
@@ -123,8 +133,10 @@ class _AiDebugSection extends StatelessWidget {
           _DebugLine(label: 'Taste preferences', value: _joinValues(tastePreferences)),
           _DebugLine(label: 'Allergies', value: _joinValues(allergies)),
           _DebugLine(label: 'Dietary preferences', value: _joinValues(dietaryPreferences)),
+          _DebugLine(label: 'Output language', value: outputLanguage),
+          _DebugLine(label: 'Home currency', value: homeCurrency),
           const _DebugLine(label: 'Active provider', value: 'mock_ai'),
-          const _DebugLine(label: 'Routing mode', value: 'mock'),
+          _DebugLine(label: 'Provider mode', value: providerMode),
           const _DebugLine(label: 'Backend routing planned', value: 'true'),
           const _DebugLine(label: 'OCR-first pipeline planned', value: 'true'),
           const _DebugLine(label: 'Qwen enabled', value: 'false'),
