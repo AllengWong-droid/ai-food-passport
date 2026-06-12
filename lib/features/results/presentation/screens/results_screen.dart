@@ -57,7 +57,7 @@ class ResultsScreen extends ConsumerWidget {
               ResultCard(
                 dish: dishes[i],
                 elevated: i == 0,
-                onTap: () => context.goNamed(
+                onTap: () => context.pushNamed(
                   RouteNames.dishDetail,
                   pathParameters: {'dishId': dishes[i].id},
                 ),
