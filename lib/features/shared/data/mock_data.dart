@@ -40,21 +40,21 @@ const mockRecentCrossings = [
 ];
 
 const mockJapaneseMenuText = '''
-居酒屋 権八
-鶏雑炊 1200円
-銀だら西京焼き 2400円
-味噌串カツ 800円
-だし巻き卵 900円
-アレルギー表示: 卵, 小麦, 大豆, 魚介だし
+Izakaya Gonpachi
+Tori zousui 1200 JPY
+Saikyo miso cod 2400 JPY
+Miso katsu skewers 800 JPY
+Dashimaki tamago 900 JPY
+Allergen notes: egg, wheat, soy, fish dashi
 ''';
 
 const mockChineseMenuText = '''
-老街小馆
-宫保鸡丁 RMB 58
-清炒时蔬 RMB 38
-麻婆豆腐 RMB 42
-葱油拌面 RMB 32
-过敏原提示: 花生, 大豆, 小麦, 芝麻
+Laojie Xiaoguan
+Kung pao chicken RMB 58
+Stir-fried seasonal greens RMB 38
+Mapo tofu RMB 42
+Scallion oil noodles RMB 32
+Allergen notes: peanut, soy, wheat, sesame
 ''';
 
 const mockEnglishMenuText = '''

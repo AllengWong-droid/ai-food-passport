@@ -18,6 +18,7 @@ class ResultsScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final dishes = ref.watch(dishAnalysesProvider);
     final ocrResult = ref.watch(latestOcrResultProvider);
+    final aiRequest = ref.watch(latestAiAnalysisRequestProvider);
 
     return Scaffold(
       body: SafeArea(
@@ -61,6 +62,16 @@ class ResultsScreen extends ConsumerWidget {
               ),
               const SizedBox(height: 18),
             ],
+            if (kDebugMode && aiRequest != null) ...[
+              _AiDebugSection(
+                ocrLanguage: aiRequest.ocrResult.detectedLanguage,
+                tastePreferences: aiRequest.tastePassport.tastePreferences,
+                allergies: aiRequest.tastePassport.allergies,
+                dietaryPreferences: aiRequest.tastePassport.dietaryPreferences,
+                dishCount: dishes.length,
+              ),
+              const SizedBox(height: 18),
+            ],
             for (var i = 0; i < dishes.length; i++) ...[
               ResultCard(
                 dish: dishes[i],
@@ -81,6 +92,44 @@ class ResultsScreen extends ConsumerWidget {
   }
 }
 
+class _AiDebugSection extends StatelessWidget {
+  const _AiDebugSection({
+    required this.ocrLanguage,
+    required this.tastePreferences,
+    required this.allergies,
+    required this.dietaryPreferences,
+    required this.dishCount,
+  });
+
+  final String ocrLanguage;
+  final List<String> tastePreferences;
+  final List<String> allergies;
+  final List<String> dietaryPreferences;
+  final int dishCount;
+
+  @override
+  Widget build(BuildContext context) {
+    return _DebugExpansionPanel(
+      title: 'AI Debug',
+      subtitle: '$dishCount dishes - mock_ai',
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _DebugLine(label: 'OCR language', value: ocrLanguage),
+          _DebugLine(label: 'Taste preferences', value: _joinValues(tastePreferences)),
+          _DebugLine(label: 'Allergies', value: _joinValues(allergies)),
+          _DebugLine(label: 'Dietary preferences', value: _joinValues(dietaryPreferences)),
+          const _DebugLine(label: 'AI source', value: 'mock_ai'),
+        ],
+      ),
+    );
+  }
+
+  String _joinValues(List<String> values) {
+    return values.isEmpty ? 'None' : values.join(', ');
+  }
+}
+
 class _OcrDebugSection extends StatelessWidget {
   const _OcrDebugSection({
     required this.rawText,
@@ -96,6 +145,38 @@ class _OcrDebugSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return _DebugExpansionPanel(
+      title: 'OCR Debug',
+      subtitle: '$detectedLanguage - ${(confidence * 100).round()}% - $source',
+      child: Align(
+        alignment: Alignment.centerLeft,
+        child: SelectableText(
+          rawText,
+          style: const TextStyle(
+            color: AppColors.ink,
+            fontSize: 13,
+            height: 1.35,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _DebugExpansionPanel extends StatelessWidget {
+  const _DebugExpansionPanel({
+    required this.title,
+    required this.subtitle,
+    required this.child,
+  });
+
+  final String title;
+  final String subtitle;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
         color: const Color(0xFFF7F4EF),
@@ -105,36 +186,49 @@ class _OcrDebugSection extends StatelessWidget {
       child: ExpansionTile(
         tilePadding: const EdgeInsets.symmetric(horizontal: 18),
         childrenPadding: const EdgeInsets.fromLTRB(18, 0, 18, 18),
-        title: const Text(
-          'OCR Debug',
-          style: TextStyle(
+        title: Text(
+          title,
+          style: const TextStyle(
             color: AppColors.ink,
             fontSize: 15,
             fontWeight: FontWeight.w900,
           ),
         ),
         subtitle: Text(
-          '$detectedLanguage - ${(confidence * 100).round()}% - $source',
+          subtitle,
           style: const TextStyle(
             color: AppColors.mutedInk,
             fontSize: 12,
             fontWeight: FontWeight.w700,
           ),
         ),
-        children: [
-          Align(
-            alignment: Alignment.centerLeft,
-            child: SelectableText(
-              rawText,
-              style: const TextStyle(
-                color: AppColors.ink,
-                fontSize: 13,
-                height: 1.35,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ),
-        ],
+        children: [child],
+      ),
+    );
+  }
+}
+
+class _DebugLine extends StatelessWidget {
+  const _DebugLine({
+    required this.label,
+    required this.value,
+  });
+
+  final String label;
+  final String value;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8),
+      child: Text(
+        '$label: $value',
+        style: const TextStyle(
+          color: AppColors.ink,
+          fontSize: 13,
+          height: 1.35,
+          fontWeight: FontWeight.w500,
+        ),
       ),
     );
   }

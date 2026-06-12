@@ -1,3 +1,4 @@
+export 'ai_analysis_request.dart';
 export 'dish_analysis_model.dart';
 export 'ocr_result.dart';
 export 'price_intelligence_model.dart';

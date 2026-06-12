@@ -8,6 +8,7 @@ import 'package:image_picker/image_picker.dart';
 import '../../../../app/router/route_names.dart';
 import '../../../../app/theme/app_colors.dart';
 import '../../../shared/data/mock_repositories.dart';
+import '../../../shared/domain/models/models.dart';
 
 class ScanScreen extends ConsumerStatefulWidget {
   const ScanScreen({super.key});
@@ -148,6 +149,8 @@ class _ScanScreenState extends ConsumerState<ScanScreen> {
     final scanRepository = ref.read(scanRepositoryProvider);
     final ocrRepository = ref.read(ocrRepositoryProvider);
     final aiRepository = ref.read(aiRepositoryProvider);
+    final user = ref.read(currentUserProvider);
+    final tastePassport = ref.read(tastePassportProvider);
 
     try {
       final scan = scanRepository.createScanFromImage(imagePath);
@@ -155,8 +158,20 @@ class _ScanScreenState extends ConsumerState<ScanScreen> {
 
       final ocrResult = await ocrRepository.extractText(scan.imagePath);
       ref.read(latestOcrResultProvider.notifier).state = ocrResult;
+
+      final analysisRequest = AiAnalysisRequest(
+        ocrResult: ocrResult,
+        tastePassport: tastePassport,
+        scan: scan,
+        userHomeCountry: user.homeCountry,
+        userHomeCurrency: user.homeCurrency,
+        restaurantCountry: scan.restaurantCountry,
+        restaurantCity: scan.restaurantCity,
+        localCurrency: scan.localCurrency,
+      );
+      ref.read(latestAiAnalysisRequestProvider.notifier).state = analysisRequest;
       ref.read(dishAnalysesProvider.notifier).state =
-          aiRepository.analyzeOcrResult(scan, ocrResult);
+          await aiRepository.analyzeMenu(analysisRequest);
 
       if (mounted) {
         context.goNamed(RouteNames.results);
