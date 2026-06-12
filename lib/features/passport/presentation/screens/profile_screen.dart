@@ -83,6 +83,14 @@ class ProfileScreen extends ConsumerWidget {
                 );
               },
             ),
+            const SizedBox(height: 8),
+            const _SettingsHelperText(
+              text: 'Provider mode is for future routing. Mock remains active in this MVP.',
+            ),
+            const SizedBox(height: 12),
+            _ResetTravelerSettingsButton(
+              onTap: () => _resetTravelerSettings(ref),
+            ),
             const SizedBox(height: 28),
             _PreferenceTile(
               title: 'Taste & Allergies',
@@ -117,6 +125,10 @@ void _updateTravelerSettings(WidgetRef ref, TravelerSettingsModel settings) {
   ref.read(travelerSettingsProvider.notifier).update(settings);
 }
 
+void _resetTravelerSettings(WidgetRef ref) {
+  ref.read(travelerSettingsProvider.notifier).reset();
+}
+
 String _providerModeLabel(AiProviderMode mode) {
   return switch (mode) {
     AiProviderMode.auto => 'Auto',
@@ -124,6 +136,66 @@ String _providerModeLabel(AiProviderMode mode) {
     AiProviderMode.global => 'Global',
     AiProviderMode.mock => 'Mock',
   };
+}
+
+class _SettingsHelperText extends StatelessWidget {
+  const _SettingsHelperText({required this.text});
+
+  final String text;
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      text,
+      style: const TextStyle(
+        color: AppColors.mutedInk,
+        fontSize: 13,
+        height: 1.35,
+        fontWeight: FontWeight.w600,
+      ),
+    );
+  }
+}
+
+class _ResetTravelerSettingsButton extends StatelessWidget {
+  const _ResetTravelerSettingsButton({required this.onTap});
+
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        height: 54,
+        padding: const EdgeInsets.symmetric(horizontal: 18),
+        decoration: BoxDecoration(
+          color: AppColors.accentSoft,
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: AppColors.border),
+        ),
+        child: const Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.restart_alt, color: AppColors.ink, size: 20),
+            SizedBox(width: 8),
+            Flexible(
+              child: Text(
+                'Reset traveler settings',
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  color: AppColors.ink,
+                  fontSize: 15,
+                  fontWeight: FontWeight.w900,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 }
 
 class _SettingsDropdownTile<T> extends StatelessWidget {

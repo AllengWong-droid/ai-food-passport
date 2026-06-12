@@ -32,6 +32,10 @@ class TravelerSettingsController extends StateNotifier<TravelerSettingsModel> {
     await preferences.setString(_providerModeKey, settings.providerMode.name);
   }
 
+  Future<void> reset() {
+    return update(defaultSettings);
+  }
+
   Future<void> _loadSavedSettings() async {
     final updateCountAtStart = _localUpdateCount;
     final preferences = await SharedPreferences.getInstance();
