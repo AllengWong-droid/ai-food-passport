@@ -6,9 +6,13 @@ import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../../../app/router/route_names.dart';
-import '../../../../app/theme/app_colors.dart';
 import '../../../shared/data/mock_repositories.dart';
 import '../../../shared/domain/models/models.dart';
+import '../widgets/scan_controls.dart';
+import '../widgets/scan_frame_overlay.dart';
+import '../widgets/scan_processing_overlay.dart';
+import '../widgets/scan_recovery_overlay.dart';
+import '../widgets/scanner_background.dart';
 
 class ScanScreen extends ConsumerStatefulWidget {
   const ScanScreen({super.key});
@@ -50,7 +54,7 @@ class _ScanScreenState extends ConsumerState<ScanScreen> {
                 return Stack(
                   fit: StackFit.expand,
                   children: [
-                    _ScannerBackground(imageBytes: _selectedImageBytes),
+                    ScannerBackground(imageBytes: _selectedImageBytes),
                     SafeArea(
                       bottom: false,
                       child: Stack(
@@ -58,7 +62,7 @@ class _ScanScreenState extends ConsumerState<ScanScreen> {
                           Positioned(
                             top: 20,
                             left: 24,
-                            child: _RoundCloseButton(
+                            child: ScanRoundCloseButton(
                               onTap: () => context.goNamed(RouteNames.home),
                             ),
                           ),
@@ -69,7 +73,7 @@ class _ScanScreenState extends ConsumerState<ScanScreen> {
                             child: Center(
                               child: SizedBox(
                                 width: 250,
-                                child: _LanguageChip(label: 'AUTO-DETECT JAPANESE'),
+                                child: ScanLanguageChip(label: 'AUTO-DETECT JAPANESE'),
                               ),
                             ),
                           ),
@@ -78,7 +82,7 @@ class _ScanScreenState extends ConsumerState<ScanScreen> {
                             left: 54,
                             right: 54,
                             height: frameHeight,
-                            child: const _ScanFrameOverlay(),
+                            child: const ScanFrameOverlay(),
                           ),
                           Positioned(
                             left: 0,
@@ -98,24 +102,24 @@ class _ScanScreenState extends ConsumerState<ScanScreen> {
                                 ),
                                 if (_hasSelectedImage && _selectedImagePath != null) ...[
                                   const SizedBox(height: 10),
-                                  _SelectedImageLabel(imagePath: _selectedImagePath!),
+                                  SelectedImageLabel(imagePath: _selectedImagePath!),
                                 ],
                                 const SizedBox(height: 28),
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    _ScanActionButton(
+                                    ScanActionButton(
                                       icon: Icons.photo_library_outlined,
                                       label: 'GALLERY',
                                       onTap: _selectImageFromGallery,
                                     ),
                                     const SizedBox(width: 24),
-                                    _CaptureButton(
+                                    CaptureButton(
                                       isProcessing: _isProcessing,
                                       onTap: _startScan,
                                     ),
                                     const SizedBox(width: 24),
-                                    const _DisabledScanActionButton(
+                                    const DisabledScanActionButton(
                                       icon: Icons.photo_camera_outlined,
                                       label: 'PHOTO',
                                     ),
@@ -128,12 +132,14 @@ class _ScanScreenState extends ConsumerState<ScanScreen> {
                       ),
                     ),
                     if (_isProcessing)
-                      _ScanProcessingOverlay(
+                      ScanProcessingOverlay(
                         message: _processingMessage ?? 'Reading menu image',
                       ),
                     if (_recoveryState != null)
-                      _ScanRecoveryOverlay(
-                        state: _recoveryState!,
+                      ScanRecoveryOverlay(
+                        title: _recoveryState!.title,
+                        message: _recoveryState!.message,
+                        retryAvailable: _recoveryState!.retryAvailable,
                         onRetry: _retryScan,
                         onChooseImage: _chooseAnotherImage,
                         onContinueSample: _continueWithSampleResult,
@@ -333,617 +339,5 @@ class _ScanRecoveryState {
       case _ScanRecoveryKind.fallbackUsed:
         return 'A primary provider was unavailable, so a backup route prepared the result.';
     }
-  }
-}
-
-class _ScannerBackground extends StatelessWidget {
-  const _ScannerBackground({required this.imageBytes});
-
-  final Uint8List? imageBytes;
-
-  @override
-  Widget build(BuildContext context) {
-    final bytes = imageBytes;
-
-    return Stack(
-      fit: StackFit.expand,
-      children: [
-        if (bytes != null)
-          Image.memory(
-            bytes,
-            fit: BoxFit.cover,
-            errorBuilder: (context, error, stackTrace) => const _CameraMockBackground(),
-          )
-        else
-          const _CameraMockBackground(),
-        DecoratedBox(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [
-                Colors.black.withOpacity(0.18),
-                Colors.black.withOpacity(0.34),
-                Colors.black.withOpacity(0.78),
-              ],
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class _CameraMockBackground extends StatelessWidget {
-  const _CameraMockBackground();
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            Color(0xFF1A0804),
-            Color(0xFF7E331C),
-            Color(0xFF2D2118),
-            Color(0xFF030303),
-          ],
-          stops: [0, 0.22, 0.64, 1],
-        ),
-      ),
-      child: Stack(
-        children: [
-          Positioned.fill(
-            top: 128,
-            bottom: 104,
-            child: Transform.rotate(
-              angle: -0.14,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24),
-                child: DecoratedBox(
-                  decoration: const BoxDecoration(
-                    color: Color(0xBDC2A77D),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black54,
-                        blurRadius: 26,
-                        offset: Offset(0, 18),
-                      ),
-                    ],
-                  ),
-                  child: const Padding(
-                    padding: EdgeInsets.fromLTRB(24, 28, 24, 28),
-                    child: _MockMenuLines(),
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _MockMenuLines extends StatelessWidget {
-  const _MockMenuLines();
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        for (var column = 0; column < 3; column++) ...[
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(height: 4, color: Colors.black.withOpacity(0.55)),
-                const SizedBox(height: 18),
-                for (var i = 0; i < 15; i++) ...[
-                  Container(
-                    height: i % 4 == 0 ? 18 : 9,
-                    width: i % 3 == 0 ? 78 : 112,
-                    color: i % 7 == 0
-                        ? AppColors.accent.withOpacity(0.55)
-                        : Colors.black.withOpacity(0.58),
-                  ),
-                  SizedBox(height: i % 4 == 0 ? 13 : 9),
-                ],
-              ],
-            ),
-          ),
-          if (column < 2)
-            Container(
-              width: 1,
-              height: 650,
-              margin: const EdgeInsets.symmetric(horizontal: 14),
-              color: Colors.black.withOpacity(0.48),
-            ),
-        ],
-      ],
-    );
-  }
-}
-
-class _RoundCloseButton extends StatelessWidget {
-  const _RoundCloseButton({required this.onTap});
-
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        width: 56,
-        height: 56,
-        decoration: BoxDecoration(
-          color: const Color(0xFF4D413F).withOpacity(0.88),
-          shape: BoxShape.circle,
-        ),
-        child: const Icon(Icons.close, color: Colors.white, size: 26),
-      ),
-    );
-  }
-}
-
-class _LanguageChip extends StatelessWidget {
-  const _LanguageChip({required this.label});
-
-  final String label;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 42,
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-        color: const Color(0xFF4D413F).withOpacity(0.94),
-        borderRadius: BorderRadius.circular(22),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          const Icon(Icons.bolt, color: AppColors.accent, size: 17),
-          const SizedBox(width: 7),
-          Flexible(
-            child: Text(
-              label,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 14,
-                fontWeight: FontWeight.w900,
-                letterSpacing: 1.2,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _ScanFrameOverlay extends StatelessWidget {
-  const _ScanFrameOverlay();
-
-  @override
-  Widget build(BuildContext context) {
-    return CustomPaint(painter: _ScanFramePainter());
-  }
-}
-
-class _ScanFramePainter extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    final rect = RRect.fromRectAndRadius(
-      Offset.zero & size,
-      const Radius.circular(30),
-    );
-    final whitePaint = Paint()
-      ..color = Colors.white.withOpacity(0.72)
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 2;
-    final accentPaint = Paint()
-      ..color = AppColors.accent
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 3
-      ..strokeCap = StrokeCap.square;
-
-    canvas.drawRRect(rect, whitePaint);
-
-    const corner = 48.0;
-    final path = Path()
-      ..moveTo(0, corner)
-      ..lineTo(0, 18)
-      ..quadraticBezierTo(0, 0, 18, 0)
-      ..lineTo(corner, 0)
-      ..moveTo(size.width - corner, 0)
-      ..lineTo(size.width - 18, 0)
-      ..quadraticBezierTo(size.width, 0, size.width, 18)
-      ..lineTo(size.width, corner)
-      ..moveTo(0, size.height - corner)
-      ..lineTo(0, size.height - 18)
-      ..quadraticBezierTo(0, size.height, 18, size.height)
-      ..lineTo(corner, size.height)
-      ..moveTo(size.width - corner, size.height)
-      ..lineTo(size.width - 18, size.height)
-      ..quadraticBezierTo(size.width, size.height, size.width, size.height - 18)
-      ..lineTo(size.width, size.height - corner);
-    canvas.drawPath(path, accentPaint);
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
-}
-
-class _ScanActionButton extends StatelessWidget {
-  const _ScanActionButton({
-    required this.icon,
-    required this.label,
-    required this.onTap,
-  });
-
-  final IconData icon;
-  final String label;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            width: 54,
-            height: 54,
-            decoration: BoxDecoration(
-              color: const Color(0xFF4D413F).withOpacity(0.94),
-              shape: BoxShape.circle,
-            ),
-            child: Icon(icon, color: Colors.white, size: 24),
-          ),
-          const SizedBox(height: 9),
-          Text(
-            label,
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 11,
-              fontWeight: FontWeight.w900,
-              letterSpacing: 1.1,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _DisabledScanActionButton extends StatelessWidget {
-  const _DisabledScanActionButton({
-    required this.icon,
-    required this.label,
-  });
-
-  final IconData icon;
-  final String label;
-
-  @override
-  Widget build(BuildContext context) {
-    return Opacity(
-      opacity: 0.42,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            width: 54,
-            height: 54,
-            decoration: BoxDecoration(
-              color: const Color(0xFF4D413F).withOpacity(0.94),
-              shape: BoxShape.circle,
-            ),
-            child: Icon(icon, color: Colors.white, size: 24),
-          ),
-          const SizedBox(height: 9),
-          Text(
-            label,
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 11,
-              fontWeight: FontWeight.w900,
-              letterSpacing: 1.1,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _ScanProcessingOverlay extends StatelessWidget {
-  const _ScanProcessingOverlay({required this.message});
-
-  final String message;
-
-  @override
-  Widget build(BuildContext context) {
-    return Positioned.fill(
-      child: AbsorbPointer(
-        child: DecoratedBox(
-          decoration: BoxDecoration(
-            color: Colors.black.withOpacity(0.72),
-          ),
-          child: SafeArea(
-            child: Center(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 42),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const SizedBox(
-                      width: 54,
-                      height: 54,
-                      child: CircularProgressIndicator(
-                        color: AppColors.accent,
-                        strokeWidth: 4,
-                      ),
-                    ),
-                    const SizedBox(height: 26),
-                    Text(
-                      message,
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 22,
-                        height: 1.22,
-                        fontWeight: FontWeight.w900,
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                    const Text(
-                      'Building your food passport match',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: Color(0xFFC6C6C8),
-                        fontSize: 13,
-                        height: 1.35,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _ScanRecoveryOverlay extends StatelessWidget {
-  const _ScanRecoveryOverlay({
-    required this.state,
-    required this.onRetry,
-    required this.onChooseImage,
-    required this.onContinueSample,
-  });
-
-  final _ScanRecoveryState state;
-  final VoidCallback onRetry;
-  final VoidCallback onChooseImage;
-  final VoidCallback onContinueSample;
-
-  @override
-  Widget build(BuildContext context) {
-    return Positioned.fill(
-      child: DecoratedBox(
-        decoration: BoxDecoration(
-          color: Colors.black.withOpacity(0.76),
-        ),
-        child: SafeArea(
-          child: Center(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 30),
-              child: Container(
-                padding: const EdgeInsets.fromLTRB(22, 24, 22, 20),
-                decoration: BoxDecoration(
-                  color: const Color(0xFF2D2118).withOpacity(0.96),
-                  borderRadius: BorderRadius.circular(28),
-                  border: Border.all(color: Colors.white.withOpacity(0.14)),
-                ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Container(
-                      width: 58,
-                      height: 58,
-                      decoration: const BoxDecoration(
-                        color: AppColors.accent,
-                        shape: BoxShape.circle,
-                      ),
-                      child: const Icon(
-                        Icons.travel_explore,
-                        color: Colors.black,
-                        size: 29,
-                      ),
-                    ),
-                    const SizedBox(height: 18),
-                    Text(
-                      state.title,
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 21,
-                        height: 1.16,
-                        fontWeight: FontWeight.w900,
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                    Text(
-                      state.message,
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(
-                        color: Color(0xFFC6C6C8),
-                        fontSize: 14,
-                        height: 1.36,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                    const SizedBox(height: 22),
-                    if (state.retryAvailable)
-                      _RecoveryActionButton(
-                        label: 'Try again',
-                        icon: Icons.refresh,
-                        onTap: onRetry,
-                        emphasized: true,
-                      ),
-                    const SizedBox(height: 10),
-                    _RecoveryActionButton(
-                      label: 'Choose another image',
-                      icon: Icons.photo_library_outlined,
-                      onTap: onChooseImage,
-                    ),
-                    const SizedBox(height: 10),
-                    _RecoveryActionButton(
-                      label: 'Continue with sample result',
-                      icon: Icons.restaurant_menu,
-                      onTap: onContinueSample,
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _RecoveryActionButton extends StatelessWidget {
-  const _RecoveryActionButton({
-    required this.label,
-    required this.icon,
-    required this.onTap,
-    this.emphasized = false,
-  });
-
-  final String label;
-  final IconData icon;
-  final VoidCallback onTap;
-  final bool emphasized;
-
-  @override
-  Widget build(BuildContext context) {
-    final backgroundColor = emphasized ? AppColors.accent : Colors.white.withOpacity(0.1);
-    final foregroundColor = emphasized ? Colors.black : Colors.white;
-
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        height: 48,
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        decoration: BoxDecoration(
-          color: backgroundColor,
-          borderRadius: BorderRadius.circular(24),
-          border: Border.all(color: Colors.white.withOpacity(emphasized ? 0 : 0.14)),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(icon, color: foregroundColor, size: 20),
-            const SizedBox(width: 9),
-            Flexible(
-              child: Text(
-                label,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  color: foregroundColor,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w900,
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _CaptureButton extends StatelessWidget {
-  const _CaptureButton({
-    required this.onTap,
-    required this.isProcessing,
-  });
-
-  final VoidCallback onTap;
-  final bool isProcessing;
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        width: 116,
-        height: 116,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          border: Border.all(color: Colors.white, width: 6),
-        ),
-        alignment: Alignment.center,
-        child: isProcessing
-            ? const SizedBox(
-                width: 42,
-                height: 42,
-                child: CircularProgressIndicator(color: Colors.white, strokeWidth: 4),
-              )
-            : Container(
-                width: 78,
-                height: 78,
-                decoration: const BoxDecoration(color: Colors.white, shape: BoxShape.circle),
-                child: const Icon(
-                  Icons.document_scanner_outlined,
-                  color: Colors.black,
-                  size: 30,
-                ),
-              ),
-      ),
-    );
-  }
-}
-
-class _SelectedImageLabel extends StatelessWidget {
-  const _SelectedImageLabel({required this.imagePath});
-
-  final String imagePath;
-
-  @override
-  Widget build(BuildContext context) {
-    final normalizedPath = imagePath.replaceAll('\\', '/');
-    final fileName = normalizedPath.split('/').last;
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 44),
-      child: Text(
-        fileName,
-        maxLines: 1,
-        overflow: TextOverflow.ellipsis,
-        textAlign: TextAlign.center,
-        style: const TextStyle(
-          color: Color(0xFFC6C6C8),
-          fontSize: 13,
-          fontWeight: FontWeight.w700,
-        ),
-      ),
-    );
   }
 }
