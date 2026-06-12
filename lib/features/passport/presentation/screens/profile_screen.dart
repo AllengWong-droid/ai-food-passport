@@ -114,7 +114,7 @@ class ProfileScreen extends ConsumerWidget {
 }
 
 void _updateTravelerSettings(WidgetRef ref, TravelerSettingsModel settings) {
-  ref.read(travelerSettingsProvider.notifier).state = settings;
+  ref.read(travelerSettingsProvider.notifier).update(settings);
 }
 
 String _providerModeLabel(AiProviderMode mode) {

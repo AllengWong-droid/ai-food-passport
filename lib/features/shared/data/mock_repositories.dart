@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../domain/models/models.dart';
 import '../domain/repositories/repositories.dart';
 import 'mock_data.dart';
+import 'traveler_settings_controller.dart';
 
 final authRepositoryProvider = Provider<AuthRepository>((ref) {
   return MockAuthRepository();
@@ -32,13 +33,9 @@ final priceRepositoryProvider = Provider<PriceRepository>((ref) {
   return MockPriceRepository();
 });
 
-final travelerSettingsProvider = StateProvider<TravelerSettingsModel>((ref) {
-  return const TravelerSettingsModel(
-    homeCountry: 'Germany',
-    homeCurrency: 'EUR',
-    outputLanguage: 'English',
-    providerMode: AiProviderMode.mock,
-  );
+final travelerSettingsProvider =
+    StateNotifierProvider<TravelerSettingsController, TravelerSettingsModel>((ref) {
+  return TravelerSettingsController();
 });
 
 final currentUserProvider = Provider<UserModel>((ref) {
