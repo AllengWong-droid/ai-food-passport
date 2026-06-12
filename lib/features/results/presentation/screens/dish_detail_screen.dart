@@ -11,6 +11,7 @@ import '../../../../core/widgets/section_header.dart';
 import '../../../shared/data/mock_repositories.dart';
 import '../../../shared/domain/models/dish_analysis_model.dart';
 import '../../../shared/domain/models/price_intelligence_model.dart';
+import '../../../shared/presentation/localized_result_copy.dart';
 
 class DishDetailScreen extends ConsumerWidget {
   const DishDetailScreen({required this.dishId, super.key});
@@ -20,6 +21,8 @@ class DishDetailScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final dish = ref.watch(dishByIdProvider(dishId));
+    final aiRequest = ref.watch(latestAiAnalysisRequestProvider);
+    final copy = LocalizedResultCopy(aiRequest?.outputLanguage ?? 'English');
 
     return Scaffold(
       appBar: AppBar(
@@ -40,7 +43,7 @@ class DishDetailScreen extends ConsumerWidget {
         child: ListView(
           padding: const EdgeInsets.fromLTRB(45, 4, 45, 40),
           children: [
-            const SectionHeader('Dish Detail'),
+            SectionHeader(copy.dishDetailTitle),
             const SizedBox(height: 12),
             Text(dish.dishName, style: AppTextStyles.title.copyWith(fontSize: 36)),
             const SizedBox(height: 8),
@@ -53,22 +56,22 @@ class DishDetailScreen extends ConsumerWidget {
               ),
             ),
             const SizedBox(height: 24),
-            _HeroDishPanel(dish: dish),
+            _HeroDishPanel(dish: dish, copy: copy),
             const SizedBox(height: 18),
             const DisclaimerBanner(),
             const SizedBox(height: 18),
             _InfoPanel(
-              title: 'Recommendation Reason',
+              title: copy.recommendationTitle,
               child: Text(dish.recommendationReason, style: AppTextStyles.body),
             ),
-            _InfoPanel(title: 'Ingredients', child: _TokenWrap(values: dish.ingredients)),
+            _InfoPanel(title: copy.ingredientsTitle, child: _TokenWrap(values: dish.ingredients)),
             _InfoPanel(
-              title: 'Hidden Ingredient Watch',
+              title: copy.hiddenIngredientTitle,
               child: _TokenWrap(values: dish.hiddenIngredients, tone: ScoreBadgeTone.warning),
             ),
             _InfoPanel(
-              title: 'Price Intelligence',
-              child: _PriceIntelligenceDetail(price: dish.priceIntelligence),
+              title: copy.priceIntelligenceTitle,
+              child: _PriceIntelligenceDetail(price: dish.priceIntelligence, copy: copy),
             ),
           ],
         ),
@@ -78,9 +81,10 @@ class DishDetailScreen extends ConsumerWidget {
 }
 
 class _PriceIntelligenceDetail extends StatelessWidget {
-  const _PriceIntelligenceDetail({required this.price});
+  const _PriceIntelligenceDetail({required this.price, required this.copy});
 
   final PriceIntelligenceModel price;
+  final LocalizedResultCopy copy;
 
   @override
   Widget build(BuildContext context) {
@@ -91,40 +95,27 @@ class _PriceIntelligenceDetail extends StatelessWidget {
           spacing: 8,
           runSpacing: 8,
           children: [
-            ScoreBadge(label: price.assessment.label.toUpperCase(), tone: ScoreBadgeTone.value),
-            ScoreBadge(label: 'VALUE SIGNAL', tone: ScoreBadgeTone.muted),
+            ScoreBadge(label: copy.assessmentLabel(price.assessment), tone: ScoreBadgeTone.value),
+            ScoreBadge(label: copy.valueSignalLabel, tone: ScoreBadgeTone.muted),
           ],
         ),
         const SizedBox(height: 18),
         _PriceLine(
-          label: 'Local menu price',
+          label: copy.localMenuPriceLabel,
           value: _formatMoney(price.localPrice, price.localCurrency),
         ),
         _PriceLine(
-          label: 'Your ${price.homeCurrency} price',
-          value: 'approx ${_formatMoney(price.homePrice, price.homeCurrency)}',
+          label: copy.yourCurrencyPriceLabel(price.homeCurrency),
+          value: '${copy.approximate} ${_formatMoney(price.homePrice, price.homeCurrency)}',
         ),
         _PriceLine(
-          label: 'Exchange rate',
+          label: copy.exchangeRateLabel,
           value: '1 ${price.localCurrency} = ${price.exchangeRate} ${price.homeCurrency}',
         ),
         const SizedBox(height: 12),
-        Text(_valueExplanation(price), style: AppTextStyles.body),
+        Text(copy.valueExplanation(price.assessment), style: AppTextStyles.body),
       ],
     );
-  }
-
-  String _valueExplanation(PriceIntelligenceModel price) {
-    return switch (price.assessment) {
-      PriceAssessment.cheap =>
-        'This looks inexpensive for the local menu context and may be a budget-friendly pick.',
-      PriceAssessment.fair =>
-        'This price looks reasonable after converting it into your selected home currency.',
-      PriceAssessment.expensive =>
-        'This is relatively expensive, so order it for experience rather than pure value.',
-      PriceAssessment.goodValue =>
-        'This looks like a strong value: the converted price is low for the dish quality and portion expectation.',
-    };
   }
 }
 
@@ -182,9 +173,10 @@ String _formatMoney(num amount, String currency) {
 }
 
 class _HeroDishPanel extends StatelessWidget {
-  const _HeroDishPanel({required this.dish});
+  const _HeroDishPanel({required this.dish, required this.copy});
 
   final DishAnalysisModel dish;
+  final LocalizedResultCopy copy;
 
   @override
   Widget build(BuildContext context) {
@@ -218,11 +210,11 @@ class _HeroDishPanel extends StatelessWidget {
             spacing: 8,
             runSpacing: 8,
             children: [
-              ScoreBadge(label: 'TASTE ${dish.tasteScore}%', tone: ScoreBadgeTone.match),
-              ScoreBadge(label: 'SAFETY ${dish.safetyScore}%', tone: ScoreBadgeTone.safe),
-              ScoreBadge(label: 'VALUE ${dish.valueScore}%', tone: ScoreBadgeTone.value),
+              ScoreBadge(label: '${copy.tasteLabel} ${dish.tasteScore}%', tone: ScoreBadgeTone.match),
+              ScoreBadge(label: '${copy.safetyLabel} ${dish.safetyScore}%', tone: ScoreBadgeTone.safe),
+              ScoreBadge(label: '${copy.valueLabel} ${dish.valueScore}%', tone: ScoreBadgeTone.value),
               ScoreBadge(
-                label: 'CONFIDENCE ${dish.foodConfidenceScore}%',
+                label: '${copy.confidenceLabel} ${dish.foodConfidenceScore}%',
                 tone: ScoreBadgeTone.muted,
               ),
             ],

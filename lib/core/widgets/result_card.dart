@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../app/theme/app_colors.dart';
 import '../../features/shared/domain/models/dish_analysis_model.dart';
 import '../../features/shared/domain/models/price_intelligence_model.dart';
+import '../../features/shared/presentation/localized_result_copy.dart';
 import 'score_badge.dart';
 
 class ResultCard extends StatelessWidget {
@@ -10,12 +11,14 @@ class ResultCard extends StatelessWidget {
     required this.dish,
     required this.onTap,
     this.elevated = false,
+    this.copy = const LocalizedResultCopy('English'),
     super.key,
   });
 
   final DishAnalysisModel dish;
   final VoidCallback onTap;
   final bool elevated;
+  final LocalizedResultCopy copy;
 
   @override
   Widget build(BuildContext context) {
@@ -50,9 +53,9 @@ class ResultCard extends StatelessWidget {
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  ScoreBadge(label: 'TASTE ${dish.tasteScore}%', tone: matchTone),
+                  ScoreBadge(label: '${copy.tasteLabel} ${dish.tasteScore}%', tone: matchTone),
                   const Spacer(),
-                  _PriceSummary(price: price),
+                  _PriceSummary(price: price, copy: copy),
                 ],
               ),
               const SizedBox(height: 22),
@@ -112,17 +115,20 @@ class ResultCard extends StatelessWidget {
                 runSpacing: 8,
                 children: [
                   ScoreBadge(
-                    label: 'SAFETY ${dish.safetyScore}%',
+                    label: '${copy.safetyLabel} ${dish.safetyScore}%',
                     tone: safetyTone,
                   ),
-                  ScoreBadge(label: 'VALUE ${dish.valueScore}%', tone: ScoreBadgeTone.value),
                   ScoreBadge(
-                    label: price.assessment.label.toUpperCase(),
+                    label: '${copy.valueLabel} ${dish.valueScore}%',
+                    tone: ScoreBadgeTone.value,
+                  ),
+                  ScoreBadge(
+                    label: copy.assessmentLabel(price.assessment),
                     tone: ScoreBadgeTone.value,
                   ),
                   if (dish.hiddenIngredients.isNotEmpty)
                     ScoreBadge(
-                      label: 'HIDDEN WATCH',
+                      label: copy.hiddenWatchLabel,
                       tone: ScoreBadgeTone.warning,
                       icon: Icons.warning_amber_rounded,
                     ),
@@ -155,9 +161,10 @@ class ResultCard extends StatelessWidget {
 }
 
 class _PriceSummary extends StatelessWidget {
-  const _PriceSummary({required this.price});
+  const _PriceSummary({required this.price, required this.copy});
 
   final PriceIntelligenceModel price;
+  final LocalizedResultCopy copy;
 
   @override
   Widget build(BuildContext context) {
@@ -175,7 +182,7 @@ class _PriceSummary extends StatelessWidget {
         ),
         const SizedBox(height: 6),
         Text(
-          'approx ${_formatMoney(price.homePrice, price.homeCurrency)}',
+          '${copy.approximate} ${_formatMoney(price.homePrice, price.homeCurrency)}',
           style: const TextStyle(
             color: AppColors.softInk,
             fontSize: 13,

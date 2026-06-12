@@ -10,6 +10,7 @@ import '../../../../core/widgets/disclaimer_banner.dart';
 import '../../../../core/widgets/result_card.dart';
 import '../../../../core/widgets/section_header.dart';
 import '../../../shared/data/mock_repositories.dart';
+import '../../../shared/presentation/localized_result_copy.dart';
 
 class ResultsScreen extends ConsumerWidget {
   const ResultsScreen({super.key});
@@ -19,6 +20,7 @@ class ResultsScreen extends ConsumerWidget {
     final dishes = ref.watch(dishAnalysesProvider);
     final ocrResult = ref.watch(latestOcrResultProvider);
     final aiRequest = ref.watch(latestAiAnalysisRequestProvider);
+    final copy = LocalizedResultCopy(aiRequest?.outputLanguage ?? 'English');
 
     return Scaffold(
       body: SafeArea(
@@ -49,7 +51,7 @@ class ResultsScreen extends ConsumerWidget {
             const SectionHeader('Tokyo - Izakaya Gonpachi'),
             const SizedBox(height: 14),
             Text(
-              'Ranked by taste,\nsafety, and value.',
+              copy.resultsTitle,
               style: AppTextStyles.title.copyWith(fontSize: 36, height: 1.26),
             ),
             if (aiRequest != null) ...[
@@ -57,6 +59,7 @@ class ResultsScreen extends ConsumerWidget {
               _TravelerContextSummary(
                 homeCurrency: aiRequest.userHomeCurrency,
                 homeCountry: aiRequest.userHomeCountry,
+                copy: copy,
               ),
             ],
             const SizedBox(height: 34),
@@ -64,6 +67,7 @@ class ResultsScreen extends ConsumerWidget {
               ResultCard(
                 dish: dishes[i],
                 elevated: i == 0,
+                copy: copy,
                 onTap: () => context.pushNamed(
                   RouteNames.dishDetail,
                   pathParameters: {'dishId': dishes[i].id},
@@ -111,10 +115,12 @@ class _TravelerContextSummary extends StatelessWidget {
   const _TravelerContextSummary({
     required this.homeCurrency,
     required this.homeCountry,
+    required this.copy,
   });
 
   final String homeCurrency;
   final String homeCountry;
+  final LocalizedResultCopy copy;
 
   @override
   Widget build(BuildContext context) {
@@ -142,7 +148,7 @@ class _TravelerContextSummary extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Prices converted to $homeCurrency',
+                  copy.pricesConvertedTo(homeCurrency),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
@@ -154,7 +160,7 @@ class _TravelerContextSummary extends StatelessWidget {
                 ),
                 const SizedBox(height: 5),
                 Text(
-                  'Based on your traveler profile from $homeCountry',
+                  copy.basedOnTravelerProfile(homeCountry),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
