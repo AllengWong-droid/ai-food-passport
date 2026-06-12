@@ -24,6 +24,7 @@ class _ScanScreenState extends ConsumerState<ScanScreen> {
   String? _selectedImagePath;
   Uint8List? _selectedImageBytes;
   String? _processingMessage;
+  _ScanRecoveryState? _recoveryState;
   bool _isProcessing = false;
 
   bool get _hasSelectedImage => _selectedImageBytes != null;
@@ -130,6 +131,13 @@ class _ScanScreenState extends ConsumerState<ScanScreen> {
                       _ScanProcessingOverlay(
                         message: _processingMessage ?? 'Reading menu image',
                       ),
+                    if (_recoveryState != null)
+                      _ScanRecoveryOverlay(
+                        state: _recoveryState!,
+                        onRetry: _retryScan,
+                        onChooseImage: _chooseAnotherImage,
+                        onContinueSample: _continueWithSampleResult,
+                      ),
                   ],
                 );
               },
@@ -152,11 +160,37 @@ class _ScanScreenState extends ConsumerState<ScanScreen> {
     setState(() {
       _selectedImagePath = imagePath;
       _selectedImageBytes = imageBytes;
+      _recoveryState = null;
     });
   }
 
   void _startScan() {
     _processSelectedImage(_selectedImagePath ?? _mockScanImagePath);
+  }
+
+  void _retryScan() {
+    _clearRecoveryState();
+    _startScan();
+  }
+
+  void _chooseAnotherImage() {
+    _clearRecoveryState();
+    _selectImageFromGallery();
+  }
+
+  void _continueWithSampleResult() {
+    _clearRecoveryState();
+    _processSelectedImage(_mockScanImagePath);
+  }
+
+  void _clearRecoveryState() {
+    if (!mounted) {
+      return;
+    }
+
+    setState(() {
+      _recoveryState = null;
+    });
   }
 
   Future<void> _processSelectedImage(String imagePath) async {
@@ -167,6 +201,7 @@ class _ScanScreenState extends ConsumerState<ScanScreen> {
     setState(() {
       _isProcessing = true;
       _processingMessage = 'Reading menu image';
+      _recoveryState = null;
     });
 
     final scanRepository = ref.read(scanRepositoryProvider);
@@ -181,7 +216,13 @@ class _ScanScreenState extends ConsumerState<ScanScreen> {
       ref.read(latestScanProvider.notifier).state = scan;
 
       await _showProcessingStage('Recognizing dishes', pause: Duration.zero);
-      final ocrResult = await ocrRepository.extractText(scan.imagePath);
+      final OcrResult ocrResult;
+      try {
+        ocrResult = await ocrRepository.extractText(scan.imagePath);
+      } catch (_) {
+        _showRecoveryState(_ScanRecoveryKind.ocrFailed);
+        return;
+      }
       ref.read(latestOcrResultProvider.notifier).state = ocrResult;
 
       await _showProcessingStage('Checking taste and allergy fit', pause: Duration.zero);
@@ -196,8 +237,13 @@ class _ScanScreenState extends ConsumerState<ScanScreen> {
         localCurrency: scan.localCurrency,
       );
       ref.read(latestAiAnalysisRequestProvider.notifier).state = analysisRequest;
-      ref.read(dishAnalysesProvider.notifier).state =
-          await aiRepository.analyzeMenu(analysisRequest);
+      try {
+        ref.read(dishAnalysesProvider.notifier).state =
+            await aiRepository.analyzeMenu(analysisRequest);
+      } catch (_) {
+        _showRecoveryState(_ScanRecoveryKind.aiAnalysisFailed);
+        return;
+      }
 
       await _showProcessingStage('Comparing local prices');
       await _showProcessingStage('Preparing recommendations');
@@ -205,6 +251,8 @@ class _ScanScreenState extends ConsumerState<ScanScreen> {
       if (mounted) {
         context.goNamed(RouteNames.results);
       }
+    } catch (_) {
+      _showRecoveryState(_ScanRecoveryKind.providerUnavailable);
     } finally {
       if (mounted) {
         setState(() {
@@ -229,6 +277,61 @@ class _ScanScreenState extends ConsumerState<ScanScreen> {
 
     if (pause != Duration.zero) {
       await Future<void>.delayed(pause);
+    }
+  }
+
+  void _showRecoveryState(_ScanRecoveryKind kind) {
+    if (!mounted) {
+      return;
+    }
+
+    setState(() {
+      _recoveryState = _ScanRecoveryState(kind);
+    });
+  }
+}
+
+enum _ScanRecoveryKind {
+  ocrFailed,
+  aiAnalysisFailed,
+  networkUnavailable,
+  providerUnavailable,
+  fallbackUsed,
+}
+
+class _ScanRecoveryState {
+  const _ScanRecoveryState(this.kind);
+
+  final _ScanRecoveryKind kind;
+  bool get retryAvailable => true;
+
+  String get title {
+    switch (kind) {
+      case _ScanRecoveryKind.ocrFailed:
+        return 'We could not read this menu clearly';
+      case _ScanRecoveryKind.aiAnalysisFailed:
+        return 'We could not finish the food match';
+      case _ScanRecoveryKind.networkUnavailable:
+        return 'Connection looks unavailable';
+      case _ScanRecoveryKind.providerUnavailable:
+        return 'Menu analysis is taking too long';
+      case _ScanRecoveryKind.fallbackUsed:
+        return 'We used a backup route';
+    }
+  }
+
+  String get message {
+    switch (kind) {
+      case _ScanRecoveryKind.ocrFailed:
+        return 'Try another photo or continue with a sample analysis.';
+      case _ScanRecoveryKind.aiAnalysisFailed:
+        return 'You can retry the analysis or continue with sample recommendations.';
+      case _ScanRecoveryKind.networkUnavailable:
+        return 'Check your connection, try again, or continue with sample results.';
+      case _ScanRecoveryKind.providerUnavailable:
+        return 'Try again in a moment or continue with sample recommendations.';
+      case _ScanRecoveryKind.fallbackUsed:
+        return 'A primary provider was unavailable, so a backup route prepared the result.';
     }
   }
 }
@@ -618,6 +721,158 @@ class _ScanProcessingOverlay extends StatelessWidget {
               ),
             ),
           ),
+        ),
+      ),
+    );
+  }
+}
+
+class _ScanRecoveryOverlay extends StatelessWidget {
+  const _ScanRecoveryOverlay({
+    required this.state,
+    required this.onRetry,
+    required this.onChooseImage,
+    required this.onContinueSample,
+  });
+
+  final _ScanRecoveryState state;
+  final VoidCallback onRetry;
+  final VoidCallback onChooseImage;
+  final VoidCallback onContinueSample;
+
+  @override
+  Widget build(BuildContext context) {
+    return Positioned.fill(
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          color: Colors.black.withOpacity(0.76),
+        ),
+        child: SafeArea(
+          child: Center(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 30),
+              child: Container(
+                padding: const EdgeInsets.fromLTRB(22, 24, 22, 20),
+                decoration: BoxDecoration(
+                  color: const Color(0xFF2D2118).withOpacity(0.96),
+                  borderRadius: BorderRadius.circular(28),
+                  border: Border.all(color: Colors.white.withOpacity(0.14)),
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      width: 58,
+                      height: 58,
+                      decoration: const BoxDecoration(
+                        color: AppColors.accent,
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(
+                        Icons.travel_explore,
+                        color: Colors.black,
+                        size: 29,
+                      ),
+                    ),
+                    const SizedBox(height: 18),
+                    Text(
+                      state.title,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 21,
+                        height: 1.16,
+                        fontWeight: FontWeight.w900,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    Text(
+                      state.message,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        color: Color(0xFFC6C6C8),
+                        fontSize: 14,
+                        height: 1.36,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    const SizedBox(height: 22),
+                    if (state.retryAvailable)
+                      _RecoveryActionButton(
+                        label: 'Try again',
+                        icon: Icons.refresh,
+                        onTap: onRetry,
+                        emphasized: true,
+                      ),
+                    const SizedBox(height: 10),
+                    _RecoveryActionButton(
+                      label: 'Choose another image',
+                      icon: Icons.photo_library_outlined,
+                      onTap: onChooseImage,
+                    ),
+                    const SizedBox(height: 10),
+                    _RecoveryActionButton(
+                      label: 'Continue with sample result',
+                      icon: Icons.restaurant_menu,
+                      onTap: onContinueSample,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _RecoveryActionButton extends StatelessWidget {
+  const _RecoveryActionButton({
+    required this.label,
+    required this.icon,
+    required this.onTap,
+    this.emphasized = false,
+  });
+
+  final String label;
+  final IconData icon;
+  final VoidCallback onTap;
+  final bool emphasized;
+
+  @override
+  Widget build(BuildContext context) {
+    final backgroundColor = emphasized ? AppColors.accent : Colors.white.withOpacity(0.1);
+    final foregroundColor = emphasized ? Colors.black : Colors.white;
+
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        height: 48,
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        decoration: BoxDecoration(
+          color: backgroundColor,
+          borderRadius: BorderRadius.circular(24),
+          border: Border.all(color: Colors.white.withOpacity(emphasized ? 0 : 0.14)),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(icon, color: foregroundColor, size: 20),
+            const SizedBox(width: 9),
+            Flexible(
+              child: Text(
+                label,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  color: foregroundColor,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w900,
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
