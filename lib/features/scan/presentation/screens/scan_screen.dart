@@ -213,7 +213,6 @@ class _ScanScreenState extends ConsumerState<ScanScreen> {
     final scanRepository = ref.read(scanRepositoryProvider);
     final ocrRepository = ref.read(ocrRepositoryProvider);
     final aiRepository = ref.read(aiRepositoryProvider);
-    final user = ref.read(currentUserProvider);
     final tastePassport = ref.read(tastePassportProvider);
     final travelerSettings = ref.read(travelerSettingsProvider);
 
@@ -237,8 +236,8 @@ class _ScanScreenState extends ConsumerState<ScanScreen> {
         ocrResult: ocrResult,
         tastePassport: tastePassport,
         scan: scan,
-        userHomeCountry: user.homeCountry,
-        userHomeCurrency: user.homeCurrency,
+        userHomeCountry: travelerSettings.homeCountry,
+        userHomeCurrency: travelerSettings.homeCurrency,
         restaurantCountry: scan.restaurantCountry,
         restaurantCity: scan.restaurantCity,
         localCurrency: scan.localCurrency,
