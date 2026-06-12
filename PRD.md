@@ -1,308 +1,72 @@
-\# AI Food Passport for Travelers - Product Requirements Document (V1)
+# AI Food Passport - Product Requirements Document
 
+## Product Vision
 
+AI Food Passport helps international travelers understand unfamiliar restaurant menus, avoid food risks, discover dishes they are likely to enjoy, and make smarter dining decisions abroad.
 
-\## Product Vision
+Tagline: Travel Smarter. Eat Better.
 
+## Target Users
 
+- International travelers
+- Business travelers
+- Digital nomads
+- Food enthusiasts
 
-AI Food Passport helps international travelers understand foreign menus, avoid food risks, discover dishes they will enjoy, and make smarter spending decisions when dining abroad.
+## Core Problems
 
+Travelers often cannot confidently:
 
+- Understand foreign menu items
+- Identify ingredients
+- Detect allergens or hidden risk
+- Compare prices in local and home currency
+- Decide what to order based on personal taste
 
-Tagline:
+## MVP Alpha Scope
 
+The MVP Alpha demonstrates the end-to-end user flow with real image selection and mock intelligence layers.
 
+Implemented:
 
-Travel Smarter. Eat Better.
+- Taste Passport setup UI
+- Home, Scan, Results, Dish Detail, and Profile screens
+- Gallery image selection
+- Selected image preview
+- Typed `ScanModel`
+- Mock OCR adapter returning typed OCR results
+- OCR Debug section
+- Typed AI analysis request model
+- Mock AI repository returning dish analysis results
+- AI Debug section
+- OpenAI prompt builder, response schema, parser, and disabled repository skeleton
 
+Not implemented:
 
+- Firebase
+- Real OCR
+- Real OpenAI calls
+- API keys
+- Backend proxy
+- Subscriptions
+- Persistent user accounts or scan history
 
-\---
+## Main User Flow
 
+1. User opens app.
+2. User enters or uses demo taste passport.
+3. User selects a menu image.
+4. App previews the image.
+5. Mock OCR extracts menu text.
+6. Mock AI analyzes dishes using OCR text and taste passport context.
+7. User reviews ranked results.
+8. User opens Dish Detail.
 
+## Future Production Features
 
-\## Target Users
-
-
-
-Primary Users:
-
-
-
-\* International travelers
-
-\* Business travelers
-
-\* Digital nomads
-
-\* Food enthusiasts
-
-
-
-Age:
-
-
-
-25-55
-
-
-
-Countries:
-
-
-
-\* USA
-
-\* Canada
-
-\* UK
-
-\* Australia
-
-\* Germany
-
-\* France
-
-\* Singapore
-
-\* Japan
-
-
-
-\---
-
-
-
-\## Core Problems
-
-
-
-Travelers often:
-
-
-
-\* Cannot understand menu items
-
-\* Cannot identify ingredients
-
-\* Cannot detect allergens
-
-\* Cannot determine if prices are reasonable
-
-\* Cannot decide what to order
-
-
-
-\---
-
-
-
-\## MVP Features
-
-
-
-\### 1. Taste Passport
-
-
-
-User defines:
-
-
-
-\* Home Country
-
-\* Home Currency
-
-\* Travel Style
-
-\* Dietary Preferences
-
-\* Allergies
-
-\* Taste Preferences
-
-
-
-\---
-
-
-
-\### 2. Menu Scan
-
-
-
-User scans a restaurant menu.
-
-
-
-System extracts:
-
-
-
-\* Dish Name
-
-\* Description
-
-\* Price
-
-\* Currency
-
-
-
-\---
-
-
-
-\### 3. Dish Intelligence
-
-
-
-Display:
-
-
-
-\* Dish explanation
-
-\* Ingredients
-
-\* Cooking style
-
-\* Dietary suitability
-
-
-
-\---
-
-
-
-\### 4. Allergy Intelligence
-
-
-
-Display:
-
-
-
-\* Allergens detected
-
-\* Risk level
-
-\* Safety Score
-
-
-
-\---
-
-
-
-\### 5. AI Recommendation
-
-
-
-Rank dishes based on:
-
-
-
-\* Taste Match
-
-\* Allergies
-
-\* Preferences
-
-\* Previous behavior
-
-
-
-\---
-
-
-
-\### 6. Price Intelligence
-
-
-
-Display:
-
-
-
-\* Local price
-
-\* Home currency conversion
-
-\* Cheap / Fair / Expensive
-
-\* Value Score
-
-
-
-\---
-
-
-
-\## Main Pages
-
-
-
-1\. Onboarding
-
-2\. Passport Setup
-
-3\. Home
-
-4\. Camera Scan
-
-5\. Results
-
-6\. Dish Detail
-
-7\. Profile
-
-
-
-\---
-
-
-
-\## Monetization
-
-
-
-Free Plan:
-
-
-
-\* 5 scans per day
-
-
-
-Premium:
-
-
-
-\* Unlimited scans
-
-\* Advanced recommendations
-
-\* Travel statistics
-
-\* Price intelligence history
-
-
-
-Subscription:
-
-
-
-$4.99/month
-
-
-
-or
-
-
-
-$39.99/year
-
-
-
+- Real OCR provider
+- Backend OpenAI proxy
+- Firebase Auth and persistence
+- Saved scans and travel history
+- Real price intelligence
+- Subscription and App Store purchase flow

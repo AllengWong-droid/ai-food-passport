@@ -1,196 +1,64 @@
-\# AI Food Passport - Technical Architecture
+# AI Food Passport - Technical Architecture
 
+## Current MVP Alpha Stack
 
+- Flutter
+- Dart
+- Riverpod
+- GoRouter
+- image_picker
 
-\## Frontend
+## Current Architecture
 
+The app uses a feature-based structure with shared domain models and repository interfaces.
 
+Key folders:
 
-Framework:
+- `lib/features/shared/domain/models/`
+- `lib/features/shared/domain/repositories/`
+- `lib/features/shared/data/`
+- `lib/features/shared/data/ai/`
 
+## Implemented Repository Interfaces
 
+- `AuthRepository`
+- `PassportRepository`
+- `ScanRepository`
+- `OcrRepository`
+- `AiRepository`
+- `PriceRepository`
 
-Flutter
+## Active Implementations
 
+- Mock auth/passport/scan repositories
+- Mock OCR repository
+- Mock AI repository
+- Mock price repository
 
+## Prepared But Disabled
 
-State Management:
+- `OpenAiMenuAnalysisRepository`
+- `OpenAiMenuPromptBuilder`
+- `OpenAiMenuResponseSchema`
+- `OpenAiMenuResponseParser`
 
+The OpenAI skeleton does not call the network and is not the default provider.
 
+## Not Yet Implemented
 
-Riverpod
+- Firebase Auth
+- Firestore
+- Firebase Storage
+- Firebase Analytics
+- Firebase Crashlytics
+- Real OCR
+- Real OpenAI API integration
+- Backend API proxy
+- Apple In-App Purchase
+- Android/iOS production deployment
 
+## Future Architecture Direction
 
+Real OpenAI calls should be made through a backend proxy, not directly from Flutter. API keys must never be stored in client code.
 
-Navigation:
-
-
-
-GoRouter
-
-
-
-\---
-
-
-
-\## Backend
-
-
-
-Firebase
-
-
-
-Services:
-
-
-
-\* Firebase Auth
-
-\* Firestore
-
-\* Firebase Storage
-
-\* Firebase Analytics
-
-\* Firebase Crashlytics
-
-
-
-\---
-
-
-
-\## Authentication
-
-
-
-\* Apple Sign In
-
-\* Google Sign In
-
-\* Email Login
-
-
-
-\---
-
-
-
-\## OCR
-
-
-
-Primary:
-
-
-
-Apple Vision OCR
-
-
-
-Languages:
-
-
-
-\* Japanese
-
-\* Chinese
-
-\* English
-
-
-
-\---
-
-
-
-\## AI Layer
-
-
-
-OpenAI API
-
-
-
-Functions:
-
-
-
-\* Dish Understanding
-
-\* Ingredient Analysis
-
-\* Allergy Detection
-
-\* Recommendation Engine
-
-\* Price Intelligence
-
-
-
-\---
-
-
-
-\## Payment
-
-
-
-Apple In-App Purchase
-
-
-
-\---
-
-
-
-\## Deployment
-
-
-
-Phase 1:
-
-
-
-iOS Only
-
-
-
-Phase 2:
-
-
-
-Android
-
-
-
-\---
-
-
-
-\## Architecture Pattern
-
-
-
-Clean Architecture
-
-
-
-Feature-Based Structure
-
-
-
-Repository Pattern
-
-
-
-Dependency Injection
-
-
-
-Production Ready
-
-
-
+Real OCR should be introduced behind `OcrRepository`, allowing Apple Vision, Google ML Kit, cloud OCR, or another provider to replace the mock adapter.

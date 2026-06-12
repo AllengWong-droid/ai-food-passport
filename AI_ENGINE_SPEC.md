@@ -1,222 +1,94 @@
-\# AI Food Passport - AI Engine Specification
+# AI Food Passport - AI Engine Specification
 
+## Current State
 
+The MVP Alpha uses `MockAiRepository` as the active AI engine. It accepts a typed `AiAnalysisRequest` and returns `List<DishAnalysisModel>`.
 
-\## Core Scores
+The OpenAI adapter is prepared but disabled:
 
+- No real OpenAI API calls
+- No API keys
+- No client-side secrets
+- No network calls from the OpenAI skeleton
 
+## Input Model
 
-\### Taste Score
+`AiAnalysisRequest` includes:
 
+- OCR result
+- Taste passport
+- Scan model
+- User home country
+- User home currency
+- Restaurant country
+- Restaurant city
+- Local currency
 
+## Output Model
 
-Range:
+The AI layer currently returns `List<DishAnalysisModel>`.
 
+Each dish includes:
 
+- Dish name
+- Description
+- Ingredients
+- Allergens
+- Taste score
+- Safety score
+- Value score
+- Recommendation reason
+- Price intelligence
 
-0-100
+## Score Definitions
 
+### Taste Score
 
+Range: 0-100
 
-Factors:
+Represents likely fit with the user's taste preferences.
 
+### Safety Score
 
+Range: 0-100
 
-\* Cuisine preference
+Represents likely allergen and dietary safety. This is not medical advice.
 
-\* Ingredient preference
+### Value Score
 
-\* Past behavior
+Range: 0-100
 
-\* Travel profile
+Represents perceived value using local price, home currency, and travel context.
 
+## Future OpenAI Response Shape
 
+The prepared parser expects a JSON-like object:
 
-Interpretation:
-
-
-
-90-100 = Excellent Match
-
-
-
-70-89 = Good Match
-
-
-
-50-69 = Moderate Match
-
-
-
-Below 50 = Poor Match
-
-
-
-\---
-
-
-
-\### Safety Score
-
-
-
-Range:
-
-
-
-0-100
-
-
-
-Factors:
-
-
-
-\* Allergens
-
-\* Dietary restrictions
-
-\* Ingredient uncertainty
-
-
-
-Interpretation:
-
-
-
-100 = Safe
-
-
-
-80-99 = Low Risk
-
-
-
-50-79 = Medium Risk
-
-
-
-Below 50 = High Risk
-
-
-
-\---
-
-
-
-\### Value Score
-
-
-
-Range:
-
-
-
-0-100
-
-
-
-Factors:
-
-
-
-\* Local average price
-
-\* Restaurant category
-
-\* Travel Style
-
-\* Portion expectations
-
-
-
-Interpretation:
-
-
-
-90-100 = Excellent Value
-
-
-
-70-89 = Good Value
-
-
-
-50-69 = Fair Value
-
-
-
-Below 50 = Poor Value
-
-
-
-\---
-
-
-
-\## Travel Style Profiles
-
-
-
-\### Budget Traveler
-
-
-
-Highly price sensitive
-
-
-
-\### Standard Traveler
-
-
-
-Balanced price/value
-
-
-
-\### Luxury Traveler
-
-
-
-Experience focused
-
-
-
-\---
-
-
-
-\## Required JSON Response
-
-
-
+```json
 {
-
-"dish\_name": "",
-
-"description": "",
-
-"taste\_score": 0,
-
-"safety\_score": 0,
-
-"value\_score": 0,
-
-"ingredients": \[],
-
-"allergens": \[],
-
-"dietary\_flags": \[],
-
-"price\_local": 0,
-
-"price\_home\_currency": 0,
-
-"price\_assessment": "",
-
-"recommendation\_reason": ""
-
+  "dishes": [
+    {
+      "dishName": "Sample Dish",
+      "description": "Short explanation",
+      "ingredients": ["Ingredient"],
+      "allergens": ["Allergen"],
+      "tasteScore": 90,
+      "safetyScore": 85,
+      "valueScore": 80,
+      "recommendationReason": "Why this dish fits",
+      "priceIntelligence": {
+        "localPrice": 1200,
+        "localCurrency": "JPY",
+        "homePrice": 8.1,
+        "homeCurrency": "USD",
+        "exchangeRate": 0.00675,
+        "assessment": "Fair"
+      }
+    }
+  ]
 }
+```
 
+## Future Integration Rule
 
-
+OpenAI should be integrated through a backend proxy. Flutter should send a typed request to the backend and receive structured dish results. API keys must stay server-side.
