@@ -9,6 +9,7 @@ import '../../../../app/theme/app_text_styles.dart';
 import '../../../../core/widgets/disclaimer_banner.dart';
 import '../../../../core/widgets/result_card.dart';
 import '../../../../core/widgets/section_header.dart';
+import '../../../shared/data/ai/backend_ai_config.dart';
 import '../../../shared/data/mock_repositories.dart';
 import '../../../shared/presentation/localized_result_copy.dart';
 
@@ -20,6 +21,8 @@ class ResultsScreen extends ConsumerWidget {
     final dishes = ref.watch(dishAnalysesProvider);
     final ocrResult = ref.watch(latestOcrResultProvider);
     final aiRequest = ref.watch(latestAiAnalysisRequestProvider);
+    final activeAiProvider = ref.watch(latestAiProviderLabelProvider);
+    final backendMockEnabled = ref.watch(backendMockModeProvider);
     final copy = LocalizedResultCopy(aiRequest?.outputLanguage ?? 'English');
 
     return Scaffold(
@@ -98,6 +101,8 @@ class ResultsScreen extends ConsumerWidget {
                   homeCurrency: aiRequest.userHomeCurrency,
                   outputLanguage: aiRequest.outputLanguage,
                   providerMode: aiRequest.providerMode.name,
+                  activeProvider: activeAiProvider,
+                  backendMockEnabled: backendMockEnabled,
                   dishCount: dishes.length,
                 ),
               const SizedBox(height: 18),
@@ -189,6 +194,8 @@ class _AiDebugSection extends StatelessWidget {
     required this.homeCurrency,
     required this.outputLanguage,
     required this.providerMode,
+    required this.activeProvider,
+    required this.backendMockEnabled,
     required this.dishCount,
   });
 
@@ -200,13 +207,15 @@ class _AiDebugSection extends StatelessWidget {
   final String homeCurrency;
   final String outputLanguage;
   final String providerMode;
+  final String activeProvider;
+  final bool backendMockEnabled;
   final int dishCount;
 
   @override
   Widget build(BuildContext context) {
     return _DebugExpansionPanel(
       title: 'AI Debug',
-      subtitle: '$dishCount dishes - mock_ai',
+      subtitle: '$dishCount dishes - $activeProvider',
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -217,9 +226,13 @@ class _AiDebugSection extends StatelessWidget {
           _DebugLine(label: 'Home country', value: homeCountry),
           _DebugLine(label: 'Home currency', value: homeCurrency),
           _DebugLine(label: 'Output language', value: outputLanguage),
-          const _DebugLine(label: 'Active provider', value: 'mock_ai'),
+          _DebugLine(label: 'Active provider', value: activeProvider),
           const _DebugLine(label: 'Backend mock adapter available', value: 'true'),
-          const _DebugLine(label: 'Backend mock enabled', value: 'false'),
+          _DebugLine(
+            label: 'Backend mock enabled',
+            value: backendMockEnabled ? 'true' : 'false',
+          ),
+          const _DebugLine(label: 'Backend base URL', value: BackendAiConfig.baseUrl),
           _DebugLine(label: 'Provider mode', value: providerMode),
           const _DebugLine(label: 'Backend routing planned', value: 'true'),
           const _DebugLine(label: 'OCR-first pipeline planned', value: 'true'),

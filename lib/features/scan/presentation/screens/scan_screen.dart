@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../../../app/router/route_names.dart';
+import '../../../shared/data/ai/backend_mock_menu_analysis_repository.dart';
 import '../../../shared/data/mock_repositories.dart';
 import '../../../shared/domain/models/models.dart';
 import '../widgets/scan_controls.dart';
@@ -186,7 +187,7 @@ class _ScanScreenState extends ConsumerState<ScanScreen> {
 
   void _continueWithSampleResult() {
     _clearRecoveryState();
-    _processSelectedImage(_mockScanImagePath);
+    _processSelectedImage(_mockScanImagePath, forceLocalMock: true);
   }
 
   void _clearRecoveryState() {
@@ -199,7 +200,10 @@ class _ScanScreenState extends ConsumerState<ScanScreen> {
     });
   }
 
-  Future<void> _processSelectedImage(String imagePath) async {
+  Future<void> _processSelectedImage(
+    String imagePath, {
+    bool forceLocalMock = false,
+  }) async {
     if (_isProcessing) {
       return;
     }
@@ -212,9 +216,14 @@ class _ScanScreenState extends ConsumerState<ScanScreen> {
 
     final scanRepository = ref.read(scanRepositoryProvider);
     final ocrRepository = ref.read(ocrRepositoryProvider);
-    final aiRepository = ref.read(aiRepositoryProvider);
+    final useBackendMock = !forceLocalMock && ref.read(backendMockModeProvider);
+    final aiRepository = useBackendMock
+        ? BackendMockMenuAnalysisRepository(enabled: true)
+        : ref.read(aiRepositoryProvider);
     final tastePassport = ref.read(tastePassportProvider);
     final travelerSettings = ref.read(travelerSettingsProvider);
+    ref.read(latestAiProviderLabelProvider.notifier).state =
+        useBackendMock ? 'backend_mock' : 'mock_ai';
 
     try {
       await _showProcessingStage('Reading menu image');

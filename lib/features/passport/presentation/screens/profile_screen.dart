@@ -17,6 +17,7 @@ class ProfileScreen extends ConsumerWidget {
     final user = ref.watch(currentUserProvider);
     final passport = ref.watch(tastePassportProvider);
     final travelerSettings = ref.watch(travelerSettingsProvider);
+    final backendMockEnabled = ref.watch(backendMockModeProvider);
 
     return Scaffold(
       body: SafeArea(
@@ -87,6 +88,17 @@ class ProfileScreen extends ConsumerWidget {
             const _SettingsHelperText(
               text: 'Provider mode is for future routing. Mock remains active in this MVP.',
             ),
+            const SizedBox(height: 10),
+            _DeveloperToggleTile(
+              title: 'Backend Mock Mode',
+              subtitle: backendMockEnabled
+                  ? 'Developer test mode. Uses the local backend mock server.'
+                  : 'Local mock AI is active. Backend server is not required.',
+              value: backendMockEnabled,
+              onChanged: (value) {
+                ref.read(backendMockModeProvider.notifier).state = value;
+              },
+            ),
             const SizedBox(height: 12),
             _ResetTravelerSettingsButton(
               onTap: () => _resetTravelerSettings(ref),
@@ -152,6 +164,72 @@ class _SettingsHelperText extends StatelessWidget {
         fontSize: 13,
         height: 1.35,
         fontWeight: FontWeight.w600,
+      ),
+    );
+  }
+}
+
+class _DeveloperToggleTile extends StatelessWidget {
+  const _DeveloperToggleTile({
+    required this.title,
+    required this.subtitle,
+    required this.value,
+    required this.onChanged,
+  });
+
+  final String title;
+  final String subtitle;
+  final bool value;
+  final ValueChanged<bool> onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.fromLTRB(18, 14, 14, 14),
+      decoration: BoxDecoration(
+        color: AppColors.accentSoft,
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(color: AppColors.border),
+      ),
+      child: Row(
+        children: [
+          const Icon(Icons.science_outlined, color: AppColors.ink, size: 22),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    color: AppColors.ink,
+                    fontSize: 15,
+                    fontWeight: FontWeight.w900,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  subtitle,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    color: AppColors.mutedInk,
+                    fontSize: 12,
+                    height: 1.25,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Switch.adaptive(
+            value: value,
+            activeColor: AppColors.accent,
+            onChanged: onChanged,
+          ),
+        ],
       ),
     );
   }

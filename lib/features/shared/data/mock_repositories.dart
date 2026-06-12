@@ -29,6 +29,14 @@ final aiRepositoryProvider = Provider<AiRepository>((ref) {
   return MockAiRepository();
 });
 
+final backendMockModeProvider = StateProvider<bool>((ref) {
+  return false;
+});
+
+final latestAiProviderLabelProvider = StateProvider<String>((ref) {
+  return 'mock_ai';
+});
+
 final priceRepositoryProvider = Provider<PriceRepository>((ref) {
   return MockPriceRepository();
 });
