@@ -4,5 +4,6 @@ class BackendAiConfig {
   const BackendAiConfig._();
 
   static const enabled = AiProviderConfig.backendRoutingEnabled;
-  static const baseUrl = 'https://backend.example.com';
+  static const mockEnabled = AiProviderConfig.backendMockEnabled;
+  static const baseUrl = AiProviderConfig.backendBaseUrl;
 }

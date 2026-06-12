@@ -218,6 +218,8 @@ class _AiDebugSection extends StatelessWidget {
           _DebugLine(label: 'Home currency', value: homeCurrency),
           _DebugLine(label: 'Output language', value: outputLanguage),
           const _DebugLine(label: 'Active provider', value: 'mock_ai'),
+          const _DebugLine(label: 'Backend mock adapter available', value: 'true'),
+          const _DebugLine(label: 'Backend mock enabled', value: 'false'),
           _DebugLine(label: 'Provider mode', value: providerMode),
           const _DebugLine(label: 'Backend routing planned', value: 'true'),
           const _DebugLine(label: 'OCR-first pipeline planned', value: 'true'),
