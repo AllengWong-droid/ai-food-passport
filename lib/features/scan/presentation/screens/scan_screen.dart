@@ -23,6 +23,8 @@ class _ScanScreenState extends ConsumerState<ScanScreen> {
   Uint8List? _selectedImageBytes;
   bool _isProcessing = false;
 
+  bool get _hasSelectedImage => _selectedImageBytes != null;
+
   @override
   Widget build(BuildContext context) {
     final viewportHeight = MediaQuery.sizeOf(context).height;
@@ -82,7 +84,7 @@ class _ScanScreenState extends ConsumerState<ScanScreen> {
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 Text(
-                                  _selectedImagePath == null ? 'FRAME THE MENU' : 'IMAGE READY',
+                                  _hasSelectedImage ? 'IMAGE READY' : 'FRAME THE MENU',
                                   style: const TextStyle(
                                     color: Colors.white,
                                     fontSize: 18,
@@ -90,7 +92,7 @@ class _ScanScreenState extends ConsumerState<ScanScreen> {
                                     letterSpacing: 1.2,
                                   ),
                                 ),
-                                if (_selectedImagePath != null) ...[
+                                if (_hasSelectedImage && _selectedImagePath != null) ...[
                                   const SizedBox(height: 10),
                                   _SelectedImageLabel(imagePath: _selectedImagePath!),
                                 ],
@@ -106,20 +108,12 @@ class _ScanScreenState extends ConsumerState<ScanScreen> {
                                     const SizedBox(width: 24),
                                     _CaptureButton(
                                       isProcessing: _isProcessing,
-                                      onTap: () {
-                                        final imagePath = _selectedImagePath;
-                                        if (imagePath == null) {
-                                          _showSelectImageMessage();
-                                          return;
-                                        }
-                                        _processSelectedImage(imagePath);
-                                      },
+                                      onTap: _startScan,
                                     ),
                                     const SizedBox(width: 24),
-                                    _ScanActionButton(
+                                    const _DisabledScanActionButton(
                                       icon: Icons.photo_camera_outlined,
                                       label: 'PHOTO',
-                                      onTap: _showPhotoPlaceholder,
                                     ),
                                   ],
                                 ),
@@ -146,11 +140,16 @@ class _ScanScreenState extends ConsumerState<ScanScreen> {
     }
 
     final imageBytes = await image.readAsBytes();
+    final imagePath = image.path.trim().isNotEmpty ? image.path : image.name;
 
     setState(() {
-      _selectedImagePath = image.path;
+      _selectedImagePath = imagePath;
       _selectedImageBytes = imageBytes;
     });
+  }
+
+  void _startScan() {
+    _processSelectedImage(_selectedImagePath ?? 'mock-menu-image');
   }
 
   Future<void> _processSelectedImage(String imagePath) async {
@@ -201,19 +200,6 @@ class _ScanScreenState extends ConsumerState<ScanScreen> {
     }
   }
 
-  void _showSelectImageMessage() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Select a menu image first.')),
-    );
-  }
-
-  void _showPhotoPlaceholder() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Camera capture placeholder. Use gallery selection in this MVP Alpha.'),
-      ),
-    );
-  }
 }
 
 class _ScannerBackground extends StatelessWidget {
@@ -477,6 +463,47 @@ class _ScanActionButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            width: 54,
+            height: 54,
+            decoration: BoxDecoration(
+              color: const Color(0xFF4D413F).withOpacity(0.94),
+              shape: BoxShape.circle,
+            ),
+            child: Icon(icon, color: Colors.white, size: 24),
+          ),
+          const SizedBox(height: 9),
+          Text(
+            label,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 11,
+              fontWeight: FontWeight.w900,
+              letterSpacing: 1.1,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _DisabledScanActionButton extends StatelessWidget {
+  const _DisabledScanActionButton({
+    required this.icon,
+    required this.label,
+  });
+
+  final IconData icon;
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    return Opacity(
+      opacity: 0.42,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
