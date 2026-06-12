@@ -223,9 +223,16 @@ class MockAiRepository implements AiRepository {
           priceIntelligence: PriceIntelligenceModel(
             localPrice: 180,
             localCurrency: request.localCurrency,
-            homePrice: _homePriceFor(request.userHomeCurrency, eur: 5.20, usd: 5.65),
+            homePrice: _homePriceFor(
+              request.userHomeCurrency,
+              localPrice: 180,
+              localCurrency: request.localCurrency,
+            ),
             homeCurrency: request.userHomeCurrency,
-            exchangeRate: _exchangeRateFor(request.userHomeCurrency, localCurrency: 'TWD'),
+            exchangeRate: _exchangeRateFor(
+              request.userHomeCurrency,
+              localCurrency: request.localCurrency,
+            ),
             assessment: PriceAssessment.goodValue,
           ),
           recommendationReason:
@@ -247,9 +254,16 @@ class MockAiRepository implements AiRepository {
           priceIntelligence: PriceIntelligenceModel(
             localPrice: 120,
             localCurrency: request.localCurrency,
-            homePrice: _homePriceFor(request.userHomeCurrency, eur: 3.45, usd: 3.77),
+            homePrice: _homePriceFor(
+              request.userHomeCurrency,
+              localPrice: 120,
+              localCurrency: request.localCurrency,
+            ),
             homeCurrency: request.userHomeCurrency,
-            exchangeRate: _exchangeRateFor(request.userHomeCurrency, localCurrency: 'TWD'),
+            exchangeRate: _exchangeRateFor(
+              request.userHomeCurrency,
+              localCurrency: request.localCurrency,
+            ),
             assessment: PriceAssessment.cheap,
           ),
           recommendationReason:
@@ -277,9 +291,16 @@ class MockAiRepository implements AiRepository {
           priceIntelligence: PriceIntelligenceModel(
             localPrice: 14.90,
             localCurrency: request.localCurrency,
-            homePrice: _homePriceFor(request.userHomeCurrency, eur: 13.70, usd: 14.90),
+            homePrice: _homePriceFor(
+              request.userHomeCurrency,
+              localPrice: 14.90,
+              localCurrency: request.localCurrency,
+            ),
             homeCurrency: request.userHomeCurrency,
-            exchangeRate: _exchangeRateFor(request.userHomeCurrency, localCurrency: 'USD'),
+            exchangeRate: _exchangeRateFor(
+              request.userHomeCurrency,
+              localCurrency: request.localCurrency,
+            ),
             assessment: PriceAssessment.fair,
           ),
           recommendationReason:
@@ -300,9 +321,16 @@ class MockAiRepository implements AiRepository {
           priceIntelligence: PriceIntelligenceModel(
             localPrice: 12,
             localCurrency: request.localCurrency,
-            homePrice: _homePriceFor(request.userHomeCurrency, eur: 11.05, usd: 12),
+            homePrice: _homePriceFor(
+              request.userHomeCurrency,
+              localPrice: 12,
+              localCurrency: request.localCurrency,
+            ),
             homeCurrency: request.userHomeCurrency,
-            exchangeRate: _exchangeRateFor(request.userHomeCurrency, localCurrency: 'USD'),
+            exchangeRate: _exchangeRateFor(
+              request.userHomeCurrency,
+              localCurrency: request.localCurrency,
+            ),
             assessment: PriceAssessment.cheap,
           ),
           recommendationReason:
@@ -331,9 +359,16 @@ class MockAiRepository implements AiRepository {
         priceIntelligence: PriceIntelligenceModel(
           localPrice: 980,
           localCurrency: request.localCurrency,
-          homePrice: _homePriceFor(request.userHomeCurrency, eur: 6.10, usd: 6.62),
+          homePrice: _homePriceFor(
+            request.userHomeCurrency,
+            localPrice: 980,
+            localCurrency: request.localCurrency,
+          ),
           homeCurrency: request.userHomeCurrency,
-          exchangeRate: _exchangeRateFor(request.userHomeCurrency, localCurrency: 'JPY'),
+          exchangeRate: _exchangeRateFor(
+            request.userHomeCurrency,
+            localCurrency: request.localCurrency,
+          ),
           assessment: PriceAssessment.fair,
         ),
         foodConfidenceScore: 93,
@@ -355,9 +390,16 @@ class MockAiRepository implements AiRepository {
         priceIntelligence: PriceIntelligenceModel(
           localPrice: 800,
           localCurrency: request.localCurrency,
-          homePrice: _homePriceFor(request.userHomeCurrency, eur: 4.98, usd: 5.40),
+          homePrice: _homePriceFor(
+            request.userHomeCurrency,
+            localPrice: 800,
+            localCurrency: request.localCurrency,
+          ),
           homeCurrency: request.userHomeCurrency,
-          exchangeRate: _exchangeRateFor(request.userHomeCurrency, localCurrency: 'JPY'),
+          exchangeRate: _exchangeRateFor(
+            request.userHomeCurrency,
+            localCurrency: request.localCurrency,
+          ),
           assessment: PriceAssessment.goodValue,
         ),
         foodConfidenceScore: 80,
@@ -368,8 +410,14 @@ class MockAiRepository implements AiRepository {
     ];
   }
 
-  num _homePriceFor(String homeCurrency, {required num eur, required num usd}) {
-    return homeCurrency.toUpperCase() == 'EUR' ? eur : usd;
+  num _homePriceFor(
+    String homeCurrency, {
+    required num localPrice,
+    required String localCurrency,
+  }) {
+    final exchangeRate = _exchangeRateFor(homeCurrency, localCurrency: localCurrency);
+    final homePrice = localPrice * exchangeRate;
+    return num.parse(homePrice.toStringAsFixed(2));
   }
 
   num _exchangeRateFor(String homeCurrency, {required String localCurrency}) {
@@ -381,9 +429,24 @@ class MockAiRepository implements AiRepository {
     return switch ((normalizedLocal, normalizedHome)) {
       ('JPY', 'EUR') => 0.00622,
       ('JPY', 'USD') => 0.00675,
+      ('JPY', 'TWD') => 0.216,
+      ('JPY', 'SGD') => 0.0091,
       ('TWD', 'EUR') => 0.0289,
       ('TWD', 'USD') => 0.0314,
+      ('TWD', 'JPY') => 4.63,
+      ('TWD', 'SGD') => 0.042,
       ('USD', 'EUR') => 0.919,
+      ('USD', 'TWD') => 31.8,
+      ('USD', 'SGD') => 1.35,
+      ('USD', 'JPY') => 148,
+      ('EUR', 'USD') => 1.09,
+      ('EUR', 'TWD') => 34.6,
+      ('EUR', 'SGD') => 1.47,
+      ('EUR', 'JPY') => 161,
+      ('SGD', 'EUR') => 0.68,
+      ('SGD', 'USD') => 0.74,
+      ('SGD', 'TWD') => 23.6,
+      ('SGD', 'JPY') => 109.6,
       _ => 1,
     };
   }

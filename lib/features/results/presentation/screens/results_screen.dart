@@ -19,7 +19,6 @@ class ResultsScreen extends ConsumerWidget {
     final dishes = ref.watch(dishAnalysesProvider);
     final ocrResult = ref.watch(latestOcrResultProvider);
     final aiRequest = ref.watch(latestAiAnalysisRequestProvider);
-    final travelerSettings = ref.watch(travelerSettingsProvider);
 
     return Scaffold(
       body: SafeArea(
@@ -84,9 +83,10 @@ class ResultsScreen extends ConsumerWidget {
                   tastePreferences: aiRequest.tastePassport.tastePreferences,
                   allergies: aiRequest.tastePassport.allergies,
                   dietaryPreferences: aiRequest.tastePassport.dietaryPreferences,
-                  outputLanguage: travelerSettings.outputLanguage,
-                  homeCurrency: travelerSettings.homeCurrency,
-                  providerMode: travelerSettings.providerMode.name,
+                  homeCountry: aiRequest.userHomeCountry,
+                  homeCurrency: aiRequest.userHomeCurrency,
+                  outputLanguage: aiRequest.outputLanguage,
+                  providerMode: aiRequest.providerMode.name,
                   dishCount: dishes.length,
                 ),
               const SizedBox(height: 18),
@@ -106,8 +106,9 @@ class _AiDebugSection extends StatelessWidget {
     required this.tastePreferences,
     required this.allergies,
     required this.dietaryPreferences,
-    required this.outputLanguage,
+    required this.homeCountry,
     required this.homeCurrency,
+    required this.outputLanguage,
     required this.providerMode,
     required this.dishCount,
   });
@@ -116,8 +117,9 @@ class _AiDebugSection extends StatelessWidget {
   final List<String> tastePreferences;
   final List<String> allergies;
   final List<String> dietaryPreferences;
-  final String outputLanguage;
+  final String homeCountry;
   final String homeCurrency;
+  final String outputLanguage;
   final String providerMode;
   final int dishCount;
 
@@ -133,8 +135,9 @@ class _AiDebugSection extends StatelessWidget {
           _DebugLine(label: 'Taste preferences', value: _joinValues(tastePreferences)),
           _DebugLine(label: 'Allergies', value: _joinValues(allergies)),
           _DebugLine(label: 'Dietary preferences', value: _joinValues(dietaryPreferences)),
-          _DebugLine(label: 'Output language', value: outputLanguage),
+          _DebugLine(label: 'Home country', value: homeCountry),
           _DebugLine(label: 'Home currency', value: homeCurrency),
+          _DebugLine(label: 'Output language', value: outputLanguage),
           const _DebugLine(label: 'Active provider', value: 'mock_ai'),
           _DebugLine(label: 'Provider mode', value: providerMode),
           const _DebugLine(label: 'Backend routing planned', value: 'true'),

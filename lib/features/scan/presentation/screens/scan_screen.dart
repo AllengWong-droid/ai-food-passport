@@ -215,6 +215,7 @@ class _ScanScreenState extends ConsumerState<ScanScreen> {
     final aiRepository = ref.read(aiRepositoryProvider);
     final user = ref.read(currentUserProvider);
     final tastePassport = ref.read(tastePassportProvider);
+    final travelerSettings = ref.read(travelerSettingsProvider);
 
     try {
       await _showProcessingStage('Reading menu image');
@@ -241,6 +242,8 @@ class _ScanScreenState extends ConsumerState<ScanScreen> {
         restaurantCountry: scan.restaurantCountry,
         restaurantCity: scan.restaurantCity,
         localCurrency: scan.localCurrency,
+        outputLanguage: travelerSettings.outputLanguage,
+        providerMode: travelerSettings.providerMode,
       );
       ref.read(latestAiAnalysisRequestProvider.notifier).state = analysisRequest;
       try {
