@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -16,6 +17,7 @@ class ResultsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final dishes = ref.watch(dishAnalysesProvider);
+    final ocrResult = ref.watch(latestOcrResultProvider);
 
     return Scaffold(
       body: SafeArea(
@@ -50,6 +52,15 @@ class ResultsScreen extends ConsumerWidget {
               style: AppTextStyles.title.copyWith(fontSize: 36, height: 1.26),
             ),
             const SizedBox(height: 34),
+            if (kDebugMode && ocrResult != null) ...[
+              _OcrDebugSection(
+                rawText: ocrResult.rawText,
+                detectedLanguage: ocrResult.detectedLanguage,
+                confidence: ocrResult.confidence,
+                source: ocrResult.source,
+              ),
+              const SizedBox(height: 18),
+            ],
             for (var i = 0; i < dishes.length; i++) ...[
               ResultCard(
                 dish: dishes[i],
@@ -65,6 +76,65 @@ class ResultsScreen extends ConsumerWidget {
             const DisclaimerBanner(),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class _OcrDebugSection extends StatelessWidget {
+  const _OcrDebugSection({
+    required this.rawText,
+    required this.detectedLanguage,
+    required this.confidence,
+    required this.source,
+  });
+
+  final String rawText;
+  final String detectedLanguage;
+  final double confidence;
+  final String source;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: const Color(0xFFF7F4EF),
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(color: AppColors.border),
+      ),
+      child: ExpansionTile(
+        tilePadding: const EdgeInsets.symmetric(horizontal: 18),
+        childrenPadding: const EdgeInsets.fromLTRB(18, 0, 18, 18),
+        title: const Text(
+          'OCR Debug',
+          style: TextStyle(
+            color: AppColors.ink,
+            fontSize: 15,
+            fontWeight: FontWeight.w900,
+          ),
+        ),
+        subtitle: Text(
+          '$detectedLanguage - ${(confidence * 100).round()}% - $source',
+          style: const TextStyle(
+            color: AppColors.mutedInk,
+            fontSize: 12,
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+        children: [
+          Align(
+            alignment: Alignment.centerLeft,
+            child: SelectableText(
+              rawText,
+              style: const TextStyle(
+                color: AppColors.ink,
+                fontSize: 13,
+                height: 1.35,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

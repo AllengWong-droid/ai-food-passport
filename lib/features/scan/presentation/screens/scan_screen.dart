@@ -1,4 +1,4 @@
-import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -19,6 +19,7 @@ class ScanScreen extends ConsumerStatefulWidget {
 class _ScanScreenState extends ConsumerState<ScanScreen> {
   final ImagePicker _imagePicker = ImagePicker();
   String? _selectedImagePath;
+  Uint8List? _selectedImageBytes;
   bool _isProcessing = false;
 
   @override
@@ -59,7 +60,7 @@ class _ScanScreenState extends ConsumerState<ScanScreen> {
                   left: 64,
                   right: 64,
                   height: frameHeight,
-                  child: _ScanPreviewFrame(imagePath: _selectedImagePath),
+                  child: _ScanPreviewFrame(imageBytes: _selectedImageBytes),
                 ),
                 Positioned(
                   left: 0,
@@ -127,8 +128,11 @@ class _ScanScreenState extends ConsumerState<ScanScreen> {
       return;
     }
 
+    final imageBytes = await image.readAsBytes();
+
     setState(() {
       _selectedImagePath = image.path;
+      _selectedImageBytes = imageBytes;
     });
   }
 
@@ -149,9 +153,10 @@ class _ScanScreenState extends ConsumerState<ScanScreen> {
       final scan = scanRepository.createScanFromImage(imagePath);
       ref.read(latestScanProvider.notifier).state = scan;
 
-      final menuText = await ocrRepository.extractText(scan.imagePath);
-      ref.read(latestOcrTextProvider.notifier).state = menuText;
-      ref.read(dishAnalysesProvider.notifier).state = aiRepository.analyzeScan(scan);
+      final ocrResult = await ocrRepository.extractText(scan.imagePath);
+      ref.read(latestOcrResultProvider.notifier).state = ocrResult;
+      ref.read(dishAnalysesProvider.notifier).state =
+          aiRepository.analyzeOcrResult(scan, ocrResult);
 
       if (mounted) {
         context.goNamed(RouteNames.results);
@@ -351,22 +356,22 @@ class _ScanFrameOverlay extends StatelessWidget {
 }
 
 class _ScanPreviewFrame extends StatelessWidget {
-  const _ScanPreviewFrame({required this.imagePath});
+  const _ScanPreviewFrame({required this.imageBytes});
 
-  final String? imagePath;
+  final Uint8List? imageBytes;
 
   @override
   Widget build(BuildContext context) {
-    final path = imagePath;
+    final bytes = imageBytes;
 
     return ClipRRect(
       borderRadius: BorderRadius.circular(30),
       child: Stack(
         fit: StackFit.expand,
         children: [
-          if (path != null)
-            Image.file(
-              File(path),
+          if (bytes != null)
+            Image.memory(
+              bytes,
               fit: BoxFit.cover,
               errorBuilder: (context, error, stackTrace) {
                 return Container(
@@ -376,7 +381,7 @@ class _ScanPreviewFrame extends StatelessWidget {
                 );
               },
             ),
-          if (path == null)
+          if (bytes == null)
             DecoratedBox(
               decoration: BoxDecoration(color: Colors.black.withOpacity(0.08)),
             ),

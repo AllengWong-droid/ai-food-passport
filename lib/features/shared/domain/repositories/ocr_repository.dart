@@ -1,3 +1,5 @@
+import '../models/ocr_result.dart';
+
 abstract class OcrRepository {
-  Future<String> extractText(String imagePath);
+  Future<OcrResult> extractText(String imagePath);
 }

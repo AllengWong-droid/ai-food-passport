@@ -48,7 +48,7 @@ final latestScanProvider = StateProvider<ScanModel>((ref) {
   return mockScan;
 });
 
-final latestOcrTextProvider = StateProvider<String?>((ref) {
+final latestOcrResultProvider = StateProvider<OcrResult?>((ref) {
   return null;
 });
 
@@ -111,28 +111,53 @@ class MockScanRepository implements ScanRepository {
 
 class MockOcrRepository implements OcrRepository {
   @override
-  Future<String> extractText(String imagePath) async {
+  Future<OcrResult> extractText(String imagePath) async {
     await Future<void>.delayed(const Duration(milliseconds: 450));
 
     final normalizedPath = imagePath.toLowerCase();
     if (normalizedPath.contains('china') ||
         normalizedPath.contains('chinese') ||
         normalizedPath.contains('zh')) {
-      return mockChineseMenuText;
+      return OcrResult(
+        rawText: mockChineseMenuText,
+        detectedLanguage: 'Chinese',
+        confidence: 0.92,
+        source: 'mock_chinese',
+        createdAt: DateTime.now(),
+      );
     }
     if (normalizedPath.contains('english') ||
         normalizedPath.contains('harbor') ||
         normalizedPath.contains('en')) {
-      return mockEnglishMenuText;
+      return OcrResult(
+        rawText: mockEnglishMenuText,
+        detectedLanguage: 'English',
+        confidence: 0.96,
+        source: 'mock_english',
+        createdAt: DateTime.now(),
+      );
     }
 
-    return mockJapaneseMenuText;
+    return OcrResult(
+      rawText: mockJapaneseMenuText,
+      detectedLanguage: 'Japanese',
+      confidence: 0.94,
+      source: 'mock_japanese',
+      createdAt: DateTime.now(),
+    );
   }
 }
 
 class MockAiRepository implements AiRepository {
   @override
-  List<DishAnalysisModel> analyzeScan(ScanModel scan) => mockDishAnalyses;
+  List<DishAnalysisModel> analyzeScan(ScanModel scan, String ocrText) {
+    return mockDishAnalyses;
+  }
+
+  @override
+  List<DishAnalysisModel> analyzeOcrResult(ScanModel scan, OcrResult ocrResult) {
+    return analyzeScan(scan, ocrResult.rawText);
+  }
 
   @override
   List<DishAnalysisModel> loadLatestResults() => mockDishAnalyses;
