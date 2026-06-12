@@ -120,6 +120,9 @@ class _AiDebugSection extends StatelessWidget {
           _DebugLine(label: 'Allergies', value: _joinValues(allergies)),
           _DebugLine(label: 'Dietary preferences', value: _joinValues(dietaryPreferences)),
           const _DebugLine(label: 'AI source', value: 'mock_ai'),
+          const _DebugLine(label: 'Future provider available', value: 'openai_skeleton'),
+          const _DebugLine(label: 'Parser status', value: 'ready'),
+          const _DebugLine(label: 'Real API enabled', value: 'false'),
         ],
       ),
     );
