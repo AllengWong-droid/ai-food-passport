@@ -7,6 +7,7 @@
 - Riverpod
 - GoRouter
 - image_picker
+- shared_preferences
 
 ## Current Architecture
 
@@ -18,6 +19,9 @@ Key folders:
 - `lib/features/shared/domain/repositories/`
 - `lib/features/shared/data/`
 - `lib/features/shared/data/ai/`
+- `lib/features/shared/presentation/`
+- `lib/features/scan/presentation/`
+- `lib/features/results/presentation/`
 
 ## Implemented Repository Interfaces
 
@@ -34,6 +38,9 @@ Key folders:
 - Mock OCR repository
 - Mock AI repository
 - Mock price repository
+- Local traveler settings controller using `shared_preferences`
+
+The active AI provider remains `MockAiRepository`.
 
 ## Prepared But Disabled
 
@@ -41,8 +48,22 @@ Key folders:
 - `OpenAiMenuPromptBuilder`
 - `OpenAiMenuResponseSchema`
 - `OpenAiMenuResponseParser`
+- `BackendMenuAnalysisRepository`
+- `MultiProviderMenuAnalysisRepository`
+- OCR-first multi-provider routing contract
 
-The OpenAI skeleton does not call the network and is not the default provider.
+These skeletons do not call the network and are not wired as active providers.
+
+## Traveler Settings
+
+Persisted locally:
+
+- Home country
+- Home currency
+- Output language
+- Provider mode
+
+These settings flow into `AiAnalysisRequest`. Home currency affects deterministic mock price conversion. Output language affects local mock Results/Dish Detail helper copy. Provider mode is informational only.
 
 ## Not Yet Implemented
 
@@ -52,13 +73,25 @@ The OpenAI skeleton does not call the network and is not the default provider.
 - Firebase Analytics
 - Firebase Crashlytics
 - Real OCR
-- Real OpenAI API integration
+- Real Qwen integration
+- Real DeepSeek integration
+- Real OpenAI integration
 - Backend API proxy
-- Apple In-App Purchase
-- Android/iOS production deployment
+- Real provider routing
+- Real exchange-rate API
+- Apple/Google in-app purchase
+- Production deployment
 
 ## Future Architecture Direction
 
-Real OpenAI calls should be made through a backend proxy, not directly from Flutter. API keys must never be stored in client code.
+Future real provider calls should go through a backend proxy. API keys must never be stored in Flutter code.
 
-Real OCR should be introduced behind `OcrRepository`, allowing Apple Vision, Google ML Kit, cloud OCR, or another provider to replace the mock adapter.
+Future OCR should be introduced behind `OcrRepository`. Future analysis should keep returning typed `DishAnalysisModel` results through `AiRepository`.
+
+Future routing should remain OCR-first:
+
+1. Image OCR or vision extraction.
+2. Structured menu text analysis.
+3. Price intelligence and recommendation output.
+
+China mode may later route through Qwen-OCR/Qwen-VL and Qwen or DeepSeek. Global mode may later route through OpenAI or another global provider. This is planned only.

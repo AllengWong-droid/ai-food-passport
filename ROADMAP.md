@@ -10,30 +10,41 @@
 - Phase 5A: AI Engine Adapter Preparation
 - Phase 5B: OpenAI Adapter Skeleton
 - Phase 5D: UX Alignment + Price Intelligence
-- Phase 6A: OCR-First Multi-Provider Routing Contract
+- Phase 6A: OCR-First Multi-Provider Routing Skeleton
+- Phase 6B: Perceived Latency Scan Flow
+- Phase 6C: Fallback/Failure UX
+- Phase 6C1: Dish Detail Navigation Fix
+- Phase 6D: Scan UI Cleanup
+- Phase 6E: Traveler Locale/Provider Settings
+- Phase 6F: Settings Connected To Mock Analysis Context
+- Phase 6G: Local Persistence For Traveler Settings
+- Phase 6H: Reset Traveler Settings
+- Phase 6I: Results Personalization Polish
+- Phase 6J: Multilingual Mock Results Presentation
 
 ## Current MVP Alpha
 
-The app currently demonstrates the full intended product flow with mocks:
+The app demonstrates the intended product flow with mocks:
 
-Select image -> preview image -> mock OCR -> mock AI analysis -> Results with price intelligence -> Developer Debug -> Dish Detail with price intelligence.
+Scan -> optional Gallery preview -> processing overlay -> mock OCR -> mock AI -> Results with deterministic price intelligence -> Dish Detail -> back navigation.
 
-OpenAI integration, backend proxy integration, and OCR-first multi-provider routing are represented by disabled skeletons only. Qwen, DeepSeek, and OpenAI are not called. No real API calls or API keys exist in the Flutter app.
+Profile traveler settings persist locally and influence mock home-currency prices and local helper text. Provider mode is visible for future planning but remains informational only.
 
 ## Next
 
-- Phase 6B: Backend proxy implementation plan
-- Phase 6C: China/global provider routing implementation plan
-- Phase 6D: Real OpenAI/Qwen/DeepSeek integration through backend
-- Phase 7: Real OCR strategy
-- Phase 8: Firebase persistence
-- Phase 9: Subscription and App Store preparation
+- Backend proxy implementation for server-side provider calls
+- Real OCR adapter behind `OcrRepository`
+- Qwen, DeepSeek, and OpenAI provider adapter skeletons behind the backend
+- Real provider health checks, latency policy, and fallback routing
+- Real exchange-rate service
+- Production auth and persistence
+- Saved scan history
+- App Store preparation
 
 ## Later Product Expansion
 
-- Saved scan history
-- User account persistence
-- Real price intelligence
+- Cloud sync for traveler settings
 - Travel history and country stamps
-- Production safety disclaimers and allergen risk language
-- App Store metadata, screenshots, and subscription copy
+- Production allergy/safety disclaimers
+- Subscription and purchase flow
+- App Store screenshots, preview video, metadata, and support documentation

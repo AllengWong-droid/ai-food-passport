@@ -4,12 +4,15 @@
 
 The MVP Alpha uses `MockAiRepository` as the active AI engine. It accepts a typed `AiAnalysisRequest` and returns `List<DishAnalysisModel>`.
 
-The OpenAI adapter is prepared but disabled:
+No real OCR, Qwen, DeepSeek, OpenAI, backend, provider routing, or exchange-rate API calls are made.
 
-- No real OpenAI API calls
-- No API keys
-- No client-side secrets
-- No network calls from the OpenAI skeleton
+## Active Pipeline
+
+1. Scan screen creates or uses a mock/default image source.
+2. Mock OCR returns typed `OcrResult`.
+3. Scan builds `AiAnalysisRequest`.
+4. `MockAiRepository` returns deterministic dish results.
+5. Results and Dish Detail present price intelligence and local mock helper copy.
 
 ## Input Model
 
@@ -23,6 +26,10 @@ The OpenAI adapter is prepared but disabled:
 - Restaurant country
 - Restaurant city
 - Local currency
+- Output language
+- Provider mode
+
+Provider mode is informational only in the MVP Alpha.
 
 ## Output Model
 
@@ -40,29 +47,42 @@ Each dish includes:
 - Recommendation reason
 - Price intelligence
 
-## Score Definitions
+## Price Intelligence
 
-### Taste Score
+Mock price intelligence includes:
 
-Range: 0-100
+- Local price
+- Local currency
+- Home price
+- Home currency
+- Exchange rate
+- Assessment: Cheap, Fair, Expensive, or Good Value
 
-Represents likely fit with the user's taste preferences.
+Home currency conversion uses deterministic mock rates for supported currencies. No real exchange-rate API is implemented.
 
-### Safety Score
+## Output Language
 
-Range: 0-100
+Output language affects local mock helper text in Results and Dish Detail for:
 
-Represents likely allergen and dietary safety. This is not medical advice.
+- English
+- Traditional Chinese
+- Simplified Chinese
+- Japanese
 
-### Value Score
+This is not real translation. Dish content remains deterministic mock data.
 
-Range: 0-100
+## Prepared But Disabled
 
-Represents perceived value using local price, home currency, and travel context.
+- OpenAI prompt builder
+- OpenAI response schema
+- OpenAI response parser
+- OpenAI repository skeleton
+- Backend proxy repository skeleton
+- Multi-provider routing repository skeleton
 
-## Future OpenAI Response Shape
+## Future Response Shape
 
-The prepared parser expects a JSON-like object:
+Future provider responses should map to:
 
 ```json
 {
@@ -91,4 +111,4 @@ The prepared parser expects a JSON-like object:
 
 ## Future Integration Rule
 
-OpenAI should be integrated through a backend proxy. Flutter should send a typed request to the backend and receive structured dish results. API keys must stay server-side.
+Real provider calls must be made through a backend proxy. Flutter should send typed requests to the backend and receive structured dish results. API keys must stay server-side.

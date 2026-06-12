@@ -1,52 +1,114 @@
-# AI Food Passport Demo Script
+# AI Food Passport Written Demo Walkthrough
 
-## 30-Second Version
+## Short Demo
 
-Opening line:
-"AI Food Passport helps travelers understand foreign menus before they order."
+Opening:
+"AI Food Passport helps travelers understand menus abroad, compare prices in their own currency, and choose dishes that fit their taste and safety profile."
 
-Demo beats:
-1. Show the Scan screen.
-2. Select a menu image from gallery.
-3. Point out the image preview.
-4. Run the mock OCR and mock AI analysis.
-5. Show Results with ranked dishes.
-6. Expand OCR Debug and AI Debug briefly.
-7. Open Dish Detail.
+Flow:
 
-Closing line:
-"This MVP Alpha uses real image selection and typed adapter layers, with mock OCR and mock AI ready to be replaced by production services."
+1. Open Profile.
+2. Show Home country, Home currency, Output language, and Provider mode.
+3. Explain that settings persist locally and can be reset.
+4. Open Scan.
+5. Optionally select a menu image from Gallery.
+6. Tap the main scan button.
+7. Show the processing overlay.
+8. Show Results with prices converted to the selected home currency.
+9. Change Output language and run another scan to show localized helper text.
+10. Open Dish Detail and show local price, home-currency price, and value explanation.
 
-## 60-Second Version
+Closing:
+"This MVP Alpha uses mock OCR and mock AI, but the product flow, domain models, local settings, price intelligence, and future provider-routing skeleton are in place."
 
-Opening line:
-"When travelers cannot read a menu, they also cannot easily judge ingredients, allergens, value, or what they will actually enjoy. AI Food Passport turns a menu image into personalized dish guidance."
+## Detailed Demo Script
 
-Step-by-step:
-1. Start on Scan.
-   Say: "This is the menu scan flow. For the MVP Alpha, image selection is real, while OCR is mocked behind a production-ready repository interface."
-2. Select an image from gallery.
-   Say: "The selected image is stored in the scan model and previewed immediately."
-3. Tap the center analyze action.
-   Say: "The app sends the selected image path into a mock OCR adapter, then builds a typed AI analysis request."
-4. Show Results.
-   Say: "Results are mock AI dish analyses ranked for the user's taste passport, allergies, dietary preferences, restaurant location, and currency."
-5. Expand OCR Debug.
-   Say: "OCR Debug shows the raw text, detected language, confidence, and source. This is development-only visibility."
-6. Expand AI Debug.
-   Say: "AI Debug shows the context used by the mock AI layer and confirms the future OpenAI skeleton is available but disabled."
-7. Open Dish Detail.
-   Say: "Dish Detail explains ingredients, allergens, scores, price intelligence, and recommendation reasons."
+### 1. Profile Settings
 
-Closing line:
-"The important part is the architecture: the user flow works today with mocks, and the OCR and AI adapters are ready for real services without redesigning the app."
+Say:
+"The traveler can set their home country, home currency, output language, and provider mode. These settings are persisted locally with shared preferences."
 
-## Demo Checklist
+Show:
 
-- Use a menu image with a recognizable filename if you want a specific mock language:
-  - Japanese/default: any normal image name
-  - Chinese: include `china`, `chinese`, or `zh`
-  - English: include `english`, `harbor`, or `en`
-- Keep the OCR Debug panel collapsed until Results appears.
-- Expand OCR Debug first, then AI Debug.
-- End on Dish Detail to show the final user-facing value.
+- Home country
+- Home currency
+- Output language
+- Provider mode
+- Reset traveler settings
+
+Clarify:
+"Provider mode is currently informational only. Mock AI remains active in this MVP. China, Global, and Auto are future routing modes."
+
+### 2. Scan
+
+Say:
+"The scan flow works whether or not an image is selected. On web, Gallery image preview is real, while OCR remains mocked."
+
+Show:
+
+- Scanner-style Scan screen
+- Gallery image preview if available
+- Main scan button
+
+### 3. Processing Overlay
+
+Say:
+"After tapping scan, the app shows staged progress so the user does not feel stuck."
+
+Messages include:
+
+- Reading menu image
+- Recognizing dishes
+- Checking taste and allergy fit
+- Comparing local prices
+- Preparing recommendations
+
+### 4. Results
+
+Say:
+"Results show deterministic mock dish recommendations with price intelligence. Prices are converted into the selected traveler home currency using mock rates."
+
+Show:
+
+- Traveler context summary
+- Dish cards
+- Local price
+- Home-currency price
+- Price assessment
+- Taste, safety, and value scores
+
+### 5. Multilingual Helper Text
+
+Say:
+"Output language changes local helper text in Results and Dish Detail. This is deterministic mock UI copy, not real translation."
+
+Try:
+
+- English
+- Traditional Chinese
+- Simplified Chinese
+- Japanese
+
+### 6. Dish Detail
+
+Say:
+"Dish Detail explains why a dish was recommended and separates local menu price from the traveler's selected currency price."
+
+Show:
+
+- Recommendation reason
+- Ingredients
+- Hidden ingredient watch
+- Local menu price
+- Your currency price
+- Exchange rate
+- Value explanation
+- Back navigation to Results
+
+### 7. Future Provider Routing
+
+Say:
+"The architecture prepares for OCR-first routing. In the future, China mode could use Qwen-OCR or Qwen-VL plus Qwen or DeepSeek analysis, while Global mode could use OpenAI or other global providers through a backend proxy."
+
+Clarify:
+"No real OCR, Qwen, DeepSeek, OpenAI, backend proxy, Firebase, or real exchange-rate API is implemented yet."

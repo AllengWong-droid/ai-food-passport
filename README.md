@@ -1,37 +1,39 @@
 # AI Food Passport
 
-AI Food Passport is a Flutter MVP Alpha that helps travelers understand restaurant menus, identify food risks, and choose dishes that fit their personal taste passport.
+AI Food Passport is a Flutter MVP Alpha that helps travelers understand restaurant menus, compare prices in their home currency, and choose dishes that fit their taste and safety profile.
 
 ## Problem
 
-Travelers often face menus they cannot read, prices they cannot compare, and ingredients or allergens they cannot confidently identify. AI Food Passport explores a guided flow where a user selects a menu image, sees OCR and AI analysis output, and reviews dish-level recommendations before ordering.
+Travelers often face menus they cannot read, prices they cannot quickly compare, and ingredients or allergens they cannot confidently identify. AI Food Passport demonstrates a practical scan-to-recommendation flow while keeping production integrations safely mocked or skeleton-only.
 
 ## Current MVP Alpha Capabilities
 
-- Web-server demo build works locally.
-- Menu image selection from gallery works.
-- Selected image preview works on the scan screen.
+- Scan works with or without selecting an image.
+- Gallery image selection and image preview work on Flutter Web.
+- Processing overlay explains scan progress and improves perceived latency.
+- Friendly fallback/failure recovery UX is prepared for future OCR/AI failures.
 - Mock OCR returns realistic Japanese, Chinese, or English menu text.
-- OCR Debug shows raw text, detected language, confidence, and source.
-- Mock AI analysis ranks dishes using OCR text, taste preferences, allergies, dietary preferences, country, and currency context.
-- AI Debug shows the context used by the mock AI adapter.
-- Results and Dish Detail navigation work.
-- OpenAI adapter skeleton exists, but is disabled by default.
-- Backend proxy contract and repository skeleton exist for future OpenAI integration, but are disabled by default.
-- OCR-first multi-provider routing skeleton exists for future China/global provider routing, but is disabled by default.
-- No real API calls, API keys, Firebase, real OCR, or subscriptions are implemented.
+- Mock AI ranks dishes using OCR text, taste passport, allergies, dietary preferences, location, and traveler settings.
+- Results show dish recommendations, safety/value/taste scores, and price intelligence.
+- Dish Detail shows local menu price, traveler home-currency price, exchange rate, value explanation, ingredients, and recommendation reason.
+- Dish Detail back navigation returns to Results.
+- Profile includes persisted traveler settings: home country, home currency, output language, and provider mode.
+- Traveler settings can be reset to Germany / EUR / English / mock.
+- Home currency affects deterministic mock price conversion.
+- Output language affects local mock Results and Dish Detail helper text.
+- Provider mode exists for future routing but is informational only.
+- Developer Debug remains collapsed/secondary.
 
 ## Current User Flow
 
-1. Open the app.
-2. Continue through onboarding/auth/passport screens.
-3. Open Scan.
-4. Select a menu image from gallery.
-5. Confirm the image preview.
-6. Run the mock OCR and mock AI analysis.
-7. Review ranked dish results.
-8. Expand OCR Debug and AI Debug during development.
-9. Open Dish Detail for a specific recommendation.
+1. Open Profile and adjust traveler settings if desired.
+2. Open Scan.
+3. Optionally select a menu image from Gallery.
+4. Tap the main scan button.
+5. See staged processing messages.
+6. Review Results with price intelligence and traveler-context copy.
+7. Open Dish Detail for a recommendation.
+8. Return to Results, then back to Scan.
 
 ## Tech Stack
 
@@ -40,43 +42,49 @@ Travelers often face menus they cannot read, prices they cannot compare, and ing
 - Riverpod
 - GoRouter
 - image_picker
+- shared_preferences
 - Clean, feature-based structure
 - Repository interfaces for Auth, Passport, Scan, OCR, AI, and Price layers
 
 ## Architecture Summary
 
-The MVP uses typed domain models and repository interfaces so mock implementations can be replaced later without redesigning the UI flow.
+The app uses typed domain models and repository interfaces so mock implementations can later be replaced without redesigning the user flow.
 
 - Domain models live under `lib/features/shared/domain/models/`.
 - Repository interfaces live under `lib/features/shared/domain/repositories/`.
 - Mock implementations live under `lib/features/shared/data/`.
-- Future OpenAI adapter preparation lives under `lib/features/shared/data/ai/`.
-- The default AI provider is still `MockAiRepository`.
-- `OpenAiMenuAnalysisRepository` is a disabled skeleton and makes no network calls.
-- `BackendMenuAnalysisRepository` is a disabled backend proxy skeleton and is not wired into the app.
-- `MultiProviderMenuAnalysisRepository` is a disabled OCR-first routing skeleton for future Qwen, DeepSeek, and OpenAI backend routes.
+- Future AI adapter skeletons live under `lib/features/shared/data/ai/`.
+- Local mock presentation copy lives under `lib/features/shared/presentation/`.
+- The active AI provider is still `MockAiRepository`.
+- `OpenAiMenuAnalysisRepository` is disabled and makes no network calls.
+- `BackendMenuAnalysisRepository` is disabled and not wired into the app.
+- `MultiProviderMenuAnalysisRepository` is disabled and represents future OCR-first China/global routing.
 
-## Current Limitations
+## Implemented Versus Planned
 
-- OCR is mocked, not real device or cloud OCR.
-- AI analysis is mocked, not real OpenAI.
-- OpenAI prompt builder, schema, parser, and repository skeleton are preparation only.
-- Backend proxy contract and Flutter repository skeleton are preparation only.
-- OCR-first China/global provider routing is preparation only.
-- Qwen, DeepSeek, and OpenAI are not called.
-- No Firebase Auth, Firestore, Storage, Analytics, or Crashlytics.
-- No deployed or enabled backend proxy yet.
-- No API keys are stored in Flutter code.
-- No subscriptions or App Store purchase logic.
-- Price intelligence uses mock/static values.
+Implemented:
 
-## Roadmap
+- Mock OCR
+- Mock AI
+- Deterministic mock price intelligence
+- Deterministic mock exchange rates for supported traveler currencies
+- Local traveler settings persistence with `shared_preferences`
+- Local mock UI copy for English, Traditional Chinese, Simplified Chinese, and Japanese
+- OCR-first multi-provider routing contract/skeleton
 
-- Phase 6B: Backend proxy implementation plan
-- Phase 6C: Real OpenAI integration through backend
-- Phase 7: Real OCR strategy
-- Phase 8: Firebase persistence
-- Phase 9: Subscription and App Store preparation
+Not implemented:
+
+- Real OCR
+- Real Qwen
+- Real DeepSeek
+- Real OpenAI
+- Real backend proxy
+- Real provider routing
+- Firebase
+- Subscriptions
+- Production authentication
+- Real exchange-rate API
+- Real translation
 
 ## How To Run Locally
 
@@ -91,7 +99,7 @@ Optional:
 flutter analyze
 ```
 
-If the local analyzer crashes or hangs, verify the web-server flow manually and record the exact terminal error.
+If local Flutter/Dart tooling hangs or analyzer crashes, verify the web-server flow manually and record the exact terminal output.
 
 ## Current Verified Phases
 
@@ -103,4 +111,14 @@ If the local analyzer crashes or hangs, verify the web-server flow manually and 
 - Phase 5A: AI Engine Adapter Preparation
 - Phase 5B: OpenAI Adapter Skeleton
 - Phase 5D: UX Alignment + Price Intelligence
-- Phase 6A: OCR-First Multi-Provider Routing Contract
+- Phase 6A: OCR-First Multi-Provider Routing Skeleton
+- Phase 6B: Perceived Latency Scan Flow
+- Phase 6C: Fallback/Failure UX
+- Phase 6C1: Dish Detail Navigation Fix
+- Phase 6D: Scan UI Cleanup
+- Phase 6E: Traveler Locale/Provider Settings
+- Phase 6F: Settings Connected To Mock Analysis Context
+- Phase 6G: Local Persistence For Traveler Settings
+- Phase 6H: Reset Traveler Settings
+- Phase 6I: Results Personalization Polish
+- Phase 6J: Multilingual Mock Results Presentation
