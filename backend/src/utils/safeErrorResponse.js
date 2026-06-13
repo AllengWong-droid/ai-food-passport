@@ -51,6 +51,9 @@ const KNOWN_SAFE_ERROR_CODES = new Set([
   'PROVIDER_GUARD_INVALID_OPERATION'
 ]);
 
+/** @type {string[]} Array form for iteration / test assertions */
+const KNOWN_SAFE_ERROR_CODES_ARRAY = Array.from(KNOWN_SAFE_ERROR_CODES);
+
 /**
  * Extracts a safe, API-friendly error code from an Error object.
  *
@@ -108,9 +111,11 @@ function buildSafeLogEntry(error, context) {
 
     entry.message = typeof error.message === 'string'
       ? error.message
-      : 'Unknown error';
-  } else {
+      : '[unknown error]';
+  } else if (error !== null && error !== undefined) {
     entry.message = String(error);
+  } else {
+    entry.message = '[unknown error]';
   }
 
   return entry;
@@ -118,6 +123,7 @@ function buildSafeLogEntry(error, context) {
 
 module.exports = {
   KNOWN_SAFE_ERROR_CODES,
+  KNOWN_SAFE_ERROR_CODES_ARRAY,
   extractSafeErrorCode,
   isSafeErrorCode,
   buildSafeLogEntry

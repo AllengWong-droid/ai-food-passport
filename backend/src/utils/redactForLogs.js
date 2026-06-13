@@ -112,12 +112,12 @@ function redactForLogs(value, seen) {
  */
 function redactError(error) {
   if (!error || typeof error !== 'object') {
-    return { message: String(error) };
+    return { message: '[unknown error]' };
   }
 
   return {
     code: error.code || undefined,
-    message: error.message || 'Unknown error'
+    message: error.message || '[unknown error]'
     // stack intentionally omitted
   };
 }
