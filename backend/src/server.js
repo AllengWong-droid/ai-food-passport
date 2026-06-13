@@ -34,6 +34,8 @@ const server = http.createServer((request, response) => {
         ok: true,
         service: 'ai-food-passport-backend',
         mode: 'mock',
+        ocrProvider: 'mock_ocr',
+        analysisProvider: 'mock_ai',
         timestamp: new Date().toISOString()
       });
       return;

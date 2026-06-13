@@ -11,6 +11,10 @@ Flutter uses local `MockAiRepository` by default. Developer Backend Mock Mode ca
 - Local Node.js HTTP server using built-in Node modules.
 - `GET /health`.
 - `POST /api/analyze-menu`.
+- OCR-first mock pipeline:
+  - mock OCR provider
+  - mock menu analysis provider
+  - standardized API envelope
 - Deterministic mock response shaped like the future backend response.
 - Standardized `ok`, `data`, and `error` API envelope.
 - Mock routing metadata:
@@ -25,6 +29,7 @@ Flutter uses local `MockAiRepository` by default. Developer Backend Mock Mode ca
 ## What Is Not Implemented
 
 - No real OCR.
+- No Qwen OCR, Google Vision, Azure OCR, Tesseract, or OpenAI Vision.
 - No real Qwen calls.
 - No real DeepSeek calls.
 - No real OpenAI calls.
@@ -85,6 +90,8 @@ Response shape:
   "ok": true,
   "service": "ai-food-passport-backend",
   "mode": "mock",
+  "ocrProvider": "mock_ocr",
+  "analysisProvider": "mock_ai",
   "timestamp": "2026-06-13T00:00:00.000Z"
 }
 ```
@@ -140,9 +147,20 @@ curl -X POST http://localhost:8787/api/analyze-menu \
     "routing": {
       "mode": "mock",
       "ocrProvider": "mock_ocr",
+      "ocrMode": "mock",
+      "ocrConfidence": 0.98,
       "analysisProvider": "mock_ai",
+      "analysisMode": "mock",
       "fallbackUsed": false,
       "latencyMs": 2
+    },
+    "ocr": {
+      "provider": "mock_ocr",
+      "mode": "mock",
+      "text": "Tonkotsu Ramen ¥980\nMiso Katsu Skewers ¥800",
+      "languageHints": ["ja"],
+      "confidence": 0.98,
+      "warnings": []
     },
     "dishes": [
       {
@@ -169,7 +187,10 @@ curl -X POST http://localhost:8787/api/analyze-menu \
   "routing": {
     "mode": "mock",
     "ocrProvider": "mock_ocr",
+    "ocrMode": "mock",
+    "ocrConfidence": 0.98,
     "analysisProvider": "mock_ai",
+    "analysisMode": "mock",
     "fallbackUsed": false,
     "latencyMs": 2
   },
@@ -182,6 +203,26 @@ curl -X POST http://localhost:8787/api/analyze-menu \
 ```
 
 The top-level `routing` and `dishes` fields mirror `data.routing` and `data.dishes` temporarily for Flutter adapter backwards compatibility. The shortened top-level dish above represents the same dish object from `data.dishes`.
+
+## OCR-First Provider Skeleton
+
+The current route is structured as:
+
+```text
+POST /api/analyze-menu
+-> mock OCR provider
+-> mock menu analysis provider
+-> standardized response envelope
+```
+
+Current provider files:
+
+- `src/providers/ocr/mockOcrProvider.js`
+- `src/providers/ocr/ocrProviderTypes.js`
+- `src/providers/analysis/mockMenuAnalysisProvider.js`
+- `src/providers/analysis/analysisProviderTypes.js`
+
+The OCR provider returns deterministic local text and metadata. It does not read real images or call any external OCR service. The analysis provider uses that mock OCR result to create deterministic dish recommendations and price intelligence.
 
 ## Error Response Shape
 

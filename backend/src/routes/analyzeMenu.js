@@ -1,4 +1,5 @@
-const { buildMockAnalyzeMenuResponse } = require('../mock/mockAnalyzeMenuResponse');
+const { extractMenuText } = require('../providers/ocr/mockOcrProvider');
+const { analyzeMenuText } = require('../providers/analysis/mockMenuAnalysisProvider');
 
 async function handleAnalyzeMenu(request, response, body, startedAt) {
   if (request.method !== 'POST') {
@@ -18,16 +19,43 @@ async function handleAnalyzeMenu(request, response, body, startedAt) {
     return;
   }
 
-  const latencyMs = Date.now() - startedAt;
-  const mockData = buildMockAnalyzeMenuResponse(parsedBody.value, latencyMs);
-  sendJson(request, response, 200, {
-    ok: true,
-    data: mockData,
-    error: null,
-    // Backwards compatibility for Phase 7C Flutter parser.
-    routing: mockData.routing,
-    dishes: mockData.dishes
-  });
+  try {
+    const ocr = await extractMenuText(parsedBody.value);
+    const analysis = await analyzeMenuText({
+      requestBody: parsedBody.value,
+      ocrResult: ocr
+    });
+    const latencyMs = Date.now() - startedAt;
+    const routing = {
+      mode: 'mock',
+      ocrProvider: ocr.provider,
+      ocrMode: ocr.mode,
+      ocrConfidence: ocr.confidence,
+      analysisProvider: analysis.provider,
+      analysisMode: analysis.mode,
+      fallbackUsed: false,
+      latencyMs
+    };
+    const data = {
+      routing,
+      ocr,
+      dishes: analysis.dishes
+    };
+
+    sendJson(request, response, 200, {
+      ok: true,
+      data,
+      error: null,
+      // Backwards compatibility for Phase 7C Flutter parser.
+      routing: data.routing,
+      dishes: data.dishes
+    });
+  } catch (_) {
+    sendJson(request, response, 502, errorPayload(
+      'PROVIDER_FAILURE',
+      'Menu analysis is temporarily unavailable.'
+    ));
+  }
 }
 
 function parseJsonBody(body) {
