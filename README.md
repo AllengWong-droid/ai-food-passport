@@ -12,7 +12,9 @@ The backend also has OCR and analysis provider registries plus a provider routin
 
 Phase 10A adds secret-handling and real-provider readiness documentation. Future provider environment variables are placeholder-only in `backend/.env.example`; real keys must stay backend-only and must never be committed.
 
-No real OCR, Qwen, DeepSeek, OpenAI, Firebase, subscriptions, production authentication, real exchange rates, API keys, or secrets are implemented.
+Phase 10C adds logging redaction and safe error response utilities. Phase 11A adds 86 automated backend contract tests. Phase 11B adds runtime deployment config, CORS skeleton, and deployment readiness documentation (`backend/DEPLOYMENT_READINESS.md`).
+
+No real OCR, Qwen, DeepSeek, OpenAI, Firebase, subscriptions, production authentication, real exchange rates, API keys, or secrets are implemented. Production deployment is not yet ready (`productionReady: false`).
 
 ## MVP Alpha Capabilities
 

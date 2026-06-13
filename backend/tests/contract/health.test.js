@@ -67,6 +67,43 @@ describe('GET /health', () => {
     assert.strictEqual(res.body.safeErrorEnvelopeReady, true);
   });
 
+  test('should have nodeEnv as a string', async () => {
+    const res = await get('/health');
+    assert.strictEqual(typeof res.body.nodeEnv, 'string');
+  });
+
+  test('should have port as a number', async () => {
+    const res = await get('/health');
+    assert.strictEqual(typeof res.body.port, 'number');
+    assert.ok(res.body.port > 0);
+  });
+
+  test('should have host as a string', async () => {
+    const res = await get('/health');
+    assert.strictEqual(typeof res.body.host, 'string');
+  });
+
+  test('should have corsConfigured as a boolean', async () => {
+    const res = await get('/health');
+    assert.strictEqual(typeof res.body.corsConfigured, 'boolean');
+  });
+
+  test('should have allowedOriginsCount as a number', async () => {
+    const res = await get('/health');
+    assert.strictEqual(typeof res.body.allowedOriginsCount, 'number');
+    assert.ok(res.body.allowedOriginsCount >= 0);
+  });
+
+  test('should have productionReady: false', async () => {
+    const res = await get('/health');
+    assert.strictEqual(res.body.productionReady, false);
+  });
+
+  test('should have deploymentReadinessReady: true', async () => {
+    const res = await get('/health');
+    assert.strictEqual(res.body.deploymentReadinessReady, true);
+  });
+
   test('should have providerSafetyConfigValid as boolean', async () => {
     const res = await get('/health');
     assert.strictEqual(typeof res.body.providerSafetyConfigValid, 'boolean');

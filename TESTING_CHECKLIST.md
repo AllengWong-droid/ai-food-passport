@@ -186,6 +186,26 @@ Invoke-RestMethod `
 - [ ] Confirm `backend/.gitignore` ignores `.env`.
 - [ ] Confirm Flutter source contains no provider API key variables.
 
+## Backend Contract Tests
+
+- [ ] Run `cd backend && npm run test:contract`. Confirm all tests pass.
+- [ ] Confirm `/health` includes `nodeEnv`, `port`, `host`, `corsConfigured`, `allowedOriginsCount`, `productionReady`, `deploymentReadinessReady`.
+- [ ] Confirm `productionReady` is `false`.
+- [ ] Confirm `deploymentReadinessReady` is `true`.
+- [ ] Confirm `corsConfigured` is boolean.
+- [ ] Confirm `allowedOriginsCount` is a non-negative number.
+
+## Deployment Readiness Checks (Phase 11B)
+
+- [ ] Review `backend/DEPLOYMENT_READINESS.md`.
+- [ ] Review `backend/.env.example` contains placeholder-only values.
+- [ ] Confirm `NODE_ENV` defaults to `development` (no production mode accidentally enabled).
+- [ ] Confirm `npm run dev` starts with default runtime config.
+- [ ] Confirm backend start-up message includes `NODE_ENV` and host.
+- [ ] Confirm CORS headers are present in responses (check `Access-Control-Allow-Origin`).
+- [ ] Confirm no production URLs are hardcoded in backend code.
+- [ ] Confirm no real provider calls or deployment happen.
+
 ## Future Provider Readiness QA
 
 - [ ] Review `backend/SECURITY_AND_SECRETS.md`.

@@ -198,7 +198,7 @@ These settings flow into `AiAnalysisRequest`. Home currency affects deterministi
 - Real production provider routing
 - Real exchange-rate API
 - Apple/Google in-app purchase
-- Production deployment
+- Production deployment (configuration skeleton only — see `backend/DEPLOYMENT_READINESS.md`)
 
 ## Future Architecture Direction
 
@@ -234,3 +234,21 @@ Phase 10B adds backend skeleton modules for this policy:
 - `backend/src/providers/safety/providerSafetyGuards.js`
 
 The safety config appears in `/health`. Rate and cost guards are not enforced in the current mock path.
+
+Phase 10C adds logging redaction and safe error response utilities:
+- `backend/src/utils/redactForLogs.js`
+- `backend/src/utils/safeErrorResponse.js`
+
+Phase 11A adds automated contract tests (86 tests, `node:test`):
+- `backend/tests/contract/health.test.js`
+- `backend/tests/contract/analyzeMenu.test.js`
+- `backend/tests/unit/redactForLogs.test.js`
+- `backend/tests/unit/safeErrorResponse.test.js`
+
+Phase 11B adds runtime deployment config and deployment readiness skeleton:
+- `backend/src/config/runtimeConfig.js` — parses NODE_ENV, PORT, HOST, ALLOWED_ORIGINS, PUBLIC_BACKEND_URL
+- `backend/DEPLOYMENT_READINESS.md` — pre-deployment checklist
+- `backend/.env.example` — environment variable exemplar
+- CORS headers skeleton in server.js
+- `/health` now exposes: `nodeEnv`, `port`, `host`, `corsConfigured`, `allowedOriginsCount`, `productionReady`, `deploymentReadinessReady`
+- `productionReady` is always `false` until real providers are configured. `deploymentReadinessReady` is `true`.

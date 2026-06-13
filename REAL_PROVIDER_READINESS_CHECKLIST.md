@@ -2,6 +2,8 @@
 
 Use this checklist before enabling any real OCR, Qwen, DeepSeek, OpenAI, Google Vision, exchange-rate, or other provider integration.
 
+**Prerequisite**: The backend deployment readiness skeleton must be completed first. See `backend/DEPLOYMENT_READINESS.md` for the full pre-deployment checklist.
+
 ## Secret Storage
 
 - [ ] No provider API keys are stored in Flutter code.

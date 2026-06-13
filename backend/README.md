@@ -28,6 +28,9 @@ Flutter uses local `MockAiRepository` by default. Developer Backend Mock Mode ca
 - Provider timeout, rate limit, and cost guard skeletons for future real providers.
 - Logging redaction utility skeleton (`src/utils/redactForLogs.js`).
 - Safe error response helper skeleton (`src/utils/safeErrorResponse.js`).
+- Runtime configuration (`src/config/runtimeConfig.js`) for NODE_ENV, PORT, HOST, ALLOWED_ORIGINS, and PUBLIC_BACKEND_URL.
+- Deployment readiness documentation (`backend/DEPLOYMENT_READINESS.md`).
+- Environment variable exemplar (`backend/.env.example`) with placeholder-only values.
 
 ## What Is Not Implemented
 
@@ -232,6 +235,56 @@ Known safe codes: `METHOD_NOT_ALLOWED`, `BAD_REQUEST`, `NOT_FOUND`, `OCR_FAILED`
 
 These confirm the utilities are loaded and available for future provider adapter implementation.
 
+## Runtime Configuration
+
+File: `src/config/runtimeConfig.js`
+
+The backend now includes a runtime configuration module that safely parses environment variables for production/development deployment. All values have safe defaults and validation warnings (not crashes) for invalid input.
+
+### Environment Variables
+
+| Variable | Default | Description |
+|---|---|---|
+| `NODE_ENV` | `development` | `development`, `production`, or `test` |
+| `PORT` | `8787` | Server port (1-65535) |
+| `HOST` | `127.0.0.1` (dev) / `0.0.0.0` (prod) | Server bind address |
+| `ALLOWED_ORIGINS` | local Flutter/web origins (dev) / empty (prod) | Comma-separated CORS origins |
+| `PUBLIC_BACKEND_URL` | `''` (empty) | Flutter backend URL in production |
+| `REQUEST_BODY_LIMIT` | `1048576` (1 MB) | Max request body size in bytes |
+
+### Validation Behaviour
+
+- Invalid `NODE_ENV` → defaults to `development` with a warning
+- Invalid `PORT` → defaults to `8787` with a warning
+- Empty `ALLOWED_ORIGINS` in production → warning logged
+- Unset `PUBLIC_BACKEND_URL` in production → warning logged
+- No validation warnings crash the server
+
+### Usage
+
+```js
+const { getRuntimeConfig } = require('./config/runtimeConfig');
+const config = getRuntimeConfig();
+// { nodeEnv, port, host, allowedOrigins, corsConfigured, productionReady, ... }
+```
+
+## Deployment Readiness
+
+Documentation: `backend/DEPLOYMENT_READINESS.md`
+
+This phase adds deployment readiness infrastructure **without enabling real providers or deploying anything**. Key points:
+
+- `productionReady` is always `false` until real providers are configured and enforced
+- `deploymentReadinessReady` is `true` (config infrastructure is ready)
+- The `/health` endpoint now exposes `nodeEnv`, `port`, `host`, `corsConfigured`, `allowedOriginsCount`
+- CORS headers are set based on `ALLOWED_ORIGINS` configuration
+- Backend must be deployed before App Store / TestFlight real use
+- Flutter production app must call HTTPS backend, not localhost
+- Secrets must be configured as deployment environment variables (never in `.env`)
+- Real providers remain disabled — this is still a mock backend
+
+See `backend/DEPLOYMENT_READINESS.md` for the full pre-deployment checklist.
+
 ## Health Check
 
 ```powershell
@@ -244,6 +297,13 @@ Response shape:
 {
   "ok": true,
   "service": "ai-food-passport-backend",
+  "nodeEnv": "development",
+  "port": 8787,
+  "host": "127.0.0.1",
+  "corsConfigured": true,
+  "allowedOriginsCount": 5,
+  "productionReady": false,
+  "deploymentReadinessReady": true,
   "mode": "mock",
   "ocrProvider": "mock_ocr",
   "configuredOcrProvider": "mock_ocr",
@@ -791,12 +851,17 @@ Disabled analysis provider skeletons return:
 
 ## CORS
 
-The mock server allows local Flutter Web development origins such as:
+CORS support is configured via `ALLOWED_ORIGINS` (comma-separated list). The skeleton implementation sets `Access-Control-Allow-Origin` and related headers on all responses based on the configured origins.
 
-- `http://localhost:<port>`
-- `http://127.0.0.1:<port>`
+Development behaviour:
+- Allows configured localhost origins explicitly
+- Falls back to `*` (permissive) for unrecognised localhost origins
+- This is a local development convenience only
 
-This is a local development convenience only. It is not a production CORS or authentication policy.
+Production behaviour (not yet activated):
+- Only sets `Access-Control-Allow-Origin` for explicitly configured origins
+- No wildcard `*` in production
+- Requests from unrecognised origins will be blocked by the browser
 
 ## Security Notes
 

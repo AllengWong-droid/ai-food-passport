@@ -38,6 +38,9 @@
 - Phase 9E: Flutter Provider Mode Routing Visibility
 - Phase 10A: Secret Handling and Real Provider Readiness Plan
 - Phase 10B: Backend Provider Timeout, Rate Limit, and Cost Guard Skeleton
+- Phase 10C: Backend Logging Redaction and Error Hygiene Skeleton
+- Phase 11A: Backend Mock Contract Tests
+- Phase 11B: Backend Production Deployment Readiness Skeleton
 
 ## Current MVP Alpha
 
@@ -57,9 +60,9 @@ Backend Mock Mode is disabled by default. Provider mode remains informational on
 
 ## Next
 
-- Backend mock scenario QA automation
-- Backend provider contract tests
-- Provider routing contract tests for mock/china/global/auto metadata
+- Backend deployment readiness documentation and .env.example completed
+- Backend mock scenario QA automation completed (86 contract + unit tests)
+- Provider routing contract tests for mock/china/global/auto metadata completed
 - Provider timeout, rate-limit, budget, and redaction policy enforcement
 - Real OCR adapter implementation behind disabled backend skeletons
 - Real provider gateway implementation behind backend only
@@ -87,4 +90,5 @@ Backend Mock Mode is disabled by default. Provider mode remains informational on
 - Subscriptions
 - Real exchange-rate API
 - Production secret management
+- Real production deployment (configuration skeleton only — productionReady is still false)
 - App Store readiness
