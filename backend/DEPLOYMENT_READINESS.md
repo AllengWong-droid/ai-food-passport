@@ -1,6 +1,6 @@
 # Backend Deployment Readiness
 
-Phase 11B — Deployment configuration skeleton.
+Phase 11C — CORS enforcement and request body limit enforcement.
 
 ## Purpose
 
@@ -10,28 +10,30 @@ The backend is currently **mock-only**. No real OCR or AI provider calls are imp
 
 - The backend can be started in production mode (`NODE_ENV=production`)
 - Environment variables are parsed safely with documented defaults
-- CORS is configurable for the Flutter app's origin
+- CORS origin validation is enforced (not just skeleton)
+- Request body size is limited with a controlled error envelope
 - Health check reports deployment readiness metadata
 - Contract tests pass before any deployment
 
 ---
 
-## Current Status (Phase 11B)
+## Current Status (Phase 11C)
 
 | Area | Status | Notes |
-|---|---|---|
-| Runtime config (`runtimeConfig.js`) | ✅ Skeleton | Parses NODE_ENV, PORT, HOST, ALLOWED_ORIGINS, PUBLIC_BACKEND_URL |
-| Environment variable validation | ✅ Skeleton | Warnings (not crashes) on invalid values |
-| `/health` deployment metadata | ✅ Ready | Exposes `nodeEnv`, `port`, `host`, `corsConfigured`, `productionReady`, `deploymentReadinessReady` |
-| CORS configuration | ⚠️ Skeleton | Headers set based on config, but origin validation not enforced |
+|---|---|---|---|
+| Runtime config (`runtimeConfig.js`) | ✅ Ready | Parses NODE_ENV, PORT, HOST, ALLOWED_ORIGINS, PUBLIC_BACKEND_URL, REQUEST_BODY_LIMIT |
+| Environment variable validation | ✅ Ready | Warnings (not crashes) on invalid values |
+| `/health` deployment metadata | ✅ Ready | Exposes `nodeEnv`, `port`, `host`, `corsConfigured`, `corsEnforcementReady`, `requestBodyLimitBytes`, `requestBodyLimitReady`, `productionReady`, `deploymentReadinessReady` |
+| CORS enforcement | ✅ Ready | Origin validation via `corsEnforcement.js`. Dev: permissive localhost. Prod: explicit origins only, no `*`. OPTIONS preflight handled. |
+| Request body limit | ✅ Ready | `REQUEST_BODY_LIMIT` enforced. Oversized bodies return `413` with `REQUEST_BODY_TOO_LARGE` controlled error envelope. |
 | Secrets management | ⚠️ Documented | `.env.example` placeholders only; no real keys anywhere |
-| Contract tests | ✅ Ready | `npm run test:contract` passes |
+| Contract tests | ✅ Ready | `npm run test:contract` passes (102 tests) |
 | Real provider calls | ❌ Disabled | All real providers are skeletons |
 | HTTPS / TLS | ❌ Not configured | Must be handled by deployment platform (e.g. Cloud Run, Heroku) |
 | Rate limiting | ❌ Skeleton | Config parsed, not enforced |
 | Cost guards | ❌ Skeleton | Config parsed, not enforced |
 | Logging redaction | ✅ Skeleton | `redactForLogs` and `redactError` available, not yet wrapped on live paths |
-| Safe error envelopes | ✅ Skeleton | `extractSafeErrorCode` and `buildSafeLogEntry` available, not yet wrapped on live paths |
+| Safe error envelopes | ✅ Ready | `extractSafeErrorCode` and `buildSafeLogEntry` available; all API responses use controlled envelopes |
 
 ---
 
@@ -48,9 +50,10 @@ Before deploying to a real production environment, complete:
 - [ ] Add cost guards and rate limits
 - [ ] Integration test real providers in `china` providerMode
 
-### 2. CORS Enforcement
-- [ ] Validate `ALLOWED_ORIGINS` in production (reject unrecognised origins)
-- [ ] Remove `Access-Control-Allow-Origin: *` for non-localhost requests
+### 2. CORS Enforcement ✅ (Completed in Phase 11C)
+- [x] Validate `ALLOWED_ORIGINS` in production (reject unrecognised origins)
+- [x] Remove `Access-Control-Allow-Origin: *` for non-localhost requests in production
+- [x] Handle OPTIONS preflight with origin validation
 - [ ] Test Flutter web production build CORS behaviour
 
 ### 3. Secrets Management
@@ -106,7 +109,7 @@ The `/health` endpoint returns `productionReady: false` until:
 
 1. At least one real OCR provider is configured and working
 2. At least one real analysis provider is configured and working
-3. CORS enforcement is implemented
+3. CORS enforcement is implemented ✅ (Completed in Phase 11C)
 4. Rate limiting and cost guards are enforced
 5. Logging redaction is wrapped on all provider request/response logging
 6. Contract tests pass with real providers
@@ -133,34 +136,35 @@ While `productionReady: false`, the backend is safe for local development and te
 
 ## Current Mock Backend Behaviour (Preserved)
 
-All existing behaviour is preserved in Phase 11B:
+All existing behaviour is preserved in Phase 11C:
 
-- `GET /health` → returns extended metadata (new fields added)
+- `GET /health` → returns extended metadata (new fields: `corsEnforcementReady`, `requestBodyLimitBytes`, `requestBodyLimitReady`)
 - `POST /api/analyze-menu` with `{}` → returns mock dishes
 - `providerMode: mock` → mock path, no fallback
 - `providerMode: china/global/auto` → safely resolves to mock with fallback metadata
 - All 7 `debugScenario` values → controlled mock behaviour
 - Invalid JSON → `BAD_REQUEST` with no stack trace
 - Invalid `OCR_PROVIDER` / `ANALYSIS_PROVIDER` → controlled error codes
+- Oversized request body → `413` with `REQUEST_BODY_TOO_LARGE` controlled envelope
 
 ---
 
 ## Next Phases
 
-After Phase 11B, the recommended next steps are:
+After Phase 11C, the recommended next steps are:
 
 1. **Phase 12**: Real provider skeleton activation (Qwen OCR or Google Vision)
 2. **Phase 13**: Real analysis provider activation (Qwen analysis or DeepSeek)
-3. **Phase 14**: CORS enforcement implementation
-4. **Phase 15**: Cost guards and rate limiting enforcement
-5. **Phase 16**: Production deployment dry run (staging environment)
-6. **Phase 17**: Flutter production backend URL configuration
-7. **Phase 18**: Full integration test with real providers
+3. **Phase 14**: Cost guards and rate limiting enforcement
+4. **Phase 15**: Production deployment dry run (staging environment)
+5. **Phase 16**: Flutter production backend URL configuration
+6. **Phase 17**: Full integration test with real providers
 
 ---
 
 ## Contact / History
 
 - Phase 11B implemented by: AI assistant
+- Phase 11C implemented by: AI assistant
 - Date: 2026-06-13
-- Tag: `phase-11b-backend-deployment-readiness-skeleton`
+- Tags: `phase-11b-backend-deployment-readiness-skeleton`, `phase-11c-cors-and-body-limit-enforcement`

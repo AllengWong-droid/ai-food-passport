@@ -7,6 +7,7 @@ const {
   isRealAnalysisEnabled
 } = require('../providers/analysis/analysisProviderRegistry');
 const { resolveProviderRoutingDecision } = require('../providers/routing/providerRoutingDecision');
+const { corsHeadersForWriteHead } = require('../utils/corsEnforcement');
 
 async function handleAnalyzeMenu(request, response, body, startedAt) {
   if (request.method !== 'POST') {
@@ -156,9 +157,7 @@ function parseJsonBody(body) {
 function sendJson(request, response, statusCode, payload) {
   response.writeHead(statusCode, {
     'Content-Type': 'application/json; charset=utf-8',
-    ...corsHeaders(request),
-    'Access-Control-Allow-Headers': 'Content-Type',
-    'Access-Control-Allow-Methods': 'GET, POST, OPTIONS'
+    ...corsHeadersForWriteHead(request)
   });
 
   if (statusCode === 204) {
@@ -179,32 +178,6 @@ function errorPayload(code, message, details = null) {
       details
     }
   };
-}
-
-function corsHeaders(request) {
-  const origin = request.headers.origin;
-  if (!origin) {
-    return { 'Access-Control-Allow-Origin': '*' };
-  }
-
-  if (isAllowedLocalOrigin(origin)) {
-    return {
-      'Access-Control-Allow-Origin': origin,
-      'Vary': 'Origin'
-    };
-  }
-
-  return {};
-}
-
-function isAllowedLocalOrigin(origin) {
-  try {
-    const url = new URL(origin);
-    return url.protocol === 'http:' &&
-      (url.hostname === 'localhost' || url.hostname === '127.0.0.1');
-  } catch (_) {
-    return false;
-  }
 }
 
 module.exports = {

@@ -246,9 +246,17 @@ Phase 11A adds automated contract tests (86 tests, `node:test`):
 - `backend/tests/unit/safeErrorResponse.test.js`
 
 Phase 11B adds runtime deployment config and deployment readiness skeleton:
-- `backend/src/config/runtimeConfig.js` — parses NODE_ENV, PORT, HOST, ALLOWED_ORIGINS, PUBLIC_BACKEND_URL
+- `backend/src/config/runtimeConfig.js` — parses NODE_ENV, PORT, HOST, ALLOWED_ORIGINS, PUBLIC_BACKEND_URL, REQUEST_BODY_LIMIT
 - `backend/DEPLOYMENT_READINESS.md` — pre-deployment checklist
 - `backend/.env.example` — environment variable exemplar
 - CORS headers skeleton in server.js
 - `/health` now exposes: `nodeEnv`, `port`, `host`, `corsConfigured`, `allowedOriginsCount`, `productionReady`, `deploymentReadinessReady`
 - `productionReady` is always `false` until real providers are configured. `deploymentReadinessReady` is `true`.
+
+Phase 11C implements CORS enforcement and request body limit enforcement:
+- `backend/src/utils/corsEnforcement.js` — shared CORS origin validation and preflight handling
+- Development: permissive localhost/dev origins; Production: explicit origins only, no wildcard `*`
+- OPTIONS preflight: returns 204 with CORS headers for allowed origins, no headers for disallowed
+- Request body limit: `REQUEST_BODY_LIMIT` enforced; oversized bodies return `413` with `REQUEST_BODY_TOO_LARGE`
+- `/health` now exposes: `corsEnforcementReady`, `requestBodyLimitBytes`, `requestBodyLimitReady`
+- Contract tests: 102 tests passing (`npm run test:contract`)

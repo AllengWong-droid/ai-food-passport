@@ -24,6 +24,8 @@ Flutter uses local `MockAiRepository` by default. Developer Backend Mock Mode ca
 - Standardized `ok`, `data`, and `error` API envelope.
 - Mock dish results with `priceIntelligence`.
 - CORS headers for local Flutter Web development origins.
+- CORS enforcement module (`src/utils/corsEnforcement.js`) with origin validation.
+- Request body size limiting (default 1 MB) with controlled error envelope.
 - Provider safety config parsing for timeout, retries, budget, and daily request limit placeholders.
 - Provider timeout, rate limit, and cost guard skeletons for future real providers.
 - Logging redaction utility skeleton (`src/utils/redactForLogs.js`).
@@ -302,6 +304,9 @@ Response shape:
   "host": "127.0.0.1",
   "corsConfigured": true,
   "allowedOriginsCount": 5,
+  "corsEnforcementReady": true,
+  "requestBodyLimitBytes": 1048576,
+  "requestBodyLimitReady": true,
   "productionReady": false,
   "deploymentReadinessReady": true,
   "mode": "mock",
@@ -851,17 +856,42 @@ Disabled analysis provider skeletons return:
 
 ## CORS
 
-CORS support is configured via `ALLOWED_ORIGINS` (comma-separated list). The skeleton implementation sets `Access-Control-Allow-Origin` and related headers on all responses based on the configured origins.
+CORS enforcement is implemented via `src/utils/corsEnforcement.js`.
 
-Development behaviour:
-- Allows configured localhost origins explicitly
-- Falls back to `*` (permissive) for unrecognised localhost origins
-- This is a local development convenience only
+Development/Test behaviour:
+- Allows configured localhost / 127.0.0.1 origins (any port).
+- Falls back to `*` (permissive) for unrecognised origins.
 
-Production behaviour (not yet activated):
-- Only sets `Access-Control-Allow-Origin` for explicitly configured origins
-- No wildcard `*` in production
-- Requests from unrecognised origins will be blocked by the browser
+Production behaviour:
+- Only sets `Access-Control-Allow-Origin` for explicitly configured origins.
+- No wildcard `*` in production.
+- Requests from unrecognised origins receive no CORS header — the browser blocks the response.
+
+OPTIONS preflight:
+- Returns 204 with full CORS headers for allowed origins.
+- Returns 204 without CORS headers for disallowed origins (browser blocks follow-up).
+- No stack traces are ever included in CORS responses.
+
+## Request Body Limit
+
+The backend enforces `REQUEST_BODY_LIMIT` (default: 1 MB / 1048576 bytes). Oversized JSON requests receive a controlled error envelope with code `REQUEST_BODY_TOO_LARGE`:
+
+```json
+{
+  "ok": false,
+  "data": null,
+  "error": {
+    "code": "REQUEST_BODY_TOO_LARGE",
+    "message": "Request body exceeds the 1048576 byte limit.",
+    "details": null
+  }
+}
+```
+
+- HTTP status code: `413`.
+- No stack traces or internal details are included.
+- The response shape remains compatible with the standard API envelope.
+- Invalid JSON still returns `BAD_REQUEST` (400).
 
 ## Security Notes
 

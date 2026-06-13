@@ -9,7 +9,8 @@ const {
 } = require('./providers/routing/providerRoutingDecision');
 const { redactForLogs } = require('./utils/redactForLogs');
 const { extractSafeErrorCode } = require('./utils/safeErrorResponse');
-const { getRuntimeConfig, NODE_ENV, PORT, HOST, ALLOWED_ORIGINS }
+const { getCorsHeaders, handlePreflight } = require('./utils/corsEnforcement');
+const { getRuntimeConfig, NODE_ENV, PORT, HOST, REQUEST_BODY_LIMIT }
   = require('./config/runtimeConfig');
 
 // Confirm logging utilities loaded correctly at startup (no-op in production).
@@ -17,67 +18,41 @@ void redactForLogs;
 void extractSafeErrorCode;
 void getRuntimeConfig;
 
-/**
- * CORS support skeleton.
- *
- * Sets Access-Control-Allow-Origin and related headers on all responses
- * based on the ALLOWED_ORIGINS configuration.
- *
- * In development: allows configured local origins, falls back to * for
- * unrecognised localhost origins (permissive for local dev convenience).
- * In production: only allows explicitly configured origins. If the request
- * origin is not in the allowed list, the Access-Control-Allow-Origin header
- * is omitted (browser will block the response).
- *
- * This is a skeleton implementation. Full CORS enforcement
- * (origin validation on each request) is a future phase.
- */
-function setCorsHeaders(request, response) {
-  const requestOrigin = request.headers.origin;
-
-  // Always set basic CORS headers
-  response.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-  response.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-
-  if (NODE_ENV === 'production') {
-    // Production: only allow explicitly configured origins
-    if (requestOrigin && ALLOWED_ORIGINS.includes(requestOrigin)) {
-      response.setHeader('Access-Control-Allow-Origin', requestOrigin);
-    }
-    // If origin not allowed, don't set the header (browser will block)
-  } else {
-    // Development: allow the request origin if it's in allowed list
-    if (requestOrigin && ALLOWED_ORIGINS.includes(requestOrigin)) {
-      response.setHeader('Access-Control-Allow-Origin', requestOrigin);
-    } else {
-      // In development, be permissive with localhost
-      response.setHeader('Access-Control-Allow-Origin', '*');
-    }
-  }
-}
-
 const server = http.createServer((request, response) => {
   const startedAt = Date.now();
   const url = new URL(request.url, `http://${request.headers.host || 'localhost'}`);
 
-  // Set CORS headers on all responses
-  setCorsHeaders(request, response);
-
+  // Handle OPTIONS preflight with origin validation
   if (request.method === 'OPTIONS') {
-    response.writeHead(204);
-    response.end();
+    handlePreflight(request, response);
     return;
   }
 
   let body = '';
+  let bodyTooLarge = false;
+
   request.on('data', chunk => {
+    if (bodyTooLarge) return;
     body += chunk;
-    if (body.length > 1024 * 1024) {
-      request.destroy();
+    if (body.length > REQUEST_BODY_LIMIT) {
+      bodyTooLarge = true;
+      sendJson(request, response, 413, {
+        ok: false,
+        data: null,
+        error: {
+          code: 'REQUEST_BODY_TOO_LARGE',
+          message: `Request body exceeds the ${REQUEST_BODY_LIMIT} byte limit.`,
+          details: null
+        }
+      });
+      // The response has been sent. Continue ignoring remaining data chunks.
     }
   });
 
   request.on('end', () => {
+    // Do not process further if body was too large — response already sent
+    if (bodyTooLarge) return;
+
     if (url.pathname === '/health') {
       if (request.method !== 'GET') {
         sendJson(request, response, 405, errorPayload(
@@ -99,6 +74,9 @@ const server = http.createServer((request, response) => {
         host: runtimeConfig.host,
         corsConfigured: runtimeConfig.corsConfigured,
         allowedOriginsCount: runtimeConfig.allowedOriginsCount,
+        corsEnforcementReady: true,
+        requestBodyLimitBytes: runtimeConfig.requestBodyLimit,
+        requestBodyLimitReady: true,
         productionReady: runtimeConfig.productionReady,
         deploymentReadinessReady: runtimeConfig.deploymentReadinessReady,
         mode: 'mock',
@@ -149,11 +127,20 @@ const server = http.createServer((request, response) => {
   });
 });
 
-server.listen(PORT, HOST, () => {
+server.listen({ port: PORT, host: HOST, reuseAddr: true }, () => {
   console.log(
     `AI Food Passport mock backend listening on http://${HOST}:${PORT} ` +
     `(NODE_ENV=${NODE_ENV})`
   );
+});
+
+// Allow port reuse for fast restarts (tests, deployments)
+server.on('error', (err) => {
+  if (err.code === 'EADDRINUSE') {
+    console.error(`Port ${PORT} is already in use. Exiting.`);
+    process.exit(1);
+  }
+  throw err;
 });
 
 module.exports = {

@@ -45,19 +45,27 @@ function startServer() {
 function stopServer() {
   return new Promise((resolve) => {
     if (serverProcess) {
-      serverProcess.kill('SIGTERM');
-      serverProcess.on('exit', () => {
-        serverProcess = null;
-        resolve();
-      });
-      // Force kill after 2 seconds
-      setTimeout(() => {
-        if (serverProcess) {
-          serverProcess.kill('SIGKILL');
-          serverProcess = null;
-          resolve();
+      const proc = serverProcess;
+      serverProcess = null;
+
+      // On Windows, SIGTERM may not work; use taskkill as primary
+      if (process.platform === 'win32') {
+        try {
+          const { execSync } = require('child_process');
+          execSync(`taskkill /pid ${proc.pid} /T /F 2>nul`, { stdio: 'ignore' });
+        } catch (_) {
+          // Process may have already exited
         }
-      }, 2000);
+        resolve();
+      } else {
+        proc.kill('SIGTERM');
+        proc.on('exit', () => resolve());
+        // Force kill after 2 seconds
+        setTimeout(() => {
+          try { proc.kill('SIGKILL'); } catch (_) {}
+          resolve();
+        }, 2000);
+      }
     } else {
       resolve();
     }
@@ -134,12 +142,36 @@ function postRaw(path, payload, headers = {}) {
   });
 }
 
+function options(path, origin) {
+  return new Promise((resolve, reject) => {
+    const req = http.request({
+      hostname: 'localhost',
+      port: PORT,
+      path: path,
+      method: 'OPTIONS',
+      headers: {
+        'Origin': origin,
+        'Access-Control-Request-Method': 'POST',
+        'Access-Control-Request-Headers': 'Content-Type'
+      }
+    }, (res) => {
+      resolve({
+        status: res.statusCode,
+        headers: res.headers
+      });
+    });
+    req.on('error', reject);
+    req.end();
+  });
+}
+
 module.exports = {
   startServer,
   stopServer,
   get,
   post,
   postRaw,
+  options,
   PORT,
   BASE_URL
 };

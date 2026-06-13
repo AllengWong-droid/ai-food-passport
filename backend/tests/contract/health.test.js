@@ -104,6 +104,22 @@ describe('GET /health', () => {
     assert.strictEqual(res.body.deploymentReadinessReady, true);
   });
 
+  test('should have corsEnforcementReady: true', async () => {
+    const res = await get('/health');
+    assert.strictEqual(res.body.corsEnforcementReady, true);
+  });
+
+  test('should have requestBodyLimitBytes as a positive number', async () => {
+    const res = await get('/health');
+    assert.strictEqual(typeof res.body.requestBodyLimitBytes, 'number');
+    assert.ok(res.body.requestBodyLimitBytes > 0);
+  });
+
+  test('should have requestBodyLimitReady: true', async () => {
+    const res = await get('/health');
+    assert.strictEqual(res.body.requestBodyLimitReady, true);
+  });
+
   test('should have providerSafetyConfigValid as boolean', async () => {
     const res = await get('/health');
     assert.strictEqual(typeof res.body.providerSafetyConfigValid, 'boolean');

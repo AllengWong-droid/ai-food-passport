@@ -125,6 +125,8 @@ function getRuntimeConfig() {
     publicBackendUrl: PUBLIC_BACKEND_URL,
     requestBodyLimit: REQUEST_BODY_LIMIT,
     corsConfigured: ALLOWED_ORIGINS.length > 0,
+    corsEnforcementReady: true,
+    requestBodyLimitReady: true,
     productionReady: false, // Always false until real deployment is implemented
     deploymentReadinessReady: true,
     runtimeWarnings

@@ -188,14 +188,20 @@ Invoke-RestMethod `
 
 ## Backend Contract Tests
 
-- [ ] Run `cd backend && npm run test:contract`. Confirm all tests pass.
-- [ ] Confirm `/health` includes `nodeEnv`, `port`, `host`, `corsConfigured`, `allowedOriginsCount`, `productionReady`, `deploymentReadinessReady`.
+- [ ] Run `cd backend && npm run test:contract`. Confirm all 102 tests pass.
+- [ ] Confirm `/health` includes `nodeEnv`, `port`, `host`, `corsConfigured`, `allowedOriginsCount`, `corsEnforcementReady`, `requestBodyLimitBytes`, `requestBodyLimitReady`, `productionReady`, `deploymentReadinessReady`.
+- [ ] Confirm `corsEnforcementReady` is `true`.
+- [ ] Confirm `requestBodyLimitReady` is `true`.
+- [ ] Confirm `requestBodyLimitBytes` is a positive number (default: 1048576).
 - [ ] Confirm `productionReady` is `false`.
 - [ ] Confirm `deploymentReadinessReady` is `true`.
 - [ ] Confirm `corsConfigured` is boolean.
 - [ ] Confirm `allowedOriginsCount` is a non-negative number.
+- [ ] Confirm OPTIONS preflight returns 204 for allowed origin.
+- [ ] Confirm oversized request body returns `413` with `REQUEST_BODY_TOO_LARGE`.
+- [ ] Confirm invalid JSON still returns `BAD_REQUEST`.
 
-## Deployment Readiness Checks (Phase 11B)
+## Deployment Readiness Checks (Phase 11C)
 
 - [ ] Review `backend/DEPLOYMENT_READINESS.md`.
 - [ ] Review `backend/.env.example` contains placeholder-only values.
@@ -203,6 +209,8 @@ Invoke-RestMethod `
 - [ ] Confirm `npm run dev` starts with default runtime config.
 - [ ] Confirm backend start-up message includes `NODE_ENV` and host.
 - [ ] Confirm CORS headers are present in responses (check `Access-Control-Allow-Origin`).
+- [ ] Confirm OPTIONS preflight returns CORS headers for allowed origins.
+- [ ] Confirm oversized body returns controlled error (not crash).
 - [ ] Confirm no production URLs are hardcoded in backend code.
 - [ ] Confirm no real provider calls or deployment happen.
 

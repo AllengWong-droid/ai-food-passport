@@ -42,6 +42,7 @@ describe('extractSafeErrorCode', () => {
       'METHOD_NOT_ALLOWED',
       'BAD_REQUEST',
       'NOT_FOUND',
+      'REQUEST_BODY_TOO_LARGE',
       'OCR_FAILED',
       'OCR_EMPTY_TEXT',
       'OCR_PROVIDER_NOT_CONFIGURED',
