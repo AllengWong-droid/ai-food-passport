@@ -51,8 +51,15 @@
 - Phase 12H: Real Provider Gated End-to-End Dry Run Tests
 - Phase 13A: Production Backend Deployment Target Prep
 - Phase 13B: Render Deployment Config Dry Run
+- Phase 13C: Render Manual Deploy Execution — Mock Backend Verified
 
 ## Current MVP Alpha
+
+**Deployed Backend (mock-only)**: `https://ai-food-passport.onrender.com` — Phase 13C live verification.
+- GET /health: `ok: true`, `activeOcrProvider: mock_ocr`, `activeAnalysisProvider: mock_ai`, `realProvidersEnabled: false`, `productionReady: false`
+- POST /api/analyze-menu: `ok: true`, 2 mock dishes returned
+- All real providers remain disabled; no API keys or secrets configured.
+- GET / returns 404 (no homepage route); `/api/analyze-menu` must not include trailing slash.
 
 The normal app flow remains local mock by default:
 
@@ -70,6 +77,8 @@ Backend Mock Mode is disabled by default. Provider mode remains informational on
 
 ## Next
 
+- Render mock backend deployed and verified (`ai-food-passport.onrender.com`, Phase 13C)
+- Deployment documentation completed (Phases 13A, 13B, 13C)
 - Backend deployment readiness documentation and .env.example completed
 - Backend mock scenario QA automation completed (102 contract + unit tests)
 - Provider routing contract tests for mock/china/global/auto metadata completed
@@ -99,6 +108,7 @@ Backend Mock Mode is disabled by default. Provider mode remains informational on
 - Real OCR
 - Real Qwen, DeepSeek, OpenAI, Claude, Gemini, or other provider calls
 - Real production backend provider routing
+- Mock backend deployed to Render (Phase 13C); real production deployment pending
 - Firebase
 - Subscriptions
 - Real exchange-rate API

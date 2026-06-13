@@ -527,6 +527,28 @@ Invoke-RestMethod `
 - [ ] Confirm `README.md` updated with Phase 13B description.
 - [ ] Confirm `backend/README.md` updated with Phase 13B entries.
 
+## Phase 13C: Render Manual Deploy — Mock Backend Verified QA
+
+- [ ] Confirm Render mock backend deployed at `https://ai-food-passport.onrender.com`.
+- [ ] Confirm `GET /health` returns 200 with `ok: true`, `activeOcrProvider: mock_ocr`, `activeAnalysisProvider: mock_ai`.
+- [ ] Confirm `/health` reports `realOcrEnabled: false`, `realAnalysisEnabled: false`, `realProvidersEnabled: false`, `productionReady: false`.
+- [ ] Confirm `POST /api/analyze-menu` with `{}` returns 200 with `ok: true`, 2 mock dishes.
+- [ ] Confirm `mock_ocr` and `mock_ai` remain the active default providers.
+- [ ] Confirm `realProvidersEnabled` remains `false`.
+- [ ] Confirm `productionReady` remains `false`.
+- [ ] Confirm no `QWEN_API_KEY`, `DEEPSEEK_API_KEY`, `OPENAI_API_KEY`, `GOOGLE_VISION_API_KEY`, `EXCHANGE_RATE_API_KEY` configured.
+- [ ] Confirm `GET /` returns 404 (no homepage route exists — by design).
+- [ ] Confirm `/api/analyze-menu` without trailing slash works; trailing slash `POST /api/analyze-menu/` is undefined and may 404.
+- [ ] Confirm `PUBLIC_BACKEND_URL` is set and matches deployed URL.
+- [ ] Confirm no Flutter behavior changed.
+- [ ] Confirm no backend `src/` files changed from prior phases.
+- [ ] Confirm no secrets or API keys were committed.
+- [ ] Confirm `backend/.env` is untracked and in `.gitignore`.
+- [ ] Confirm local tests all pass (509 tests, 0 failures).
+- [ ] Confirm `git diff --check` passes.
+- [ ] Confirm all Phase 13C docs updated: ROADMAP.md, TESTING_CHECKLIST.md, DEPLOYMENT_READINESS.md, RENDER_DEPLOYMENT_DRY_RUN.md, backend/README.md, README.md, REAL_PROVIDER_READINESS_CHECKLIST.md, TECH_ARCHITECTURE.md.
+- [ ] Confirm no deployment secrets (dashboard screenshots, tokens, private service metadata) committed.
+
 ## Known Environment Issues
 
 - On some local Codex/Windows shells, Flutter and Dart commands may hang due to cache/permission restrictions.

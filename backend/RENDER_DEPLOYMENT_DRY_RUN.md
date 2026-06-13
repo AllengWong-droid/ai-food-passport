@@ -1,8 +1,9 @@
 # Render Deployment Dry-Run Checklist — AI Food Passport Backend
 
-> **Status**: Dry-run documentation only. No deployment has been performed.
+> **Status**: Dry-run documentation completed. Deployment executed and verified (Phase 13C).
 > **Date**: 2026-06-13
-> **Phase**: 13B
+> **Phase**: 13C
+> **Deployed URL**: `https://ai-food-passport.onrender.com`
 > **productionReady**: `false`
 
 ---
@@ -332,13 +333,87 @@ Run this checklist to confirm Phase 13B is complete (no actual deployment needed
 
 ---
 
+## Part 9: Live Deployment Results (Phase 13C)
+
+### Deployment Summary
+
+| Field | Value |
+|-------|-------|
+| **URL** | `https://ai-food-passport.onrender.com` |
+| **Branch** | `master` |
+| **Commit** | `53968d7` |
+| **Deploy Method** | Manual Dashboard Setup |
+| **Result** | Success — service is live |
+
+### Health Check (`GET /health`)
+
+```
+ok: true
+activeOcrProvider: mock_ocr
+activeAnalysisProvider: mock_ai
+realOcrEnabled: false
+realAnalysisEnabled: false
+realProvidersEnabled: false
+productionReady: false
+```
+
+### POST `/api/analyze-menu` (with `{}`)
+
+```
+ok: true
+dishes: 2 (mock dishes)
+error: none
+```
+
+### Provider Status
+
+| Provider | Active | Enabled |
+|----------|--------|---------|
+| OCR | `mock_ocr` | Real Qwen OCR: `false` |
+| Analysis | `mock_ai` | Real Qwen Analysis: `false` |
+
+### Safety Verification
+
+| Check | Result |
+|-------|--------|
+| `QWEN_API_KEY` configured? | No |
+| Any API key configured? | No |
+| Real provider calls made? | None |
+| `productionReady` changed? | No (still `false`) |
+| Flutter behavior changed? | No |
+| Backend `src/` files changed? | No |
+| Secrets committed? | No |
+
+### Known Notes
+
+- `GET /` returns 404 — no homepage route exists (by design).
+- `POST /api/analyze-menu` must not include a trailing slash; `/api/analyze-menu/` is undefined and may 404.
+- `PUBLIC_BACKEND_URL` was set to the deployed URL after initial deploy and redeployed.
+
+### Deployed Environment Variables (non-secret)
+
+```
+NODE_ENV=production
+HOST=0.0.0.0
+OCR_PROVIDER=mock_ocr
+ANALYSIS_PROVIDER=mock_ai
+QWEN_OCR_PROVIDER_ENABLED=false
+QWEN_ANALYSIS_PROVIDER_ENABLED=false
+PROVIDER_TIMEOUT_MS=15000
+PROVIDER_MAX_RETRIES=0
+REQUEST_BODY_LIMIT=1048576
+ALLOWED_ORIGINS=<safe testing origins>
+PUBLIC_BACKEND_URL=https://ai-food-passport.onrender.com
+```
+
+No API keys (`QWEN_API_KEY`, `DEEPSEEK_API_KEY`, `OPENAI_API_KEY`, `GOOGLE_VISION_API_KEY`, `EXCHANGE_RATE_API_KEY`) are configured.
+
 ## What This Phase Does NOT Do
 
-- ❌ No deployment to Render has been performed
-- ❌ No Render account was created
+- ❌ No deployment to Render has been performed **beyond the mock-only Phase 13C deploy**
 - ❌ No real API keys were added
 - ❌ No `QWEN_API_KEY` was set anywhere
-- ❌ `ALLOWED_ORIGINS` was not configured for production
+- ❌ `ALLOWED_ORIGINS` was not configured for production frontend origins (testing only)
 - ❌ No Flutter code was changed
 - ❌ No backend runtime behavior was changed
 - ❌ `productionReady` remains `false`

@@ -1,8 +1,9 @@
 # Deployment Readiness — AI Food Passport Backend
 
-> **Status**: Render config prepared (dry-run only). No deployment has been performed.
+> **Status**: Render mock backend deployed and verified. No real providers.
 > **Date**: 2026-06-13
-> **Phase**: 13B
+> **Phase**: 13C
+> **Deployed URL**: `https://ai-food-passport.onrender.com`
 > **productionReady**: `false`
 
 ---
@@ -291,14 +292,61 @@ const String BACKEND_BASE_URL = 'https://your-app.onrender.com';
 
 ---
 
+## Deployed Mock Backend (Phase 13C)
+
+| Property | Value |
+|----------|-------|
+| **URL** | `https://ai-food-passport.onrender.com` |
+| **Branch** | `master` |
+| **Commit** | `53968d7` |
+| **Status** | Live — mock providers only |
+| **Build Command** | `npm install` |
+| **Start Command** | `npm start` |
+| **Health Check** | `/health` (passes) |
+
+### Verification Results (Phase 13C Smoke Tests)
+
+| Check | Result |
+|-------|--------|
+| `GET /health` | `ok: true`, `activeOcrProvider: mock_ocr`, `activeAnalysisProvider: mock_ai` |
+| `POST /api/analyze-menu` with `{}` | `ok: true`, 2 mock dishes returned |
+| `realOcrEnabled` | `false` |
+| `realAnalysisEnabled` | `false` |
+| `realProvidersEnabled` | `false` |
+| `productionReady` | `false` |
+| `PUBLIC_BACKEND_URL` | Set and matches deployed URL |
+| `QWEN_API_KEY` | Not configured |
+| Any API key configured? | No |
+| Provider calls to Qwen/DeepSeek/OpenAI? | None |
+| Flutter behavior changed? | No |
+| `GET /` | 404 (no homepage route — by design) |
+| `/api/analyze-menu/` (trailing slash) | undefined; do not use trailing slashes |
+
+### Deployed Runtime Configuration
+
+| Env Var | Value |
+|---------|-------|
+| `NODE_ENV` | `production` |
+| `HOST` | `0.0.0.0` |
+| `OCR_PROVIDER` | `mock_ocr` |
+| `ANALYSIS_PROVIDER` | `mock_ai` |
+| `QWEN_OCR_PROVIDER_ENABLED` | `false` |
+| `QWEN_ANALYSIS_PROVIDER_ENABLED` | `false` |
+| `PROVIDER_TIMEOUT_MS` | `15000` |
+| `PROVIDER_MAX_RETRIES` | `0` |
+| `REQUEST_BODY_LIMIT` | `1048576` |
+| `ALLOWED_ORIGINS` | Safe testing origins |
+| `PUBLIC_BACKEND_URL` | `https://ai-food-passport.onrender.com` |
+
+> **Note**: `GET /` returns 404 by design because no homepage route exists.
+> **Note**: `POST /api/analyze-menu` must not include a trailing slash (`/api/analyze-menu/` is undefined).
+
 ## What This Phase Does NOT Do
 
-- ❌ No deployment has been performed
-- ❌ No accounts created on any platform
-- ❌ No production environment variables set on any server
-- ❌ No domain purchased or configured
+- ❌ No deployment has been performed **beyond the mock-only Render deploy (Phase 13C)**
 - ❌ No real API keys added
+- ❌ No `QWEN_API_KEY` set anywhere
+- ❌ No real provider calls made
 - ❌ No Flutter code changed
 - ❌ No backend runtime behavior changed
 - ❌ `productionReady` remains `false`
-- ❌ No cost/budget tracking is active (only documented)

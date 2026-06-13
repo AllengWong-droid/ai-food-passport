@@ -59,6 +59,7 @@ Flutter uses local `MockAiRepository` by default. Developer Backend Mock Mode ca
 - Updated deployment readiness doc (`DEPLOYMENT_READINESS.md`) with production env vars, startup commands, health checks, secret handling, cost controls, rollback steps, and future smoke checklist.
 - Render-specific deployment config (`render.yaml`) — Blueprint template with safe placeholder-only values; committed as reference file only.
 - Render deployment dry-run checklist (`RENDER_DEPLOYMENT_DRY_RUN.md`) — 8-part preflight and smoke-test checklist covering manual Dashboard setup, local preflight, first-deploy verification, rollback plan, and Render free-tier caveats.
+- Render mock backend deployed and verified (`ai-food-passport.onrender.com`, Phase 13C) — live with mock providers only; all real providers disabled; productionReady false.
 
 ## What Is Not Implemented
 

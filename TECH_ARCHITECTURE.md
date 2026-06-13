@@ -307,9 +307,36 @@ Alternatives evaluated: Railway (no viable free tier), Fly.io (credit card frict
    - Set `autoDeployTrigger: 'off'`
    - Manually sync after config changes
 
-### No Deployment Performed
+### No Deployment Performed **Beyond Phase 13C Mock Backend**
 
-This phase is documentation and config only. No Render account was created, no deployment was made, no real API keys were added. `productionReady` remains `false`.
+Phase 13C completed the mock-backend deployment. The backend is live at `https://ai-food-passport.onrender.com` (branch `master`, commit `53968d7`) with mock providers only. All real providers remain disabled; no API keys configured; `productionReady` remains `false`. Flutter behavior unchanged.
+
+This phase is documentation and config only **for the dry-run**. A live deployment was performed as Phase 13C. No real API keys were added. `productionReady` remains `false`.
+
+## Render Mock Backend Deployment (Phase 13C)
+
+**Deployed**: `https://ai-food-passport.onrender.com` (branch `master`, commit `53968d7`)
+
+The backend is deployed to Render with mock providers only. Key verification results:
+
+| Endpoint | Result |
+|----------|--------|
+| `GET /health` | 200 — `ok: true`, `mock_ocr`, `mock_ai`, `realProvidersEnabled: false`, `productionReady: false` |
+| `POST /api/analyze-menu` | 200 — `ok: true`, 2 mock dishes |
+| `GET /` | 404 — no homepage route (by design) |
+
+**Deployed configuration** (non-secret only):
+- `NODE_ENV=production`, `HOST=0.0.0.0`
+- `OCR_PROVIDER=mock_ocr`, `ANALYSIS_PROVIDER=mock_ai`
+- `QWEN_OCR_PROVIDER_ENABLED=false`, `QWEN_ANALYSIS_PROVIDER_ENABLED=false`
+- No API keys configured (`QWEN_API_KEY`, `DEEPSEEK_API_KEY`, etc.)
+- `PUBLIC_BACKEND_URL=https://ai-food-passport.onrender.com`
+
+**Safety status**: All real providers disabled; no secrets configured; `productionReady` remains `false`. Flutter behavior unchanged. Backend `src/` files unchanged.
+
+**Known notes**: `GET /` returns 404 (no homepage route — by design). `POST /api/analyze-menu` must not include trailing slash.
+
+
 
 Phase 10C adds logging redaction and safe error response utilities:
 - `backend/src/utils/redactForLogs.js`

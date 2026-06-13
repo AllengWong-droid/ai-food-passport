@@ -165,6 +165,24 @@ Use this checklist before enabling any real OCR, Qwen, DeepSeek, OpenAI, Google 
 - [ ] No real provider calls, no API keys, no secrets added.
 - [ ] `productionReady` remains `false`.
 
+## Render Mock Backend Deployed and Verified (Phase 13C)
+
+- [ ] Mock backend deployed to Render at `https://ai-food-passport.onrender.com`.
+- [ ] `GET /health` verified: `ok: true`, `activeOcrProvider: mock_ocr`, `activeAnalysisProvider: mock_ai`.
+- [ ] `POST /api/analyze-menu` verified: `ok: true`, 2 mock dishes returned.
+- [ ] `realOcrEnabled: false`, `realAnalysisEnabled: false`, `realProvidersEnabled: false`.
+- [ ] `productionReady: false` (unchanged).
+- [ ] `PUBLIC_BACKEND_URL` set and matches deployed URL.
+- [ ] No `QWEN_API_KEY` or any API key configured on Render.
+- [ ] No real provider calls (Qwen, DeepSeek, OpenAI) were made.
+- [ ] No Flutter behavior changed.
+- [ ] No backend `src/` files changed.
+- [ ] No secrets committed.
+- [ ] `GET /` returns 404 (no homepage route — by design).
+- [ ] `POST /api/analyze-menu` must not include trailing slash.
+- [ ] All 509 local tests pass.
+- [ ] `git diff --check` passes.
+
 ## Rollback Plan
 
 - [ ] Real provider can be disabled quickly.
