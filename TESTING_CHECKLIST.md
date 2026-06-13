@@ -86,6 +86,18 @@ Invoke-RestMethod `
 - [ ] Confirm `/health` reports active OCR provider, active analysis provider, available providers, config validity, and real provider flags.
 - [ ] Confirm no stack traces appear in provider config error responses.
 
+## Backend Provider Safety Config QA
+
+- [ ] Confirm `/health` shows `providerTimeoutMs: 15000` by default.
+- [ ] Confirm `/health` shows `providerMaxRetries: 0` by default.
+- [ ] Confirm `/health` shows monthly budget and daily request limit as not configured by default.
+- [ ] Set invalid `PROVIDER_TIMEOUT_MS` and confirm `/health` falls back to `15000` with a warning.
+- [ ] Set invalid `PROVIDER_MAX_RETRIES` and confirm `/health` falls back to `0` with a warning.
+- [ ] Set invalid `PROVIDER_MONTHLY_BUDGET_USD` and confirm it is ignored with a warning.
+- [ ] Set invalid `PROVIDER_DAILY_REQUEST_LIMIT` and confirm it is ignored with a warning.
+- [ ] Confirm invalid safety values do not crash the backend.
+- [ ] Confirm mock `POST /api/analyze-menu` still succeeds with valid safety defaults.
+
 ## Flutter Backend Mock Mode
 
 - [ ] Start the backend mock server.

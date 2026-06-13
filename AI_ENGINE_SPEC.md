@@ -238,3 +238,14 @@ Placeholder backend settings are documented in `backend/.env.example`:
 - `PROVIDER_DAILY_REQUEST_LIMIT`
 
 These settings do not currently enable real providers. They are readiness placeholders for a future provider implementation phase.
+
+Backend `/health` reports parsed safety metadata:
+
+- `providerTimeoutMs`
+- `providerMaxRetries`
+- `providerMonthlyBudgetConfigured`
+- `providerDailyRequestLimitConfigured`
+- `providerSafetyConfigValid`
+- `providerSafetyWarnings`
+
+Invalid safety values fall back or are ignored with warnings. The mock success path is not blocked by rate or cost guard skeletons.

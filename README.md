@@ -114,6 +114,7 @@ Implemented:
 - OCR provider registry and safe config validation
 - Analysis provider registry and safe config validation
 - Provider routing decision skeleton
+- Provider timeout/rate/cost guard skeletons
 - Backend OCR/analysis failure simulations
 - Flutter Backend Mock Mode toggle
 - Flutter Backend Scenario selector
@@ -187,3 +188,4 @@ git diff --check
 - Phase 9D: Backend Provider Routing Decision Skeleton
 - Phase 9E: Flutter Provider Mode Routing Visibility
 - Phase 10A: Secret Handling and Real Provider Readiness Plan
+- Phase 10B: Backend Provider Timeout, Rate Limit, and Cost Guard Skeleton

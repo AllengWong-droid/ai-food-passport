@@ -227,3 +227,10 @@ Future provider adapters should enforce:
 - No stack traces in user-facing responses.
 - Logging redaction for secrets, headers, raw images, and sensitive menu/user data.
 - Rate and cost guards before production.
+
+Phase 10B adds backend skeleton modules for this policy:
+
+- `backend/src/config/providerSafetyConfig.js`
+- `backend/src/providers/safety/providerSafetyGuards.js`
+
+The safety config appears in `/health`. Rate and cost guards are not enforced in the current mock path.

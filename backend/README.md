@@ -24,6 +24,8 @@ Flutter uses local `MockAiRepository` by default. Developer Backend Mock Mode ca
 - Standardized `ok`, `data`, and `error` API envelope.
 - Mock dish results with `priceIntelligence`.
 - CORS headers for local Flutter Web development origins.
+- Provider safety config parsing for timeout, retries, budget, and daily request limit placeholders.
+- Provider timeout, rate limit, and cost guard skeletons for future real providers.
 
 ## What Is Not Implemented
 
@@ -37,6 +39,8 @@ Flutter uses local `MockAiRepository` by default. Developer Backend Mock Mode ca
 - No production authentication.
 - No provider health checks.
 - No production fallback routing.
+- No production rate limiting.
+- No production cost enforcement.
 - No API keys or secrets.
 - Non-mock OCR providers are skeleton-only and disabled.
 - Non-mock analysis providers are skeleton-only and disabled.
@@ -120,6 +124,38 @@ Safety behavior:
 - Unknown values make `POST /api/analyze-menu` return `ANALYSIS_PROVIDER_INVALID`.
 - Skeleton provider values return `ANALYSIS_PROVIDER_NOT_CONFIGURED`.
 
+## Provider Safety Configuration
+
+Provider safety environment variables are parsed for future real provider integrations:
+
+- `PROVIDER_TIMEOUT_MS`
+- `PROVIDER_MAX_RETRIES`
+- `PROVIDER_MONTHLY_BUDGET_USD`
+- `PROVIDER_DAILY_REQUEST_LIMIT`
+
+Defaults:
+
+- `PROVIDER_TIMEOUT_MS`: `15000`
+- `PROVIDER_MAX_RETRIES`: `0`
+- monthly budget: unset
+- daily request limit: unset
+
+Validation behavior:
+
+- Invalid timeout values fall back to `15000` and add a config warning.
+- Invalid retry values fall back to `0` and add a config warning.
+- Invalid monthly budget values are ignored and add a config warning.
+- Invalid daily request limit values are ignored and add a config warning.
+- Malformed safety env values do not crash the backend.
+
+The guard module is skeleton-only:
+
+- `withProviderTimeout`
+- `checkRateLimit`
+- `checkCostBudget`
+
+Rate and cost guards are not enforced in the mock path. Retries remain disabled by default.
+
 ## Health Check
 
 ```powershell
@@ -161,6 +197,12 @@ Response shape:
   "realAnalysisEnabled": false,
   "analysisConfigValid": true,
   "analysisConfigWarnings": [],
+  "providerTimeoutMs": 15000,
+  "providerMaxRetries": 0,
+  "providerMonthlyBudgetConfigured": false,
+  "providerDailyRequestLimitConfigured": false,
+  "providerSafetyConfigValid": true,
+  "providerSafetyWarnings": [],
   "timestamp": "2026-06-13T00:00:00.000Z"
 }
 ```
@@ -687,6 +729,7 @@ This is a local development convenience only. It is not a production CORS or aut
 - This mock backend contains no API keys or secrets.
 - Provider keys alone do not enable real calls; skeleton providers remain disabled until explicitly implemented.
 - Provider timeout, retry, budget, and request-limit variables are placeholders for future real provider phases.
+- Invalid provider safety config values fall back safely and are reported through `/health`.
 
 More detail:
 

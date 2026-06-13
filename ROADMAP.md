@@ -37,6 +37,7 @@
 - Phase 9D: Backend Provider Routing Decision Skeleton
 - Phase 9E: Flutter Provider Mode Routing Visibility
 - Phase 10A: Secret Handling and Real Provider Readiness Plan
+- Phase 10B: Backend Provider Timeout, Rate Limit, and Cost Guard Skeleton
 
 ## Current MVP Alpha
 
@@ -59,7 +60,7 @@ Backend Mock Mode is disabled by default. Provider mode remains informational on
 - Backend mock scenario QA automation
 - Backend provider contract tests
 - Provider routing contract tests for mock/china/global/auto metadata
-- Provider timeout, rate-limit, budget, and redaction policy implementation
+- Provider timeout, rate-limit, budget, and redaction policy enforcement
 - Real OCR adapter implementation behind disabled backend skeletons
 - Real provider gateway implementation behind backend only
 - Qwen/DeepSeek/OpenAI adapter skeletons on backend

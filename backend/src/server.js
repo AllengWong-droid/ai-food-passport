@@ -2,6 +2,7 @@ const http = require('http');
 const { handleAnalyzeMenu, sendJson, errorPayload } = require('./routes/analyzeMenu');
 const { getOcrProviderConfigStatus } = require('./providers/ocr/ocrProviderRegistry');
 const { getAnalysisProviderConfigStatus } = require('./providers/analysis/analysisProviderRegistry');
+const { getProviderSafetyConfig } = require('./config/providerSafetyConfig');
 const {
   defaultProviderMode,
   supportedProviderModes
@@ -38,6 +39,7 @@ const server = http.createServer((request, response) => {
 
       const ocrProviderStatus = getOcrProviderConfigStatus();
       const analysisProviderStatus = getAnalysisProviderConfigStatus();
+      const providerSafetyConfig = getProviderSafetyConfig();
       sendJson(request, response, 200, {
         ok: true,
         service: 'ai-food-passport-backend',
@@ -60,6 +62,16 @@ const server = http.createServer((request, response) => {
         realAnalysisEnabled: analysisProviderStatus.realAnalysisEnabled,
         analysisConfigValid: analysisProviderStatus.configValid,
         analysisConfigWarnings: analysisProviderStatus.configWarnings,
+        providerTimeoutMs: providerSafetyConfig.providerTimeoutMs,
+        providerMaxRetries: providerSafetyConfig.providerMaxRetries,
+        providerMonthlyBudgetConfigured:
+          providerSafetyConfig.providerMonthlyBudgetConfigured,
+        providerDailyRequestLimitConfigured:
+          providerSafetyConfig.providerDailyRequestLimitConfigured,
+        providerSafetyConfigValid:
+          providerSafetyConfig.providerSafetyConfigValid,
+        providerSafetyWarnings:
+          providerSafetyConfig.providerSafetyWarnings,
         timestamp: new Date().toISOString()
       });
       return;
@@ -80,3 +92,7 @@ const server = http.createServer((request, response) => {
 server.listen(port, () => {
   console.log(`AI Food Passport mock backend listening on http://localhost:${port}`);
 });
+
+module.exports = {
+  server
+};
