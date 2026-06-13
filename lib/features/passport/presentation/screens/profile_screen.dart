@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -7,6 +6,7 @@ import '../../../../app/theme/app_text_styles.dart';
 import '../../../../core/widgets/country_stamp_grid.dart';
 import '../../../../core/widgets/passport_card.dart';
 import '../../../../core/widgets/section_header.dart';
+import '../../../shared/config/developer_controls_config.dart';
 import '../../../shared/data/ai/backend_endpoint_config.dart';
 import '../../../shared/data/mock_repositories.dart';
 import '../../../shared/domain/models/models.dart';
@@ -81,24 +81,26 @@ class ProfileScreen extends ConsumerWidget {
                 );
               },
             ),
-            _SettingsDropdownTile<AiProviderMode>(
-              title: 'AI Provider Mode',
-              value: travelerSettings.providerMode,
-              values: AiProviderMode.values,
-              labelFor: _providerModeLabel,
-              onChanged: (value) {
-                _updateTravelerSettings(
-                  ref,
-                  travelerSettings.copyWith(providerMode: value),
-                );
-              },
-            ),
-            const SizedBox(height: 8),
-            const _SettingsHelperText(
-              text:
-                  'Provider mode is for future routing. Mock remains active in this MVP.',
-            ),
-            if (kDebugMode) ...[
+            if (DeveloperControlsConfig.areVisible) ...[
+              _SettingsDropdownTile<AiProviderMode>(
+                title: 'AI Provider Mode',
+                value: travelerSettings.providerMode,
+                values: AiProviderMode.values,
+                labelFor: _providerModeLabel,
+                onChanged: (value) {
+                  _updateTravelerSettings(
+                    ref,
+                    travelerSettings.copyWith(providerMode: value),
+                  );
+                },
+              ),
+              const SizedBox(height: 8),
+              const _SettingsHelperText(
+                text:
+                    'Provider mode is for future routing. Mock remains active in this MVP.',
+              ),
+            ],
+            if (DeveloperControlsConfig.areVisible) ...[
               const SizedBox(height: 10),
               _DeveloperToggleTile(
                 title: 'Backend Mock Mode',

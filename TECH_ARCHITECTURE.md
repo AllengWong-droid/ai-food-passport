@@ -273,3 +273,24 @@ Phase 11C implements CORS enforcement and request body limit enforcement:
 - Backend Mock Mode remains disabled by default; default local mock still does not require backend
 - `BACKEND_BASE_URL` is not a secret — stored as dart-define, safe for debug visibility
 - Production builds must use a deployed HTTPS backend URL; Flutter must never contain API keys
+
+## Phase 11E: Flutter Developer Controls Release Safety
+
+- `lib/features/shared/config/developer_controls_config.dart` — centralized gate for developer UI
+- `DeveloperControlsConfig.areVisible`: true in debug builds, false in release builds
+- `SHOW_DEVELOPER_CONTROLS` dart-define: opt-in override for internal / QA / TestFlight builds
+- Controls gated when hidden:
+  - Backend Mock Mode toggle (Profile)
+  - Backend Scenario selector (Profile)
+  - AI Provider Mode dropdown (Profile — future routing, not a user feature)
+  - Backend URL debug display (Profile subtitle, Results AI Debug)
+  - Results AI Debug / OCR Debug panels
+  - Raw backend routing metadata
+- Controls that remain visible for all users:
+  - Home Country, Home Currency, Output Language (Traveler Locale)
+  - Taste & Allergies, Notifications, Email, Travel History
+  - Country Stamp Grid, Passport Card, Reset traveler settings
+  - "Continue with sample result" error recovery
+- `BackendMockModeProvider` defaults to `false` regardless of visibility
+- Default local mock app usage still does not require a backend
+- `SHOW_DEVELOPER_CONTROLS` is not a secret; does not enable real providers

@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -9,6 +8,7 @@ import '../../../../app/theme/app_text_styles.dart';
 import '../../../../core/widgets/disclaimer_banner.dart';
 import '../../../../core/widgets/result_card.dart';
 import '../../../../core/widgets/section_header.dart';
+import '../../../shared/config/developer_controls_config.dart';
 import '../../../shared/data/ai/backend_endpoint_config.dart';
 import '../../../shared/data/mock_repositories.dart';
 import '../../../shared/presentation/localized_result_copy.dart';
@@ -83,7 +83,8 @@ class ResultsScreen extends ConsumerWidget {
               ),
               const SizedBox(height: 18),
             ],
-            if (kDebugMode && (ocrResult != null || aiRequest != null)) ...[
+            if (DeveloperControlsConfig.areVisible &&
+                (ocrResult != null || aiRequest != null)) ...[
               const SizedBox(height: 8),
               const SectionHeader('Developer Debug'),
               const SizedBox(height: 12),

@@ -44,6 +44,22 @@ Current app behavior uses:
 - The app's default local mock behavior **must not require** a backend.
 - Backend Mock Mode **must remain disabled** in production builds.
 
+## Developer Controls Release Safety (Phase 11E)
+
+- Developer-only UI controls are gated behind `DeveloperControlsConfig.areVisible` (`lib/features/shared/config/developer_controls_config.dart`).
+- In release builds, the following are hidden by default:
+  - Backend Mock Mode toggle
+  - Backend Scenario selector
+  - AI Provider Mode dropdown (future routing — not a user feature)
+  - Backend URL debug display
+  - Results AI Debug / OCR Debug panels
+  - Raw backend routing metadata
+- Normal traveler settings (Home Country, Home Currency, Output Language, dietary preferences, etc.) remain visible for all users.
+- `SHOW_DEVELOPER_CONTROLS` dart-define can enable developer controls for internal / QA / TestFlight builds.
+- App Store builds **should keep** `SHOW_DEVELOPER_CONTROLS` off.
+- `SHOW_DEVELOPER_CONTROLS` is **not a secret** — it is a compile-time flag that gates debug UI visibility only.
+- Backend Mock Mode is **not a normal user feature**.
+
 ## Future App Store Work
 
 - Production privacy policy

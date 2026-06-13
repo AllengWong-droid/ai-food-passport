@@ -233,6 +233,28 @@ Invoke-RestMethod `
 - [ ] Run `dart format` on touched Dart files and confirm clean.
 - [ ] Run `git diff --check` and confirm pass.
 
+## Phase 11E: Developer Controls Release Safety (Flutter)
+
+- [ ] Confirm `lib/features/shared/config/developer_controls_config.dart` exists and compiles.
+- [ ] Run default debug build (`flutter run -d web-server`). Confirm Backend Mock Mode toggle is visible in Profile.
+- [ ] Confirm Backend Scenario selector is visible in Profile.
+- [ ] Confirm AI Provider Mode dropdown is visible in Profile.
+- [ ] Confirm Results AI Debug / OCR Debug panels are visible when data is present.
+- [ ] Confirm Backend Mock Mode remains disabled by default.
+- [ ] Confirm default local mock still works without backend.
+- [ ] Confirm Backend Mock Mode still works in developer controls mode when toggled on.
+- [ ] Confirm Backend Scenario tester still works when developer controls are enabled.
+- [ ] Confirm Home Country, Home Currency, Output Language remain visible for all users.
+- [ ] Confirm Taste & Allergies, Notifications, Email, Travel History remain visible.
+- [ ] Confirm Country Stamp Grid, Passport Card, Reset traveler settings remain visible.
+- [ ] Confirm "Continue with sample result" still forces local mock.
+- [ ] Confirm no API keys or secrets were added.
+- [ ] Confirm no real provider calls were added.
+- [ ] Confirm Backend Mock Mode default is still `false`.
+- [ ] Run `dart format` on touched Dart files and confirm clean.
+- [ ] Run `dart analyze` on touched Dart files and confirm no new errors.
+- [ ] Run `git diff --check` and confirm pass.
+
 ## Future Provider Readiness QA
 
 - [ ] Review `backend/SECURITY_AND_SECRETS.md`.
