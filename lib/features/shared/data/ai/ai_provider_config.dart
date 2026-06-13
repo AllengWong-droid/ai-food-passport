@@ -1,4 +1,5 @@
 import '../../domain/models/models.dart';
+import 'backend_endpoint_config.dart';
 
 class AiProviderConfig {
   const AiProviderConfig._();
@@ -6,7 +7,7 @@ class AiProviderConfig {
   static const defaultMode = AiProviderMode.mock;
   static const backendRoutingEnabled = false;
   static const backendMockEnabled = false;
-  static const backendBaseUrl = 'http://localhost:8787';
+  static String get backendBaseUrl => BackendEndpointConfig.currentBaseUrl;
   static const qwenEnabled = false;
   static const deepSeekEnabled = false;
   static const openAiEnabled = false;

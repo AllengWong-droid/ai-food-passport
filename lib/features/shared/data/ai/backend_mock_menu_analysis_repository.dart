@@ -6,16 +6,18 @@ import '../../domain/models/models.dart';
 import '../../domain/repositories/repositories.dart';
 import 'backend_api_exception.dart';
 import 'backend_ai_config.dart';
+import 'backend_endpoint_config.dart';
 import 'backend_routing_metadata.dart';
 
 class BackendMockMenuAnalysisRepository implements AiRepository {
   BackendMockMenuAnalysisRepository({
     http.Client? client,
-    this.baseUrl = BackendAiConfig.baseUrl,
+    String? baseUrl,
     this.enabled = BackendAiConfig.mockEnabled,
     this.debugScenario = 'normal',
     this.onRoutingMetadata,
-  }) : _client = client ?? http.Client();
+  })  : baseUrl = baseUrl ?? BackendEndpointConfig.currentBaseUrl,
+        _client = client ?? http.Client();
 
   final http.Client _client;
   final String baseUrl;

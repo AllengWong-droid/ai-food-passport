@@ -9,7 +9,7 @@ import '../../../../app/theme/app_text_styles.dart';
 import '../../../../core/widgets/disclaimer_banner.dart';
 import '../../../../core/widgets/result_card.dart';
 import '../../../../core/widgets/section_header.dart';
-import '../../../shared/data/ai/backend_ai_config.dart';
+import '../../../shared/data/ai/backend_endpoint_config.dart';
 import '../../../shared/data/mock_repositories.dart';
 import '../../../shared/presentation/localized_result_copy.dart';
 
@@ -279,8 +279,12 @@ class _AiDebugSection extends StatelessWidget {
               label: 'Backend debug scenario', value: backendDebugScenario),
           _DebugLine(
               label: 'Backend error code', value: backendErrorCode ?? 'None'),
-          const _DebugLine(
-              label: 'Backend base URL', value: BackendAiConfig.baseUrl),
+          _DebugLine(
+              label: 'Backend base URL',
+              value: BackendEndpointConfig.currentBaseUrl),
+          _DebugLine(
+              label: 'Backend URL custom defined',
+              value: BackendEndpointConfig.isCustomDefined ? 'true' : 'false'),
           _DebugLine(label: 'Provider mode', value: providerMode),
           _DebugLine(
               label: 'Requested provider mode', value: requestedProviderMode),

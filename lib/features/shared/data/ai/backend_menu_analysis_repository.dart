@@ -1,6 +1,7 @@
 import '../../domain/models/models.dart';
 import '../../domain/repositories/repositories.dart';
 import 'backend_ai_config.dart';
+import 'backend_endpoint_config.dart';
 
 class BackendMenuAnalysisRepository implements AiRepository {
   const BackendMenuAnalysisRepository();
@@ -11,7 +12,7 @@ class BackendMenuAnalysisRepository implements AiRepository {
   Future<List<DishAnalysisModel>> analyzeMenu(AiAnalysisRequest request) {
     throw UnimplementedError(
       'BackendMenuAnalysisRepository is a future integration skeleton and is not enabled yet. '
-      'Backend enabled: ${BackendAiConfig.enabled}. Base URL placeholder: ${BackendAiConfig.baseUrl}.',
+      'Backend enabled: ${BackendAiConfig.enabled}. Base URL placeholder: ${BackendEndpointConfig.currentBaseUrl}.',
     );
   }
 

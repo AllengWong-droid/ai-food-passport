@@ -214,6 +214,25 @@ Invoke-RestMethod `
 - [ ] Confirm no production URLs are hardcoded in backend code.
 - [ ] Confirm no real provider calls or deployment happen.
 
+## Phase 11D: Backend URL Configuration (Flutter)
+
+- [ ] Confirm `lib/features/shared/data/ai/backend_endpoint_config.dart` exists and compiles.
+- [ ] Run `flutter run -d web-server` (no dart-define). Confirm app starts normally with local mock.
+- [ ] Confirm Backend Mock Mode is still disabled by default.
+- [ ] In Profile > Developer, confirm Backend Mock Mode subtitle shows the default backend URL.
+- [ ] In Results > AI Debug, confirm "Backend base URL" shows the resolved URL.
+- [ ] Run `flutter run -d web-server --dart-define=BACKEND_BASE_URL=http://127.0.0.1:8787`.
+- [ ] Confirm Results > AI Debug shows "Backend base URL: http://127.0.0.1:8787" and "Backend URL custom defined: true".
+- [ ] Confirm empty `BACKEND_BASE_URL` (e.g., `--dart-define=BACKEND_BASE_URL=`) falls back to local dev URL.
+- [ ] Confirm invalid URL (e.g., `--dart-define=BACKEND_BASE_URL=not-a-url`) falls back to local dev URL.
+- [ ] Confirm no API keys or secrets are added to any Flutter file.
+- [ ] Confirm default local mock behavior is unchanged (no backend required).
+- [ ] Confirm Backend Mock Mode still works with the default local backend URL when backend is running.
+- [ ] Confirm Backend Mock Mode can use custom `BACKEND_BASE_URL` when provided.
+- [ ] Confirm "Continue with sample result" still forces local mock (does not call backend).
+- [ ] Run `dart format` on touched Dart files and confirm clean.
+- [ ] Run `git diff --check` and confirm pass.
+
 ## Future Provider Readiness QA
 
 - [ ] Review `backend/SECURITY_AND_SECRETS.md`.

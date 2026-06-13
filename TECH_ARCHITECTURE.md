@@ -260,3 +260,16 @@ Phase 11C implements CORS enforcement and request body limit enforcement:
 - Request body limit: `REQUEST_BODY_LIMIT` enforced; oversized bodies return `413` with `REQUEST_BODY_TOO_LARGE`
 - `/health` now exposes: `corsEnforcementReady`, `requestBodyLimitBytes`, `requestBodyLimitReady`
 - Contract tests: 102 tests passing (`npm run test:contract`)
+
+## Phase 11D: Flutter Backend Endpoint Configuration
+
+- `lib/features/shared/data/ai/backend_endpoint_config.dart` — centralized backend URL config
+- Reads compile-time `BACKEND_BASE_URL` dart-define
+- Falls back to `http://localhost:8787` when the define is absent, empty, or invalid
+- Validates: rejects URLs with userinfo, known secret patterns, or non-http(s) schemes
+- Exposes `currentBaseUrl` (resolved URL) and `isCustomDefined` (whether dart-define was set)
+- `BackendMockMenuAnalysisRepository` uses `BackendEndpointConfig.currentBaseUrl` instead of hardcoded URL
+- Debug UI (Results AI Debug, Profile Backend Mock Mode toggle) shows the resolved URL
+- Backend Mock Mode remains disabled by default; default local mock still does not require backend
+- `BACKEND_BASE_URL` is not a secret — stored as dart-define, safe for debug visibility
+- Production builds must use a deployed HTTPS backend URL; Flutter must never contain API keys

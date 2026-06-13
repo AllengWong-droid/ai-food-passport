@@ -12,7 +12,7 @@ The backend also has OCR and analysis provider registries plus a provider routin
 
 Phase 10A adds secret-handling and real-provider readiness documentation. Future provider environment variables are placeholder-only in `backend/.env.example`; real keys must stay backend-only and must never be committed.
 
-Phase 10C adds logging redaction and safe error response utilities. Phase 11A adds 86 automated backend contract tests. Phase 11B adds runtime deployment config, CORS skeleton, and deployment readiness documentation (`backend/DEPLOYMENT_READINESS.md`).
+Phase 10C adds logging redaction and safe error response utilities. Phase 11A adds 86 automated backend contract tests. Phase 11B adds runtime deployment config, CORS skeleton, and deployment readiness documentation (`backend/DEPLOYMENT_READINESS.md`). Phase 11C implements CORS enforcement and request body limit enforcement on the backend (102 contract tests passing). Phase 11D adds Flutter backend endpoint configuration via dart-define — compile-time `BACKEND_BASE_URL` lets production builds point to a deployed backend without embedding secrets.
 
 No real OCR, Qwen, DeepSeek, OpenAI, Firebase, subscriptions, production authentication, real exchange rates, API keys, or secrets are implemented. Production deployment is not yet ready (`productionReady: false`).
 
@@ -64,6 +64,27 @@ npm run dev
 6. Confirm Results or friendly recovery UX appears.
 
 Backend Mock Mode remains a developer/test feature and is disabled by default.
+
+## Backend URL Configuration (Phase 11D)
+
+The Flutter app uses a centralized `BackendEndpointConfig` in `lib/features/shared/data/ai/backend_endpoint_config.dart`. By default, the app points to `http://localhost:8787` for local backend testing. For production or remote testing, use the compile-time dart-define:
+
+```bash
+# Local testing with a running backend:
+flutter run -d web-server --dart-define=BACKEND_BASE_URL=http://127.0.0.1:8787
+
+# Production web build:
+flutter build web --dart-define=BACKEND_BASE_URL=https://api.foodpassport.example.com
+```
+
+Rules:
+- `BACKEND_BASE_URL` is **not a secret**. It is safe to log and display in debug UI.
+- Flutter production builds **must** use a deployed HTTPS backend URL.
+- Flutter **must never** contain provider API keys.
+- Empty or invalid `BACKEND_BASE_URL` values fall back to the local dev URL.
+- URLs containing userinfo (`user:pass@host`) or known secret patterns are rejected.
+- Backend Mock Mode remains **disabled by default** regardless of the URL.
+- Default local mock app usage still **does not require** a backend.
 
 ## Tech Stack
 

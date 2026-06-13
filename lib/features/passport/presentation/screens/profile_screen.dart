@@ -7,6 +7,7 @@ import '../../../../app/theme/app_text_styles.dart';
 import '../../../../core/widgets/country_stamp_grid.dart';
 import '../../../../core/widgets/passport_card.dart';
 import '../../../../core/widgets/section_header.dart';
+import '../../../shared/data/ai/backend_endpoint_config.dart';
 import '../../../shared/data/mock_repositories.dart';
 import '../../../shared/domain/models/models.dart';
 
@@ -36,7 +37,13 @@ class ProfileScreen extends ConsumerWidget {
             _SettingsDropdownTile<String>(
               title: 'Home Country',
               value: travelerSettings.homeCountry,
-              values: const ['Taiwan', 'Singapore', 'Japan', 'Germany', 'United States'],
+              values: const [
+                'Taiwan',
+                'Singapore',
+                'Japan',
+                'Germany',
+                'United States'
+              ],
               labelFor: (value) => value,
               onChanged: (value) {
                 _updateTravelerSettings(
@@ -88,15 +95,16 @@ class ProfileScreen extends ConsumerWidget {
             ),
             const SizedBox(height: 8),
             const _SettingsHelperText(
-              text: 'Provider mode is for future routing. Mock remains active in this MVP.',
+              text:
+                  'Provider mode is for future routing. Mock remains active in this MVP.',
             ),
             if (kDebugMode) ...[
               const SizedBox(height: 10),
               _DeveloperToggleTile(
                 title: 'Backend Mock Mode',
                 subtitle: backendMockEnabled
-                    ? 'Developer test mode. Uses the local backend mock server.'
-                    : 'Local mock AI is active. Backend server is not required.',
+                    ? 'Developer test mode. Backend: ${BackendEndpointConfig.currentBaseUrl}'
+                    : 'Local mock AI is active. Backend server is not required. Backend URL: ${BackendEndpointConfig.currentBaseUrl}',
                 value: backendMockEnabled,
                 onChanged: (value) {
                   ref.read(backendMockModeProvider.notifier).state = value;
@@ -372,7 +380,8 @@ class _SettingsDropdownTile<T> extends StatelessWidget {
                 value: value,
                 borderRadius: BorderRadius.circular(18),
                 alignment: Alignment.centerRight,
-                icon: const Icon(Icons.keyboard_arrow_down, color: AppColors.softInk),
+                icon: const Icon(Icons.keyboard_arrow_down,
+                    color: AppColors.softInk),
                 selectedItemBuilder: (context) {
                   return values
                       .map(
