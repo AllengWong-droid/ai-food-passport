@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../../../app/router/route_names.dart';
+import '../../../shared/data/ai/backend_api_exception.dart';
 import '../../../shared/data/ai/backend_mock_menu_analysis_repository.dart';
 import '../../../shared/data/mock_repositories.dart';
 import '../../../shared/domain/models/models.dart';
@@ -224,6 +225,7 @@ class _ScanScreenState extends ConsumerState<ScanScreen> {
     final travelerSettings = ref.read(travelerSettingsProvider);
     ref.read(latestAiProviderLabelProvider.notifier).state =
         useBackendMock ? 'backend_mock' : 'mock_ai';
+    ref.read(latestBackendErrorCodeProvider.notifier).state = null;
 
     try {
       await _showProcessingStage('Reading menu image');
@@ -257,8 +259,14 @@ class _ScanScreenState extends ConsumerState<ScanScreen> {
       try {
         ref.read(dishAnalysesProvider.notifier).state =
             await aiRepository.analyzeMenu(analysisRequest);
+      } on BackendApiException catch (error) {
+        ref.read(latestBackendErrorCodeProvider.notifier).state = error.code.name;
+        _showRecoveryState(_ScanRecoveryKind.fromBackendError(error.code));
+        return;
       } catch (_) {
-        _showRecoveryState(_ScanRecoveryKind.aiAnalysisFailed);
+        _showRecoveryState(
+          useBackendMock ? _ScanRecoveryKind.providerUnavailable : _ScanRecoveryKind.aiAnalysisFailed,
+        );
         return;
       }
 
@@ -310,10 +318,33 @@ class _ScanScreenState extends ConsumerState<ScanScreen> {
 
 enum _ScanRecoveryKind {
   ocrFailed,
+  ocrEmptyText,
   aiAnalysisFailed,
+  analysisEmptyResult,
   networkUnavailable,
   providerUnavailable,
   fallbackUsed,
+  backendRequestFailed;
+
+  static _ScanRecoveryKind fromBackendError(BackendErrorCode code) {
+    switch (code) {
+      case BackendErrorCode.ocrFailed:
+        return _ScanRecoveryKind.ocrFailed;
+      case BackendErrorCode.ocrEmptyText:
+        return _ScanRecoveryKind.ocrEmptyText;
+      case BackendErrorCode.analysisFailed:
+        return _ScanRecoveryKind.aiAnalysisFailed;
+      case BackendErrorCode.analysisEmptyResult:
+        return _ScanRecoveryKind.analysisEmptyResult;
+      case BackendErrorCode.badRequest:
+      case BackendErrorCode.notFound:
+        return _ScanRecoveryKind.backendRequestFailed;
+      case BackendErrorCode.providerFailure:
+      case BackendErrorCode.unavailable:
+      case BackendErrorCode.unknown:
+        return _ScanRecoveryKind.providerUnavailable;
+    }
+  }
 }
 
 class _ScanRecoveryState {
@@ -326,14 +357,20 @@ class _ScanRecoveryState {
     switch (kind) {
       case _ScanRecoveryKind.ocrFailed:
         return 'We could not read this menu clearly';
+      case _ScanRecoveryKind.ocrEmptyText:
+        return 'No readable menu text found';
       case _ScanRecoveryKind.aiAnalysisFailed:
         return 'We could not finish the food match';
+      case _ScanRecoveryKind.analysisEmptyResult:
+        return 'No dishes found yet';
       case _ScanRecoveryKind.networkUnavailable:
         return 'Connection looks unavailable';
       case _ScanRecoveryKind.providerUnavailable:
         return 'Menu analysis is taking too long';
       case _ScanRecoveryKind.fallbackUsed:
         return 'We used a backup route';
+      case _ScanRecoveryKind.backendRequestFailed:
+        return 'Menu analysis needs a quick reset';
     }
   }
 
@@ -341,14 +378,20 @@ class _ScanRecoveryState {
     switch (kind) {
       case _ScanRecoveryKind.ocrFailed:
         return 'Try another photo or continue with a sample analysis.';
+      case _ScanRecoveryKind.ocrEmptyText:
+        return 'The menu image did not include text we could use. Try another image or continue with sample results.';
       case _ScanRecoveryKind.aiAnalysisFailed:
         return 'You can retry the analysis or continue with sample recommendations.';
+      case _ScanRecoveryKind.analysisEmptyResult:
+        return 'We could not identify dishes from this menu yet. Try again, choose another image, or continue with sample results.';
       case _ScanRecoveryKind.networkUnavailable:
         return 'Check your connection, try again, or continue with sample results.';
       case _ScanRecoveryKind.providerUnavailable:
         return 'Try again in a moment or continue with sample recommendations.';
       case _ScanRecoveryKind.fallbackUsed:
         return 'A primary provider was unavailable, so a backup route prepared the result.';
+      case _ScanRecoveryKind.backendRequestFailed:
+        return 'Something about the test request was not accepted. Try again or continue with sample recommendations.';
     }
   }
 }

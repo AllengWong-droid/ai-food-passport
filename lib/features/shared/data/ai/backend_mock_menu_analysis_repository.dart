@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 
 import '../../domain/models/models.dart';
 import '../../domain/repositories/repositories.dart';
+import 'backend_api_exception.dart';
 import 'backend_ai_config.dart';
 
 class BackendMockMenuAnalysisRepository implements AiRepository {
@@ -27,19 +28,42 @@ class BackendMockMenuAnalysisRepository implements AiRepository {
       );
     }
 
-    final response = await _client.post(
-      Uri.parse('$baseUrl/api/analyze-menu'),
-      headers: const {'Content-Type': 'application/json'},
-      body: jsonEncode(_toBackendRequestJson(request)),
-    );
-
-    if (response.statusCode < 200 || response.statusCode >= 300) {
-      throw StateError(
-        'Backend mock analyze-menu failed with status ${response.statusCode}.',
+    final http.Response response;
+    try {
+      response = await _client.post(
+        Uri.parse('$baseUrl/api/analyze-menu'),
+        headers: const {'Content-Type': 'application/json'},
+        body: jsonEncode(_toBackendRequestJson(request)),
+      );
+    } catch (_) {
+      throw const BackendApiException(
+        BackendApiError(
+          code: BackendErrorCode.unavailable,
+          message: 'Backend mock server is unavailable.',
+        ),
       );
     }
 
-    return _parseDishes(jsonDecode(response.body));
+    final decodedBody = _decodeResponseBody(response.body);
+    if (decodedBody is! Map<String, dynamic>) {
+      throw const BackendApiException(
+        BackendApiError(
+          code: BackendErrorCode.unknown,
+          message: 'Backend mock response was not readable.',
+        ),
+      );
+    }
+
+    if (response.statusCode < 200 || response.statusCode >= 300) {
+      throw BackendApiException(_parseBackendError(decodedBody));
+    }
+
+    if (decodedBody['ok'] == false) {
+      throw BackendApiException(_parseBackendError(decodedBody));
+    }
+
+    _throwIfAnalysisEmptyResult(decodedBody);
+    return _parseDishes(decodedBody);
   }
 
   @override
@@ -91,12 +115,65 @@ class BackendMockMenuAnalysisRepository implements AiRepository {
       throw const FormatException('Backend mock response must be a JSON object.');
     }
 
-    final dishes = decodedBody['dishes'];
+    final data = decodedBody['data'];
+    final dishes = data is Map<String, dynamic> ? data['dishes'] : decodedBody['dishes'];
     if (dishes is! List) {
       throw const FormatException('Backend mock response must include dishes.');
     }
 
     return dishes.map(_parseDish).toList();
+  }
+
+  dynamic _decodeResponseBody(String body) {
+    try {
+      return jsonDecode(body);
+    } catch (_) {
+      return null;
+    }
+  }
+
+  BackendApiError _parseBackendError(Map<String, dynamic> decodedBody) {
+    final error = decodedBody['error'];
+    if (error is Map<String, dynamic>) {
+      return BackendApiError.fromJson(error);
+    }
+
+    return const BackendApiError(
+      code: BackendErrorCode.unknown,
+      message: 'Backend mock request failed.',
+    );
+  }
+
+  void _throwIfAnalysisEmptyResult(Map<String, dynamic> decodedBody) {
+    final data = decodedBody['data'];
+    if (data is! Map<String, dynamic>) {
+      return;
+    }
+
+    final routing = data['routing'];
+    if (routing is! Map<String, dynamic>) {
+      return;
+    }
+
+    final analysisWarnings = routing['analysisWarnings'];
+    final warnings = routing['warnings'];
+    final hasEmptyResultWarning =
+        _containsWarning(analysisWarnings, 'ANALYSIS_EMPTY_RESULT') ||
+            _containsWarning(warnings, 'ANALYSIS_EMPTY_RESULT');
+    if (!hasEmptyResultWarning) {
+      return;
+    }
+
+    throw const BackendApiException(
+      BackendApiError(
+        code: BackendErrorCode.analysisEmptyResult,
+        message: 'No dishes were found in the backend mock analysis.',
+      ),
+    );
+  }
+
+  bool _containsWarning(dynamic value, String warning) {
+    return value is List && value.whereType<String>().contains(warning);
   }
 
   DishAnalysisModel _parseDish(dynamic value) {

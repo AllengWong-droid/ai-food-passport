@@ -37,6 +37,10 @@ final latestAiProviderLabelProvider = StateProvider<String>((ref) {
   return 'mock_ai';
 });
 
+final latestBackendErrorCodeProvider = StateProvider<String?>((ref) {
+  return null;
+});
+
 final priceRepositoryProvider = Provider<PriceRepository>((ref) {
   return MockPriceRepository();
 });
