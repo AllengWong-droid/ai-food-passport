@@ -2,9 +2,16 @@
 
 ## Current State
 
-The backend is still mock-only. It does not call real OCR, Qwen, DeepSeek, OpenAI, Google Vision, Firebase, exchange-rate APIs, or any external provider.
+The backend is primarily mock-mode. It does not call real DeepSeek, OpenAI, Google Vision, Firebase, exchange-rate APIs, or any external provider by default.
 
-`mock_ocr` and `mock_ai` remain the only active providers. Skeleton providers are disabled and return controlled errors if selected.
+`mock_ocr` and `mock_ai` remain the only active providers by default. Skeleton providers are disabled and return controlled errors if selected.
+
+**Qwen OCR real transport** (`qwenOcrTransport.js`) is implemented but disabled behind explicit env gates. It will ONLY activate when ALL of the following are set:
+- `OCR_PROVIDER=qwen_ocr`
+- `QWEN_OCR_PROVIDER_ENABLED=true`
+- `QWEN_API_KEY` present and non-placeholder
+
+No real Qwen API calls occur in automated tests — tests use stubbed `https.request`.
 
 ## Secret Rules
 

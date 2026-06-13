@@ -322,6 +322,29 @@ Invoke-RestMethod `
 - [ ] Confirm no real network calls in any test (all tests use fake transport or test config validation).
 - [ ] Confirm `realOcrEnabled: false` (hard-coded in qwenOcrProvider.js).
 - [ ] Confirm `qwen_ocr` is registered in `ocrProviderRegistry.js` alongside `qwen_ocr_skeleton` (safety fallback).
+
+## Phase 12C: Qwen OCR Real Transport QA
+
+- [ ] Confirm `backend/src/providers/ocr/qwenOcrTransport.js` exists and exports `createRealQwenTransport`, `validateTransportGates`.
+- [ ] Run `cd backend && node --test tests/unit/qwenOcrTransport.test.js`. Confirm all 34 tests pass.
+- [ ] Confirm all transport tests use stubbed `httpsRequest` — no real network calls.
+- [ ] Confirm `validateTransportGates()` returns `ok:false` when `OCR_PROVIDER` is not `qwen_ocr`.
+- [ ] Confirm `validateTransportGates()` returns `ok:false` when `QWEN_OCR_PROVIDER_ENABLED` is not `true`.
+- [ ] Confirm `validateTransportGates()` returns `ok:false` when `QWEN_API_KEY` is missing or placeholder.
+- [ ] Confirm `createRealQwenTransport()` returns `{ transport, error: null }` when all gates pass.
+- [ ] Confirm transport throws `OCR_FAILED` on HTTP 500, 429, 401 responses.
+- [ ] Confirm transport throws `OCR_FAILED` on malformed JSON response body.
+- [ ] Confirm transport throws `OCR_FAILED` on network error (ECONNREFUSED, ENOTFOUND).
+- [ ] Confirm transport throws `OCR_FAILED` on timeout (both provider-level and request-level).
+- [ ] Confirm no API key, stack trace, raw response body, or headers leak in any error.
+- [ ] Confirm `realOcrEnabled` in `qwenOcrProvider.js` is now config-driven (getter checking env).
+- [ ] Confirm `GET /health` with default env still shows `mock_ocr` active, `realOcrEnabled: false`.
+- [ ] Confirm `POST /api/analyze-menu` with default env still returns mock dishes.
+- [ ] Confirm providerMode `mock`/`china`/`global`/`auto` still works safely.
+- [ ] Confirm manual smoke test guide exists at `backend/QWEN_OCR_MANUAL_SMOKE_TEST.md`.
+- [ ] Confirm all existing tests still pass: contract (102), OCR contract (80), Qwen adapter (34).
+- [ ] Confirm `backend/.env` is still in `.gitignore`.
+- [ ] Confirm no API keys or secrets were committed (`git diff --check` passes).
 - [ ] Confirm `mock_ocr` remains the active default provider.
 - [ ] Confirm `npm run test:contract` still passes (102 tests).
 - [ ] Confirm `node --test tests/unit/ocrProviderContract.test.js` still passes (80 tests).

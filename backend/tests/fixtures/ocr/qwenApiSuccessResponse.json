@@ -1,0 +1,17 @@
+{
+  "description": "Full Qwen VL API success response — as returned by real HTTPS call",
+  "output": {
+    "choices": [
+      {
+        "message": {
+          "content": [
+            { "text": "Tonkotsu Ramen JPY 980\nMiso Katsu Skewers JPY 800\nGyoza (5 pcs) JPY 480" }
+          ]
+        }
+      }
+    ]
+  },
+  "usage": {
+    "total_tokens": 520
+  }
+}

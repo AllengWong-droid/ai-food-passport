@@ -1,29 +1,29 @@
 /**
  * qwenOcrProvider.js
  *
- * Qwen OCR Provider Adapter (Disabled Scaffold)
+ * Qwen OCR Provider Adapter (Disabled by default; real transport behind gates)
  *
  * Purpose:
- *   Conform to the OCR provider contract and provide a scaffold for the
- *   future real Qwen OCR integration. This adapter does NOT call the
- *   real Qwen API. It remains disabled by default and returns controlled
- *   errors if selected without full implementation and configuration.
+ *   Conform to the OCR provider contract. When properly configured via
+ *   backend-only environment variables, this adapter can call the real
+ *   Qwen VL API. By default, it remains disabled and returns controlled
+ *   errors if selected without proper configuration.
  *
  *   The adapter supports a fake transport / unit testing seam so that
  *   the normalization logic and contract conformance can be tested
  *   without any external network calls.
  *
  * Contract conformance:
- *   Every result returned by `extractMenuText` (when enabled via test
- *   seam) is passed through `normalizeOcrResult()` from the OCR
- *   provider contract before being returned. Every error is passed
- *   through `normalizeOcrError()`.
+ *   Every result returned by `extractMenuText` is passed through
+ *   `normalizeOcrResult()` from the OCR provider contract before being
+ *   returned. Every error is passed through `normalizeOcrError()`.
  *
- * Config env vars (not required for Phase 12B):
- *   QWEN_OCR_PROVIDER_ENABLED=true  // explicitly enable (not yet)
- *   QWEN_API_KEY=sk-...                // API key (not required yet)
- *   QWEN_OCR_MODEL=qwen-vl-max            // optional, default
- *   QWEN_OCR_BASE_URL=...                 // optional, default
+ * Config env vars (all required to enable real transport):
+ *   OCR_PROVIDER=qwen_ocr                  // MUST be explicit
+ *   QWEN_OCR_PROVIDER_ENABLED=true         // MUST be "true"
+ *   QWEN_API_KEY=sk-...                    // MUST be present and non-placeholder
+ *   QWEN_OCR_MODEL=qwen-vl-max             // optional, defaults to qwen-vl-max
+ *   QWEN_OCR_BASE_URL=...                  // optional, defaults to DashScope
  *
  * Test seam:
  *   extractMenuText(image, { transport })
@@ -31,12 +31,13 @@
  *   - In unit tests, pass a fake transport created by
  *     `createFakeQwenTransport(fakeResponse)`.
  *   - The fake transport never makes network calls.
+ *   - The test seam takes precedence over real transport.
  *
  * Status:
- *   - realOcrEnabled: false (hard-coded for Phase 12B)
- *   - Adapter scaffold: complete (normalization, config validation, test seam)
- *   - Real API calls: NOT implemented (future phase)
- *   - Fake transport tests: supported
+ *   - realOcrEnabled: config-driven (Phase 12C)
+ *   - Real transport via qwenOcrTransport.js (behind env gates)
+ *   - Fake transport tests: supported (offline)
+ *   - All invariants: mock_ocr remains default, Qwen disabled by default
  *
  * Usage in tests:
  *
@@ -62,6 +63,9 @@ const {
 const {
   createDisabledOcrProviderError
 } = require('./disabledOcrProviderError');
+const {
+  createRealQwenTransport
+} = require('./qwenOcrTransport');
 
 // ---------------------------------------------------------------------------
 // Config validation
@@ -391,23 +395,84 @@ async function extractMenuText(image, options) {
   }
 
   // No transport provided → this is the production path.
-  // Check if the provider is configured. Since we're in Phase 12B and
-  // the real implementation isn't complete, always return a controlled error.
+  // First, validate Qwen OCR configuration.
   var config = validateQwenOcrConfig();
 
   if (!config.enabled) {
     throw createDisabledOcrProviderError(OcrProviderName.QWEN_OCR);
   }
 
-  // If we reach here, config is valid but the real transport isn't
-  // implemented yet. Return a controlled error (not a crash).
-  var notImplError = new Error(
-    'Qwen OCR provider configuration is valid but the real API transport ' +
-    'is not yet implemented. This is a scaffold for a future phase.'
-  );
-  notImplError.code = 'OCR_PROVIDER_NOT_CONFIGURED';
-  notImplError.provider = OcrProviderName.QWEN_OCR;
-  throw notImplError;
+  // Config is valid — try to create the real transport.
+  // createRealQwenTransport validates all env gates (including OCR_PROVIDER)
+  // and returns either { transport } or { error }.
+  var transportResult = createRealQwenTransport();
+
+  if (transportResult.error) {
+    // Transport creation failed (e.g. OCR_PROVIDER not set to qwen_ocr).
+    throw transportResult.error;
+  }
+
+  if (!transportResult.transport) {
+    // Should not happen, but guard against null transport without error.
+    throw createDisabledOcrProviderError(OcrProviderName.QWEN_OCR);
+  }
+
+  // Build Qwen API request body and call the real transport.
+  try {
+    var requestBody = {
+      model: config.model,
+      input: {
+        messages: [
+          {
+            role: 'user',
+            content: [
+              {
+                type: 'image_url',
+                image_url: {
+                  url: 'data:' + (image.mimeType || 'image/jpeg') + ';base64,' + (image.base64Content || '')
+                }
+              },
+              {
+                type: 'text',
+                text: 'Extract all menu text from this image. Return the text content only.'
+              }
+            ]
+          }
+        ]
+      }
+    };
+
+    var rawResponse = await transportResult.transport(requestBody);
+    return normalizeQwenResponse(rawResponse);
+  } catch (error) {
+    throw normalizeOcrError(error, 'OCR_FAILED');
+  }
+}
+
+// ---------------------------------------------------------------------------
+// realOcrEnabled — config-driven (Phase 12C)
+// ---------------------------------------------------------------------------
+
+/**
+ * Determine whether the real Qwen OCR provider is currently enabled.
+ * This is config-driven: it reads env vars to decide.
+ *
+ * Returns true ONLY when ALL gates are satisfied:
+ *   OCR_PROVIDER=qwen_ocr
+ *   QWEN_OCR_PROVIDER_ENABLED=true
+ *   QWEN_API_KEY present and non-placeholder
+ *
+ * In all other cases (including default mock mode), returns false.
+ *
+ * @returns {boolean}
+ */
+function checkRealOcrEnabled() {
+  var ocrProvider = (process.env.OCR_PROVIDER || '').trim();
+  if (ocrProvider !== OcrProviderName.QWEN_OCR) {
+    return false;
+  }
+  var config = validateQwenOcrConfig();
+  return config.enabled === true;
 }
 
 // ---------------------------------------------------------------------------
@@ -416,7 +481,7 @@ async function extractMenuText(image, options) {
 
 module.exports = {
   providerName: OcrProviderName.QWEN_OCR,
-  realOcrEnabled: false, // Phase 12B: hard-coded false; future phase will make config-driven
+  get realOcrEnabled() { return checkRealOcrEnabled(); },
   extractMenuText,
   validateQwenOcrConfig,
   createFakeQwenTransport,

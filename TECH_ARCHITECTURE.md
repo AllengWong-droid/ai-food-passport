@@ -339,3 +339,28 @@ Phase 11C implements CORS enforcement and request body limit enforcement:
 - `realOcrEnabled: false` — hard-coded; Qwen adapter stays disabled by default.
 - All existing contract tests (102) and OCR contract tests (80) still pass. New Qwen adapter tests: 34/34 passing.
 - All existing contract tests still pass. New OCR unit tests: 80/80 passing.
+
+## Phase 12C: Qwen OCR Real Transport Behind Explicit Safety Gates
+
+- `backend/src/providers/ocr/qwenOcrTransport.js` — Real Qwen OCR HTTPS transport behind env gates.
+  - `createRealQwenTransport({ httpsRequest })` — factory that validates all env gates and returns `{ transport, error }`. Accepts `httpsRequest` injection for offline testing.
+  - `validateTransportGates()` — checks `OCR_PROVIDER=qwen_ocr` + `QWEN_OCR_PROVIDER_ENABLED=true` + valid `QWEN_API_KEY`. Returns `{ ok, error, config }`.
+  - Timeout via `withProviderTimeout()` from provider safety guards. Respects `PROVIDER_TIMEOUT_MS`.
+  - Error mapping: network error → `OCR_FAILED`, non-2xx → `OCR_FAILED`, malformed JSON → `OCR_FAILED`, timeout → `OCR_FAILED`, missing config → `OCR_PROVIDER_NOT_CONFIGURED`.
+  - API keys NEVER logged or included in error messages. Stack traces always deleted.
+  - Raw provider responses, headers, and body content NEVER leak into errors.
+- `backend/src/providers/ocr/qwenOcrProvider.js` — Updated for Phase 12C.
+  - `realOcrEnabled` changed from hard-coded `false` to config-driven getter (`checkRealOcrEnabled()`).
+  - Production path now calls `createRealQwenTransport()` when gates are satisfied.
+  - Test seam (`transport` option) still takes precedence — all unit tests remain offline.
+- `backend/src/providers/ocr/ocrProviderContract.js` — Updated with message sanitisation.
+  - `sanitizeMessage()` — removes embedded API keys, JWTs, base64 blobs, and Bearer tokens from error messages.
+  - `normalizeOcrError()` — reads `error.message` explicitly (Error.message is inherited, not own property).
+- `backend/tests/fixtures/ocr/` — 3 new transport-level fixtures: qwenApiSuccessResponse, qwenApiEmptyTextResponse, qwenApiChineseResponse.
+- `backend/tests/unit/qwenOcrTransport.test.js` — 34 new offline tests: env gate validation (11 tests), gate failure creation (5), fake success response (3), non-2xx error (3), malformed JSON (1), network error (2), timeout (2), no secrets leak (4), no real network calls (1), transport interface (2).
+- `backend/QWEN_OCR_MANUAL_SMOKE_TEST.md` — Manual smoke test guide with setup instructions, verification steps, and troubleshooting.
+- `backend/README.md`, `backend/OCR_PROVIDER_SELECTION.md`, `backend/SECURITY_AND_SECRETS.md` — Updated for Phase 12C transport status.
+- `AI_ENGINE_SPEC.md`, `TECH_ARCHITECTURE.md`, `ROADMAP.md`, `TESTING_CHECKLIST.md`, `REAL_PROVIDER_READINESS_CHECKLIST.md` — Updated for Phase 12C.
+- Flutter files unchanged. No real provider keys or secrets committed.
+- `mock_ocr` remains default active provider. Qwen OCR stays disabled by default.
+- All existing tests pass (contract: 102, OCR contract: 80, Qwen adapter: 34, Qwen transport: 34 = 250 total).

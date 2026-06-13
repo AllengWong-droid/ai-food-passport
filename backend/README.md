@@ -35,14 +35,19 @@ Flutter uses local `MockAiRepository` by default. Developer Backend Mock Mode ca
 - OCR provider contract unit tests (`tests/unit/ocrProviderContract.test.js`, 80 tests).
 - OCR test fixture data (`tests/fixtures/ocr/`).
 - OCR provider selection documentation (`backend/OCR_PROVIDER_SELECTION.md`).
+- Qwen OCR adapter with fake transport test seam (`src/providers/ocr/qwenOcrProvider.js`).
+- Qwen OCR adapter unit tests (`tests/unit/qwenOcrProvider.test.js`, 34 tests).
+- Qwen OCR real transport behind env gates (`src/providers/ocr/qwenOcrTransport.js`).
+- Qwen OCR transport unit tests (`tests/unit/qwenOcrTransport.test.js`, 34 tests, all offline).
+- Qwen OCR manual smoke test guide (`backend/QWEN_OCR_MANUAL_SMOKE_TEST.md`).
 - Deployment readiness documentation (`backend/DEPLOYMENT_READINESS.md`).
 - Environment variable exemplar (`backend/.env.example`) with placeholder-only values.
 
 ## What Is Not Implemented
 
-- No real OCR.
-- No Qwen OCR, Google Vision, Azure OCR, Tesseract, or OpenAI Vision.
-- No real Qwen calls.
+- No real OCR active by default (Qwen OCR transport is implemented but disabled behind env gates).
+- No Qwen OCR calls in automated tests (all tests are offline).
+- No Google Vision, Azure OCR, Tesseract, or OpenAI Vision.
 - No real DeepSeek calls.
 - No real OpenAI calls.
 - No real exchange-rate API.
@@ -52,8 +57,8 @@ Flutter uses local `MockAiRepository` by default. Developer Backend Mock Mode ca
 - No production fallback routing.
 - No production rate limiting.
 - No production cost enforcement.
-- No API keys or secrets.
-- Non-mock OCR providers are skeleton-only and disabled.
+- No API keys or secrets committed.
+- Non-mock OCR providers other than Qwen are skeleton-only and disabled.
 - Non-mock analysis providers are skeleton-only and disabled.
 
 ## Install Dependencies

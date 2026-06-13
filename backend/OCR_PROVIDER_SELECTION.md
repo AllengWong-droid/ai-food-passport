@@ -1,18 +1,21 @@
 # OCR Provider Selection — AI Food Passport
 
-> **Status**: No real OCR provider is active yet. This document records the
-> evaluation and recommendation for Phase 12A preparation. Real provider
-> implementation is deferred to a future phase.
+> **Status**: Qwen OCR transport is implemented behind explicit env gates.
+> `mock_ocr` remains the default active provider. Real Qwen OCR is disabled
+> unless all env gates are satisfied. No real API calls occur in automated tests.
 
 ## Current State
 
 - Active OCR provider: `mock_ocr` (deterministic local text generator)
-- Real OCR enabled: `false`
-- Qwen OCR adapter scaffold: `backend/src/providers/ocr/qwenOcrProvider.js` (disabled, testable via fake transport)
+- Real OCR enabled: `false` (by default; config-driven via env gates)
+- Qwen OCR adapter: `backend/src/providers/ocr/qwenOcrProvider.js` (disabled by default, testable via fake transport)
+- Qwen OCR real transport: `backend/src/providers/ocr/qwenOcrTransport.js` (disabled behind env gates)
+- Required env gates: `OCR_PROVIDER=qwen_ocr` + `QWEN_OCR_PROVIDER_ENABLED=true` + valid `QWEN_API_KEY`
 - Provider skeletons exist but are disabled: Qwen OCR (skeleton), Google Vision, OpenAI Vision
 - The OCR provider contract (`ocrProviderContract.js`) defines the standard shape all future real providers must produce
 - The `/health` endpoint reports all available and configured providers
 - Provider safety guards (timeout, rate limit, cost budget, logging redaction) are already skeleton-ready
+- Manual smoke test guide: `backend/QWEN_OCR_MANUAL_SMOKE_TEST.md`
 
 ## Provider Candidates
 

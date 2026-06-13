@@ -92,7 +92,9 @@ Normalization helpers (`normalizeOcrResult`, `normalizeOcrError`) sanitise raw p
 
 Provider selection documentation (`backend/OCR_PROVIDER_SELECTION.md`) evaluates Qwen OCR/VL, OpenAI Vision, and Google Vision as future candidates. Qwen OCR/VL is the recommended first real OCR provider for `china`-mode routing, given CJK accuracy, China data compliance, and unified OCR+analysis pipeline.
 
-The Qwen OCR adapter scaffold (`backend/src/providers/ocr/qwenOcrProvider.js`) is now in place. It conforms to the OCR provider contract, remains disabled by default, and supports a fake transport test seam for unit testing. Real Qwen API calls are NOT yet implemented.
+The Qwen OCR adapter scaffold (`backend/src/providers/ocr/qwenOcrProvider.js`) is now in place. It conforms to the OCR provider contract, remains disabled by default, and supports a fake transport test seam for unit testing.
+
+The Qwen OCR real transport (`backend/src/providers/ocr/qwenOcrTransport.js`) is implemented behind explicit env gates: `OCR_PROVIDER=qwen_ocr`, `QWEN_OCR_PROVIDER_ENABLED=true`, and a valid `QWEN_API_KEY`. Without all gates, the transport creation returns a controlled `OCR_PROVIDER_NOT_CONFIGURED` error. Automated tests are 100% offline via stubbed `https.request`. A manual smoke test guide is available at `backend/QWEN_OCR_MANUAL_SMOKE_TEST.md`.
 
 No real provider is active yet.
 

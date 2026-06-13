@@ -13,6 +13,12 @@ Use this checklist before enabling any real OCR, Qwen, DeepSeek, OpenAI, Google 
 - [ ] Provider selection documented (`backend/OCR_PROVIDER_SELECTION.md`) with tradeoff analysis.
 - [ ] First real OCR provider candidate identified (Qwen OCR/VL recommended for china mode).
 - [ ] Qwen OCR adapter scaffold exists (`qwenOcrProvider.js`) with config validation, fake transport seam, and 34 unit tests.
+- [ ] Qwen OCR real transport implemented (`qwenOcrTransport.js`) behind explicit env gates:
+  - Requires `OCR_PROVIDER=qwen_ocr` + `QWEN_OCR_PROVIDER_ENABLED=true` + valid `QWEN_API_KEY`.
+  - Timeout via `PROVIDER_TIMEOUT_MS`.
+  - Safe error mapping: network errors, non-2xx, malformed response → `OCR_FAILED`.
+  - 34 offline transport unit tests.
+- [ ] Manual smoke test guide available (`backend/QWEN_OCR_MANUAL_SMOKE_TEST.md`).
 - [ ] Qwen adapter remains disabled by default (`realOcrEnabled: false`).
 - [ ] Qwen adapter conforms to OCR provider contract (normalizeOcrResult/normalizeOcrError).
 - [ ] No real provider calls, API keys, or secrets have been added.

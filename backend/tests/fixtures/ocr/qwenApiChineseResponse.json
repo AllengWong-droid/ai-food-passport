@@ -1,0 +1,17 @@
+{
+  "description": "Qwen VL API success response with Chinese menu text",
+  "output": {
+    "choices": [
+      {
+        "message": {
+          "content": [
+            { "text": "宫保鸡丁 RMB 38\n麻婆豆腐 RMB 28\n回锅肉 RMB 42\n清炒时蔬 RMB 22" }
+          ]
+        }
+      }
+    ]
+  },
+  "usage": {
+    "total_tokens": 410
+  }
+}

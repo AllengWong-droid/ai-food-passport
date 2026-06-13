@@ -177,14 +177,39 @@ function normalizeOcrResult(raw = {}) {
  * @returns {Error} A sanitised Error with only { code, message, provider }.
  */
 function normalizeOcrError(error, fallbackCode = 'OCR_FAILED') {
-  const input = error && typeof error === 'object' ? error : {};
-  const stripped = stripForbiddenFields(input);
+  // Error objects have 'message' as an inherited property, not own.
+  // We must read it explicitly before stripping fields.
+  // Also sanitise the message text to remove any embedded secrets.
+  var rawMessage = '';
+  var rawCode = undefined;
+  var rawProvider = undefined;
 
-  const code = resolveErrorCode(stripped.code, fallbackCode);
-  const message = typeof stripped.message === 'string' && stripped.message.length > 0
-    ? stripped.message
-    : 'OCR provider encountered an error.';
-  const provider = normalizeProvider(stripped.provider);
+  if (error && typeof error === 'object') {
+    rawMessage = typeof error.message === 'string' ? error.message : '';
+    rawCode = error.code;
+    rawProvider = error.provider;
+  }
+
+  var stripped = stripForbiddenFields(error && typeof error === 'object' ? error : {});
+
+  var code = resolveErrorCode(stripped.code || rawCode, fallbackCode);
+
+  // Sanitise the message: use the raw error message but remove any
+  // embedded API keys, JWTs, or base64 blobs that may have leaked into it.
+  var message = sanitizeMessage(rawMessage);
+
+  // If sanitisation left us with an empty message, try the stripped
+  // version (which was deep-cloned from own properties only) or fall back.
+  if (!message) {
+    if (typeof stripped.message === 'string' && stripped.message.length > 0) {
+      message = sanitizeMessage(stripped.message);
+    }
+  }
+  if (!message) {
+    message = 'OCR provider encountered an error.';
+  }
+
+  var provider = normalizeProvider(stripped.provider || rawProvider);
 
   const safe = new Error(message);
   safe.code = code;
@@ -351,6 +376,53 @@ function resolveErrorCode(codeValue, fallbackCode) {
 }
 
 // ---------------------------------------------------------------------------
+// Message sanitisation
+// ---------------------------------------------------------------------------
+
+/**
+ * Sanitise an error message string by removing any embedded secrets,
+ * API keys, JWTs, base64 blobs, or other sensitive patterns.
+ *
+ * This is a safety net: error messages from our own code should already
+ * be safe, but raw errors from external libraries or unexpected sources
+ * might contain sensitive data in their message text.
+ *
+ * @param {string} message - Raw error message (may contain secrets).
+ * @returns {string} Sanitised message.
+ */
+function sanitizeMessage(message) {
+  if (typeof message !== 'string' || message.length === 0) return '';
+
+  var sanitized = message;
+
+  // Remove typical API key patterns (sk-...).
+  sanitized = sanitized.replace(/\bsk-[A-Za-z0-9]{10,}\b/g, '[REDACTED]');
+
+  // Remove JWT-like tokens (three base64url segments separated by dots).
+  sanitized = sanitized.replace(/\b[A-Za-z0-9_-]{20,}\.[A-Za-z0-9_-]{20,}\.[A-Za-z0-9_-]{20,}\b/g, '[REDACTED]');
+
+  // Remove long base64-like strings that could be encoded secrets.
+  sanitized = sanitized.replace(/\b[A-Za-z0-9+/]{40,}={0,2}\b/g, function (match) {
+    // Only redact if it looks like base64 (has typical padding/characters).
+    if (match.length >= 40) return '[REDACTED]';
+    return match;
+  });
+
+  // Remove Bearer tokens.
+  sanitized = sanitized.replace(/Bearer\s+[A-Za-z0-9._\-\s]+/gi, 'Bearer [REDACTED]');
+
+  // Trim and collapse whitespace.
+  sanitized = sanitized.replace(/\s+/g, ' ').trim();
+
+  // Truncate excessively long messages.
+  if (sanitized.length > 500) {
+    sanitized = sanitized.substring(0, 497) + '...';
+  }
+
+  return sanitized;
+}
+
+// ---------------------------------------------------------------------------
 // Forbidden field detection
 // ---------------------------------------------------------------------------
 
@@ -436,6 +508,7 @@ module.exports = {
   normalizeWarnings,
   normalizeRawMetadata,
   resolveErrorCode,
+  sanitizeMessage,
   stripForbiddenFields,
   looksLikeSecret
 };

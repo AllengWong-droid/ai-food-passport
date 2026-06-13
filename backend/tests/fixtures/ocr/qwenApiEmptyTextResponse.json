@@ -1,0 +1,17 @@
+{
+  "description": "Qwen VL API response with empty text content",
+  "output": {
+    "choices": [
+      {
+        "message": {
+          "content": [
+            { "text": "" }
+          ]
+        }
+      }
+    ]
+  },
+  "usage": {
+    "total_tokens": 150
+  }
+}

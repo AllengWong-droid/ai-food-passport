@@ -43,6 +43,7 @@
 - Phase 11B: Backend Production Deployment Readiness Skeleton
 - Phase 12A: Real OCR Provider Contract and Selection Prep
 - Phase 12B: Qwen OCR Provider Disabled Adapter Scaffold
+- Phase 12C: Qwen OCR Real Transport Behind Explicit Safety Gates
 
 ## Current MVP Alpha
 
