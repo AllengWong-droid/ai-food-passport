@@ -51,15 +51,21 @@ Flutter uses local `MockAiRepository` by default. Developer Backend Mock Mode ca
 - Qwen analysis real transport behind env gates (`src/providers/analysis/qwenAnalysisTransport.js`).
 - Qwen analysis transport unit tests (`tests/unit/qwenAnalysisTransport.test.js`, all offline).
 - Qwen analysis manual smoke test guide (`backend/QWEN_ANALYSIS_MANUAL_SMOKE_TEST.md`).
+- Real provider gated E2E dry-run tests (`tests/contract/realProviderGate.test.js`, 68 tests, all offline).
+- Enhanced test helper (`tests/testHelper.js`) — startServer now accepts optional env overrides for multi-scenario contract tests.
 - `AnalysisProviderMode.ANALYSIS` added to types for future real providers.
 - `AnalysisProviderName.QWEN_ANALYSIS` ('qwen_analysis') added as real provider name (distinct from skeleton).
 
 ## What Is Not Implemented
 
 - No real OCR active by default (Qwen OCR transport is implemented but disabled behind env gates).
+- No real analysis active by default (Qwen analysis transport is implemented but disabled behind env gates).
 - No Qwen OCR calls in automated tests (all tests are offline).
+- No Qwen analysis calls in automated tests (all tests are offline).
 - No Google Vision, Azure OCR, Tesseract, or OpenAI Vision.
-- No real DeepSeek calls.
+- No real DeepSeek or real OpenAI calls.
+- No silent fallback from real provider to mock — if real provider fails, it returns a controlled safe error.
+- Real provider E2E smoke testing is blocked until a real DashScope key is obtained (see dry-run tests).
 - No real OpenAI calls.
 - No real exchange-rate API.
 - No Firebase.

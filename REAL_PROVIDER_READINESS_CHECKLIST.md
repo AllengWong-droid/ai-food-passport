@@ -108,7 +108,20 @@ Use this checklist before enabling any real OCR, Qwen, DeepSeek, OpenAI, Google 
 - [ ] Low confidence and low quality responses are handled.
 - [ ] No raw provider errors or stack traces appear in normal UI.
 
-## Deployment Environment
+## Dry-Run Gate Verification (Phase 12H)
+
+- [ ] E2E dry-run contract tests exist (`backend/tests/contract/realProviderGate.test.js`, 68 tests).
+- [ ] Default pipeline (mock_ocr + mock_ai) verified unchanged by dry-run tests.
+- [ ] OCR gate tests: `qwen_ocr` without key → `OCR_PROVIDER_NOT_CONFIGURED`, no leaks.
+- [ ] Analysis gate tests: `qwen_analysis` without key → `ANALYSIS_PROVIDER_NOT_CONFIGURED`, no leaks.
+- [ ] Placeholder key scenarios: both OCR and analysis gates reject `sk-placeholder` safely.
+- [ ] Combined gate scenario: both providers set with placeholder key → OCR fails first safely.
+- [ ] Invalid provider scenarios: `unknown_provider` → controlled invalid-provider errors.
+- [ ] Error hygiene verified: no stack traces, no API keys, no raw responses, no base64, no Authorization headers in any gate error.
+- [ ] Health metadata verified: `qwen_ocr` and `qwen_analysis` appear in available providers, `realOcrEnabled=false`, `realAnalysisEnabled=false`, `realProvidersEnabled=false`, `productionReady=false`.
+- [ ] Cross-scenario env contamination verified: default pipeline works after all gate tests.
+- [ ] Test helper enhanced: `startServer(envOverrides)` supports multi-scenario contract testing.
+- [ ] All 509 tests pass (contract + unit + gate dry-run). No real network calls in any test.
 
 - [ ] `OCR_PROVIDER` is set intentionally.
 - [ ] `ANALYSIS_PROVIDER` is set intentionally.

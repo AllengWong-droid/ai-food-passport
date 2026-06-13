@@ -11,11 +11,24 @@ const BASE_URL = `http://localhost:${PORT}`;
 
 let serverProcess = null;
 
-function startServer() {
+/**
+ * Start the backend server as a child process.
+ *
+ * @param {object} [envOverrides] — Additional env vars to merge on top of
+ *   { ...process.env, NODE_ENV: 'test' }. Use this for tests that need custom
+ *   provider configuration (e.g. OCR_PROVIDER=qwen_ocr, QWEN_API_KEY=placeholder).
+ *   Existing env vars from process.env are preserved; envOverrides wins on conflict.
+ * @returns {Promise<void>}
+ */
+function startServer(envOverrides) {
+  var mergedEnv = { ...process.env, NODE_ENV: 'test' };
+  if (envOverrides) {
+    Object.assign(mergedEnv, envOverrides);
+  }
   return new Promise((resolve, reject) => {
     serverProcess = spawn('node', ['src/server.js'], {
       cwd: process.cwd(),
-      env: { ...process.env, NODE_ENV: 'test' },
+      env: mergedEnv,
       stdio: 'pipe'
     });
 

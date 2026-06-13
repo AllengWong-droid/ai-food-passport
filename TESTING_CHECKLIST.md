@@ -113,6 +113,29 @@ Invoke-RestMethod `
 - [ ] Confirm existing contracts, adapter tests, and transport tests all pass together.
 - [ ] Confirm `mock_ai` remains default active analysis provider.
 
+## Backend Real Provider Gate Dry-Run QA (Phase 12H)
+
+- [ ] Confirm `realProviderGate.test.js` all pass (68 tests, offline via child process).
+- [ ] Default env `/health` → `activeOcrProvider: mock_ocr`, `activeAnalysisProvider: mock_ai`.
+- [ ] `OCR_PROVIDER=qwen_ocr` (no key) → `/health` shows `activeOcrProvider: qwen_ocr`, `realOcrEnabled: false`.
+- [ ] `OCR_PROVIDER=qwen_ocr` (no key) → `POST /api/analyze-menu` returns `OCR_PROVIDER_NOT_CONFIGURED`.
+- [ ] `OCR_PROVIDER=qwen_ocr` + `QWEN_OCR_PROVIDER_ENABLED=true` + `QWEN_API_KEY=sk-placeholder` → `OCR_PROVIDER_NOT_CONFIGURED`.
+- [ ] `ANALYSIS_PROVIDER=qwen_analysis` (no key) → `/health` shows `activeAnalysisProvider: qwen_analysis`, `realAnalysisEnabled: false`.
+- [ ] `ANALYSIS_PROVIDER=qwen_analysis` (no key) → `POST /api/analyze-menu` returns `ANALYSIS_PROVIDER_NOT_CONFIGURED`.
+- [ ] `ANALYSIS_PROVIDER=qwen_analysis` + `QWEN_ANALYSIS_PROVIDER_ENABLED=true` + `QWEN_API_KEY=sk-placeholder` → `ANALYSIS_PROVIDER_NOT_CONFIGURED`.
+- [ ] Both `qwen_ocr` + `qwen_analysis` with placeholder key → `OCR_PROVIDER_NOT_CONFIGURED` (OCR fails first).
+- [ ] Placeholder keys NEVER leak in any error message or health response.
+- [ ] No stack traces in any error response across all gate scenarios.
+- [ ] No Authorization headers, raw provider responses, base64, or raw prompt text in any error.
+- [ ] `productionReady` stays `false` across all gate scenarios.
+- [ ] `realProvidersEnabled` stays `false` across all gate scenarios.
+- [ ] Invalid `OCR_PROVIDER` → `OCR_PROVIDER_INVALID`.
+- [ ] Invalid `ANALYSIS_PROVIDER` → `ANALYSIS_PROVIDER_INVALID`.
+- [ ] After all gate tests, default pipeline (mock_ocr + mock_ai) still works correctly.
+- [ ] No cross-scenario env contamination between test groups.
+- [ ] No real Qwen/DashScope network calls occur during tests.
+- [ ] Existing contract tests all still pass.
+
 ## Flutter Backend Mock Mode
 
 - [ ] Start the backend mock server.
