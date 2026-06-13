@@ -26,6 +26,7 @@ Scan screen
 -> MockOcrRepository returns OcrResult
 -> AiAnalysisRequest is sent by BackendMockMenuAnalysisRepository
 -> POST /api/analyze-menu
+-> backend provider routing decision
 -> backend OCR provider registry
 -> backend mock OCR provider
 -> backend analysis provider registry
@@ -35,6 +36,25 @@ Scan screen
 ```
 
 This is mock-only and local-development-only.
+
+## Provider Routing Decision
+
+The backend can read `providerMode` or `aiProviderMode` from the request.
+
+Supported modes:
+
+- `mock`
+- `china`
+- `global`
+- `auto`
+
+Current behavior:
+
+- `mock` resolves to mock OCR and mock analysis.
+- `china`, `global`, and `auto` record future routing intent but resolve safely to mock.
+- `realProvidersEnabled` remains `false`.
+
+This skeleton is metadata-only. It does not activate real Qwen, DeepSeek, OpenAI, Google Vision, or any external provider.
 
 ## OCR Provider Registry
 

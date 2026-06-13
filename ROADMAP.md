@@ -34,6 +34,7 @@
 - Phase 9A: Real OCR Provider Skeleton
 - Phase 9B: OCR Provider Selection Safety and Config Validation
 - Phase 9C: Real Analysis Provider Skeleton
+- Phase 9D: Backend Provider Routing Decision Skeleton
 
 ## Current MVP Alpha
 

@@ -2,6 +2,10 @@ const http = require('http');
 const { handleAnalyzeMenu, sendJson, errorPayload } = require('./routes/analyzeMenu');
 const { getOcrProviderConfigStatus } = require('./providers/ocr/ocrProviderRegistry');
 const { getAnalysisProviderConfigStatus } = require('./providers/analysis/analysisProviderRegistry');
+const {
+  defaultProviderMode,
+  supportedProviderModes
+} = require('./providers/routing/providerRoutingDecision');
 
 const port = Number(process.env.PORT || 8787);
 
@@ -44,6 +48,9 @@ const server = http.createServer((request, response) => {
         availableOcrProviders: ocrProviderStatus.availableOcrProviders,
         realOcrEnabled: ocrProviderStatus.realOcrEnabled,
         providerRoutingReady: ocrProviderStatus.providerRoutingReady,
+        supportedProviderModes,
+        defaultProviderMode,
+        realProvidersEnabled: false,
         configValid: ocrProviderStatus.configValid,
         configWarnings: ocrProviderStatus.configWarnings,
         analysisProvider: 'mock_ai',

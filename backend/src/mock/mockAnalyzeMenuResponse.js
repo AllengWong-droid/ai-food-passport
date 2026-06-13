@@ -6,8 +6,10 @@ const {
   getActiveAnalysisProvider,
   isRealAnalysisEnabled
 } = require('../providers/analysis/analysisProviderRegistry');
+const { resolveProviderRoutingDecision } = require('../providers/routing/providerRoutingDecision');
 
 async function buildMockAnalyzeMenuResponse(requestBody = {}, latencyMs = 0) {
+  const routingDecision = resolveProviderRoutingDecision(requestBody);
   const ocr = await getActiveOcrProvider().extractMenuText(requestBody);
   const analysis = await getActiveAnalysisProvider().analyzeMenuText({
     requestBody,
@@ -27,13 +29,19 @@ async function buildMockAnalyzeMenuResponse(requestBody = {}, latencyMs = 0) {
       ocrWarnings: ocr.warnings || [],
       realOcrEnabled: isRealOcrEnabled(),
       providerRoutingReady: true,
+      requestedProviderMode: routingDecision.requestedMode,
+      resolvedProviderMode: routingDecision.resolvedMode,
+      realProvidersEnabled: routingDecision.realProvidersEnabled,
+      routingReason: routingDecision.reason,
+      futureOcrProvider: routingDecision.futureOcrProvider,
+      futureAnalysisProvider: routingDecision.futureAnalysisProvider,
       analysisProvider: analysis.provider,
       analysisMode: analysis.mode,
       analysisConfidence: analysis.confidence,
       analysisWarnings: analysis.warnings || [],
       realAnalysisEnabled: isRealAnalysisEnabled(),
       warnings,
-      fallbackUsed: false,
+      fallbackUsed: routingDecision.fallbackUsed,
       latencyMs
     },
     ocr,

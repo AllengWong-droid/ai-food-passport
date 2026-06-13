@@ -6,6 +6,7 @@ const {
   getActiveAnalysisProvider,
   isRealAnalysisEnabled
 } = require('../providers/analysis/analysisProviderRegistry');
+const { resolveProviderRoutingDecision } = require('../providers/routing/providerRoutingDecision');
 
 async function handleAnalyzeMenu(request, response, body, startedAt) {
   if (request.method !== 'POST') {
@@ -26,6 +27,7 @@ async function handleAnalyzeMenu(request, response, body, startedAt) {
   }
 
   try {
+    const routingDecision = resolveProviderRoutingDecision(parsedBody.value);
     const ocrProvider = getActiveOcrProvider();
     const ocr = await ocrProvider.extractMenuText(parsedBody.value);
     if (!ocr.text || !ocr.text.trim()) {
@@ -54,13 +56,19 @@ async function handleAnalyzeMenu(request, response, body, startedAt) {
       ocrWarnings: ocr.warnings || [],
       realOcrEnabled: isRealOcrEnabled(),
       providerRoutingReady: true,
+      requestedProviderMode: routingDecision.requestedMode,
+      resolvedProviderMode: routingDecision.resolvedMode,
+      realProvidersEnabled: routingDecision.realProvidersEnabled,
+      routingReason: routingDecision.reason,
+      futureOcrProvider: routingDecision.futureOcrProvider,
+      futureAnalysisProvider: routingDecision.futureAnalysisProvider,
       analysisProvider: analysis.provider,
       analysisMode: analysis.mode,
       analysisConfidence: analysis.confidence,
       analysisWarnings: analysis.warnings || [],
       realAnalysisEnabled: isRealAnalysisEnabled(),
       warnings,
-      fallbackUsed: false,
+      fallbackUsed: routingDecision.fallbackUsed,
       latencyMs
     };
     const data = {

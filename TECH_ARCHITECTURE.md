@@ -48,6 +48,7 @@ Flutter Scan
 -> local Mock OCR
 -> BackendMockMenuAnalysisRepository
 -> POST /api/analyze-menu
+-> backend provider routing decision
 -> backend OCR provider registry
 -> backend mock OCR provider
 -> backend analysis provider registry
@@ -84,10 +85,18 @@ Analysis provider registry:
 - available skeletons: `qwen_analysis_skeleton`, `deepseek_analysis_skeleton`, `openai_analysis_skeleton`
 - real analysis enabled: `false`
 
+Provider routing decision skeleton:
+
+- supported modes: `mock`, `china`, `global`, `auto`
+- default mode: `mock`
+- real providers enabled: `false`
+- china/global/auto safely resolve to mock metadata in this build
+
 The backend route is OCR-first:
 
 ```text
 request validation
+-> provider routing decision
 -> OCR provider registry
 -> mock OCR provider
 -> empty/failed OCR handling

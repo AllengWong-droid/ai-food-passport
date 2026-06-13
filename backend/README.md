@@ -16,6 +16,7 @@ Flutter uses local `MockAiRepository` by default. Developer Backend Mock Mode ca
   - OCR provider registry
   - mock menu analysis provider
   - analysis provider registry
+  - provider routing decision skeleton
   - standardized API envelope
 - Mock OCR debug scenarios for success, low confidence, empty text, and OCR failure.
 - Mock analysis debug scenarios for success, low quality, empty result, and analysis failure.
@@ -143,6 +144,9 @@ Response shape:
   ],
   "realOcrEnabled": false,
   "providerRoutingReady": true,
+  "supportedProviderModes": ["mock", "china", "global", "auto"],
+  "defaultProviderMode": "mock",
+  "realProvidersEnabled": false,
   "configValid": true,
   "configWarnings": [],
   "analysisProvider": "mock_ai",
@@ -191,6 +195,12 @@ Invoke-RestMethod `
       "ocrWarnings": [],
       "realOcrEnabled": false,
       "providerRoutingReady": true,
+      "requestedProviderMode": "mock",
+      "resolvedProviderMode": "mock",
+      "realProvidersEnabled": false,
+      "routingReason": "Mock provider mode is active.",
+      "futureOcrProvider": null,
+      "futureAnalysisProvider": null,
       "analysisProvider": "mock_ai",
       "analysisMode": "mock",
       "analysisConfidence": 0.96,
@@ -238,6 +248,12 @@ Invoke-RestMethod `
     "ocrWarnings": [],
     "realOcrEnabled": false,
     "providerRoutingReady": true,
+    "requestedProviderMode": "mock",
+    "resolvedProviderMode": "mock",
+    "realProvidersEnabled": false,
+    "routingReason": "Mock provider mode is active.",
+    "futureOcrProvider": null,
+    "futureAnalysisProvider": null,
     "analysisProvider": "mock_ai",
     "analysisMode": "mock",
     "analysisConfidence": 0.96,
@@ -282,10 +298,45 @@ Current provider files:
 - `src/providers/analysis/qwenAnalysisProviderSkeleton.js`
 - `src/providers/analysis/deepSeekAnalysisProviderSkeleton.js`
 - `src/providers/analysis/openAiAnalysisProviderSkeleton.js`
+- `src/providers/routing/providerRoutingDecision.js`
 
 The OCR provider returns deterministic local text and metadata. It does not read real images or call any external OCR service. The analysis provider uses that mock OCR result to create deterministic dish recommendations and price intelligence.
 
 The registry is future-ready only. It keeps real provider selection behind the backend, but no real OCR provider is configured or enabled yet.
+
+## Provider Routing Decision Skeleton
+
+The backend accepts provider mode hints from `providerMode` or `aiProviderMode`.
+
+Supported modes:
+
+- `mock`
+- `china`
+- `global`
+- `auto`
+
+Current behavior:
+
+- `mock` resolves to `mock_ocr` + `mock_ai`.
+- `china` records future Qwen-oriented routing intent, then safely falls back to mock.
+- `global` records future OpenAI/global routing intent, then safely falls back to mock.
+- `auto` safely falls back to mock and notes that auto routing is planned.
+
+Real provider routing is disabled:
+
+```json
+{
+  "requestedProviderMode": "china",
+  "resolvedProviderMode": "mock",
+  "ocrProvider": "mock_ocr",
+  "analysisProvider": "mock_ai",
+  "realProvidersEnabled": false,
+  "fallbackUsed": true,
+  "routingReason": "China provider routing is planned, but real providers are disabled in this mock build."
+}
+```
+
+`OCR_PROVIDER` and `ANALYSIS_PROVIDER` environment validation still takes precedence. Explicit invalid or skeleton provider settings return controlled errors.
 
 ## Mock OCR Debug Scenarios
 
