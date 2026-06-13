@@ -46,52 +46,79 @@ class BackendEndpointConfig {
   ///   [localDevUrl].
   ///
   /// This is a *non-secret* value. It is safe to log in debug contexts.
-  static String get currentBaseUrl {
-    final raw = _dartDefineUrl.trim();
-    if (raw.isEmpty) {
-      return localDevUrl;
+  static String get currentBaseUrl => validateAndResolve(_dartDefineUrl.trim());
+
+  /// Whether [BACKEND_BASE_URL] was explicitly provided at compile time.
+  static bool get isCustomDefined =>
+      _dartDefineUrl.trim().isNotEmpty && currentBaseUrl != localDevUrl;
+
+  // ---------------------------------------------------------------------------
+  // Pure helpers — testable without compile-time constants.
+  // ---------------------------------------------------------------------------
+
+  /// Validates and resolves a raw backend base URL string.
+  ///
+  /// Returns the validated URL or [fallback] if the raw value is empty,
+  /// unsafe, or an invalid URI.
+  ///
+  /// This is a **pure function** — it depends only on its arguments, making
+  /// it directly testable in `flutter test` without compile-time constants.
+  static String validateAndResolve(String raw,
+      {String fallback = localDevUrl}) {
+    final trimmed = raw.trim();
+    if (trimmed.isEmpty) {
+      return fallback;
     }
 
-    // Reject values that look like they might contain secrets.
-    if (raw.contains('@') && raw.contains(':')) {
-      // URLs with userinfo (username:password@host) are forbidden.
-      // The @ symbol could also appear in OAuth callback URLs, so we only
-      // reject when both @ and : appear before the first / (typical for
-      // userinfo segments).
-      final uri = Uri.tryParse(raw);
-      if (uri != null && uri.userInfo.isNotEmpty) {
-        return localDevUrl;
-      }
-    }
-
-    // Reject values containing known secret/token patterns.
-    if (raw.contains('api_key=') ||
-        raw.contains('api-key=') ||
-        raw.contains('secret=') ||
-        raw.contains('token=') ||
-        raw.contains('key=')) {
-      return localDevUrl;
-    }
-
-    // Basic URL shape validation: must start with http:// or https://.
-    if (!raw.startsWith('http://') && !raw.startsWith('https://')) {
-      return localDevUrl;
+    if (!isSafeBackendBaseUrl(trimmed)) {
+      return fallback;
     }
 
     // Attempt to parse the URL; fall back if it's not a valid URI.
-    final parsed = Uri.tryParse(raw);
-    if (parsed == null || !parsed.hasAuthority) {
-      return localDevUrl;
+    final parsed = Uri.tryParse(trimmed);
+    if (parsed == null || !parsed.hasAuthority || parsed.host.isEmpty) {
+      return fallback;
     }
 
     // Remove trailing slash for consistency.
     final result = parsed.path.isEmpty || parsed.path == '/'
         ? '${parsed.scheme}://${parsed.authority}'
-        : raw;
+        : trimmed;
     return result;
   }
 
-  /// Whether [BACKEND_BASE_URL] was explicitly provided at compile time.
-  static bool get isCustomDefined =>
-      _dartDefineUrl.trim().isNotEmpty && currentBaseUrl != localDevUrl;
+  /// Checks whether the raw backend base URL string is safe to use.
+  ///
+  /// Returns `false` for:
+  /// - URLs containing userinfo (`username:password@host`).
+  /// - URLs containing known secret/token query string patterns.
+  /// - URLs starting with schemes other than `http://` or `https://`.
+  ///
+  /// This is a **pure function** — it depends only on its argument, making
+  /// it directly testable in `flutter test` without compile-time constants.
+  static bool isSafeBackendBaseUrl(String raw) {
+    // Must start with http:// or https://.
+    if (!raw.startsWith('http://') && !raw.startsWith('https://')) {
+      return false;
+    }
+
+    // Reject values that look like they might contain secrets via userinfo.
+    if (raw.contains('@') && raw.contains(':')) {
+      final uri = Uri.tryParse(raw);
+      if (uri != null && uri.userInfo.isNotEmpty) {
+        return false;
+      }
+    }
+
+    // Reject values containing known secret/token query patterns.
+    if (raw.contains('api_key=') ||
+        raw.contains('api-key=') ||
+        raw.contains('secret=') ||
+        raw.contains('token=') ||
+        raw.contains('key=')) {
+      return false;
+    }
+
+    return true;
+  }
 }

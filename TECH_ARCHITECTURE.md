@@ -294,3 +294,15 @@ Phase 11C implements CORS enforcement and request body limit enforcement:
 - `BackendMockModeProvider` defaults to `false` regardless of visibility
 - Default local mock app usage still does not require a backend
 - `SHOW_DEVELOPER_CONTROLS` is not a secret; does not enable real providers
+
+## Phase 11F: Flutter Config and Release Safety Tests
+
+- Test files: `test/shared/config/backend_endpoint_config_test.dart` (33 tests) and `test/shared/config/developer_controls_config_test.dart` (8 tests) — 41 total.
+- **Pure helpers** extracted for testability without compile-time constants:
+  - `BackendEndpointConfig.validateAndResolve(String raw, {String fallback})` — resolves raw URL or returns fallback.
+  - `BackendEndpointConfig.isSafeBackendBaseUrl(String raw)` — rejects userinfo, secret patterns, non-http schemes.
+  - `DeveloperControlsConfig.resolveVisibility({bool isDebug, bool overrideEnabled})` — pure boolean gate.
+- Runtime behaviour is **unchanged**: `currentBaseUrl` and `areVisible` delegate to the same pure helpers.
+- `BackendEndpointConfig.validateAndResolve` now also rejects URLs with empty host (e.g., `http://`) — stricter edge-case safety.
+- Run: `flutter test test/shared/config/` → 41/41 tests passing.
+- Backend files unchanged. No secrets or API keys added.

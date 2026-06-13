@@ -42,9 +42,10 @@ class DeveloperControlsConfig {
   ///
   /// Visible by default in debug builds. In release builds, only visible if
   /// the [SHOW_DEVELOPER_CONTROLS] dart-define is set to `'true'`.
-  static bool get areVisible =>
-      kDebugMode ||
-      const String.fromEnvironment('SHOW_DEVELOPER_CONTROLS') == 'true';
+  static bool get areVisible => resolveVisibility(
+        isDebug: kDebugMode,
+        overrideEnabled: isOverrideEnabled,
+      );
 
   /// Whether the dart-define override is active.
   ///
@@ -52,4 +53,23 @@ class DeveloperControlsConfig {
   /// explicitly set.
   static bool get isOverrideEnabled =>
       const String.fromEnvironment('SHOW_DEVELOPER_CONTROLS') == 'true';
+
+  // ---------------------------------------------------------------------------
+  // Pure helpers — testable without compile-time constants.
+  // ---------------------------------------------------------------------------
+
+  /// Resolves whether developer controls should be visible based on explicit
+  /// flags.
+  ///
+  /// Visible when [isDebug] is `true` OR [overrideEnabled] is `true`.
+  /// Hidden otherwise.
+  ///
+  /// This is a **pure function** — it depends only on its arguments, making
+  /// it directly testable in `flutter test` without compile-time constants.
+  static bool resolveVisibility({
+    required bool isDebug,
+    required bool overrideEnabled,
+  }) {
+    return isDebug || overrideEnabled;
+  }
 }

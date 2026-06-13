@@ -60,6 +60,17 @@ Current app behavior uses:
 - `SHOW_DEVELOPER_CONTROLS` is **not a secret** — it is a compile-time flag that gates debug UI visibility only.
 - Backend Mock Mode is **not a normal user feature**.
 
+## Config and Release Safety Tests (Phase 11F)
+
+- Flutter config tests are located in `test/shared/config/`.
+- `backend_endpoint_config_test.dart` (33 tests): covers URL validation, secret-pattern rejection, fallback behaviour.
+- `developer_controls_config_test.dart` (8 tests): covers visibility gating for debug/release/override modes.
+- Run with: `flutter test test/shared/config/` — all 41 tests must pass.
+- Helper functions (`validateAndResolve`, `isSafeBackendBaseUrl`, `resolveVisibility`) are pure and testable without compile-time constants.
+- Flutter must never contain provider API keys.
+- Release builds should not expose Backend Mock Mode or raw provider routing metadata.
+- `SHOW_DEVELOPER_CONTROLS` is for internal builds only.
+
 ## Future App Store Work
 
 - Production privacy policy

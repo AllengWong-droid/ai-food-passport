@@ -255,6 +255,23 @@ Invoke-RestMethod `
 - [ ] Run `dart analyze` on touched Dart files and confirm no new errors.
 - [ ] Run `git diff --check` and confirm pass.
 
+## Phase 11F: Config and Release Safety Tests (Flutter)
+
+- [ ] Confirm `test/shared/config/backend_endpoint_config_test.dart` exists and compiles.
+- [ ] Confirm `test/shared/config/developer_controls_config_test.dart` exists and compiles.
+- [ ] Run `flutter test test/shared/config/`. Confirm all 41 tests pass.
+- [ ] Confirm `BackendEndpointConfig.validateAndResolve` tests: empty fallback, valid http/https, userinfo rejection, secret-pattern rejection, invalid URI fallback.
+- [ ] Confirm `BackendEndpointConfig.isSafeBackendBaseUrl` tests: safe URLs accepted, unsafe URLs rejected.
+- [ ] Confirm `DeveloperControlsConfig.resolveVisibility` tests: debug visible, release hidden, override enabled.
+- [ ] Confirm `DeveloperControlsConfig.resolveVisibility` is deterministic (idempotent).
+- [ ] Confirm config purity tests pass (no API keys or secrets in config values).
+- [ ] Confirm `BackendEndpointConfig.localDevUrl` passes its own `isSafeBackendBaseUrl` check.
+- [ ] Confirm no backend files are changed.
+- [ ] Confirm no real provider calls, API keys, secrets, or Firebase are added.
+- [ ] Run `dart format` on all touched files and confirm clean.
+- [ ] Run `dart analyze` on config + test files and confirm "No issues found".
+- [ ] Run `git diff --check` and confirm pass.
+
 ## Future Provider Readiness QA
 
 - [ ] Review `backend/SECURITY_AND_SECRETS.md`.
