@@ -26,6 +26,8 @@ Flutter uses local `MockAiRepository` by default. Developer Backend Mock Mode ca
 - CORS headers for local Flutter Web development origins.
 - Provider safety config parsing for timeout, retries, budget, and daily request limit placeholders.
 - Provider timeout, rate limit, and cost guard skeletons for future real providers.
+- Logging redaction utility skeleton (`src/utils/redactForLogs.js`).
+- Safe error response helper skeleton (`src/utils/safeErrorResponse.js`).
 
 ## What Is Not Implemented
 
@@ -156,6 +158,80 @@ The guard module is skeleton-only:
 
 Rate and cost guards are not enforced in the mock path. Retries remain disabled by default.
 
+## Logging Redaction And Error Hygiene
+
+Backend logging utilities are prepared for future real provider integration. These utilities ensure that secrets, raw provider responses, stack traces, menu image data, and sensitive user data are never included in logs or API responses.
+
+### Redaction Utility
+
+File: `src/utils/redactForLogs.js`
+
+`redactForLogs(object)` returns a deep-cloned copy of any object with sensitive fields replaced by `'[REDACTED]'`. It handles nested objects, arrays, and circular references safely. The original object is never modified.
+
+Redacted field names (case-insensitive):
+
+- `apiKey`
+- `authorization`
+- `token`
+- `secret`
+- `password`
+- `image`
+- `imageBytes`
+- `base64`
+- `rawImage`
+- `menuImage`
+- `providerRawResponse`
+- `providerRawError`
+- `stack`
+
+`redactError(error)` strips a JavaScript Error down to `{ code, message }` only. The stack trace is always omitted.
+
+Usage:
+
+```js
+const { redactForLogs, redactError } = require('../utils/redactForLogs');
+
+// Before writing to a logger or console:
+console.log(redactForLogs(providerRequestObject));
+
+// Before logging a caught error:
+console.log(redactError(caughtError));
+```
+
+### Safe Error Response Utility
+
+File: `src/utils/safeErrorResponse.js`
+
+`extractSafeErrorCode(error, fallback)` checks whether a caught error carries a known application-controlled error code. If so, that code is returned. Otherwise the fallback is returned. This prevents unknown internal error strings, raw provider error codes, or library exceptions from leaking into API response bodies.
+
+Known safe codes: `METHOD_NOT_ALLOWED`, `BAD_REQUEST`, `NOT_FOUND`, `OCR_FAILED`, `OCR_EMPTY_TEXT`, `OCR_PROVIDER_NOT_CONFIGURED`, `OCR_PROVIDER_INVALID`, `ANALYSIS_FAILED`, `ANALYSIS_PROVIDER_NOT_CONFIGURED`, `ANALYSIS_PROVIDER_INVALID`, `PROVIDER_FAILURE`, `PROVIDER_UNAVAILABLE`, `PROVIDER_TIMEOUT`, `PROVIDER_GUARD_INVALID_OPERATION`.
+
+`buildSafeLogEntry(error, context)` builds a minimal structured log object containing only `code` (if known-safe), `message`, and optional `context`. It never includes stack traces, headers, raw image data, or provider internals.
+
+### Policy
+
+- API responses must never include raw stack traces.
+- API responses must never include raw provider error bodies.
+- API responses must never include provider API keys or authorization headers.
+- API responses must never include raw menu image data or full OCR payloads.
+- Internal logs must pass objects through `redactForLogs` before writing.
+- Internal logs must pass caught errors through `redactError` or `buildSafeLogEntry` before writing.
+- The `details` field in error envelopes must remain `null` in production unless populated with a safe, developer-curated string.
+- These utilities are currently skeleton-only. They do not yet wrap any live code path. Future real provider adapters must use them.
+
+### Health Check Readiness Fields
+
+`/health` exposes two readiness flags:
+
+```json
+{
+  "logRedactionReady": true,
+  "safeErrorEnvelopeReady": true
+}
+```
+
+These confirm the utilities are loaded and available for future provider adapter implementation.
+
 ## Health Check
 
 ```powershell
@@ -203,6 +279,8 @@ Response shape:
   "providerDailyRequestLimitConfigured": false,
   "providerSafetyConfigValid": true,
   "providerSafetyWarnings": [],
+  "logRedactionReady": true,
+  "safeErrorEnvelopeReady": true,
   "timestamp": "2026-06-13T00:00:00.000Z"
 }
 ```
@@ -730,6 +808,8 @@ This is a local development convenience only. It is not a production CORS or aut
 - Provider keys alone do not enable real calls; skeleton providers remain disabled until explicitly implemented.
 - Provider timeout, retry, budget, and request-limit variables are placeholders for future real provider phases.
 - Invalid provider safety config values fall back safely and are reported through `/health`.
+- Logging redaction and safe error envelope utilities are skeleton-only and do not yet wrap any live code path.
+- No log output from redaction utilities appears unless an implementer explicitly calls them.
 
 More detail:
 
@@ -744,5 +824,7 @@ More detail:
 - Provider health checks.
 - Fallback routing.
 - Real exchange rates.
-- Timeout, rate-limit, cost guard, and logging redaction implementation.
+- Timeout, rate-limit, and cost guard enforcement for real provider calls.
+- Apply `redactForLogs` and `buildSafeLogEntry` to all real provider request/response logging.
+- Apply `extractSafeErrorCode` to all real provider catch handlers.
 - Production authentication and rate limiting.

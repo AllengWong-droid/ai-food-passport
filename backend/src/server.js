@@ -7,6 +7,12 @@ const {
   defaultProviderMode,
   supportedProviderModes
 } = require('./providers/routing/providerRoutingDecision');
+const { redactForLogs } = require('./utils/redactForLogs');
+const { extractSafeErrorCode } = require('./utils/safeErrorResponse');
+
+// Confirm logging utilities loaded correctly at startup (no-op in production).
+void redactForLogs;
+void extractSafeErrorCode;
 
 const port = Number(process.env.PORT || 8787);
 
@@ -72,6 +78,8 @@ const server = http.createServer((request, response) => {
           providerSafetyConfig.providerSafetyConfigValid,
         providerSafetyWarnings:
           providerSafetyConfig.providerSafetyWarnings,
+        logRedactionReady: true,
+        safeErrorEnvelopeReady: true,
         timestamp: new Date().toISOString()
       });
       return;
