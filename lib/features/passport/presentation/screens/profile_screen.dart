@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -18,6 +19,7 @@ class ProfileScreen extends ConsumerWidget {
     final passport = ref.watch(tastePassportProvider);
     final travelerSettings = ref.watch(travelerSettingsProvider);
     final backendMockEnabled = ref.watch(backendMockModeProvider);
+    final backendDebugScenario = ref.watch(backendDebugScenarioProvider);
 
     return Scaffold(
       body: SafeArea(
@@ -88,17 +90,36 @@ class ProfileScreen extends ConsumerWidget {
             const _SettingsHelperText(
               text: 'Provider mode is for future routing. Mock remains active in this MVP.',
             ),
-            const SizedBox(height: 10),
-            _DeveloperToggleTile(
-              title: 'Backend Mock Mode',
-              subtitle: backendMockEnabled
-                  ? 'Developer test mode. Uses the local backend mock server.'
-                  : 'Local mock AI is active. Backend server is not required.',
-              value: backendMockEnabled,
-              onChanged: (value) {
-                ref.read(backendMockModeProvider.notifier).state = value;
-              },
-            ),
+            if (kDebugMode) ...[
+              const SizedBox(height: 10),
+              _DeveloperToggleTile(
+                title: 'Backend Mock Mode',
+                subtitle: backendMockEnabled
+                    ? 'Developer test mode. Uses the local backend mock server.'
+                    : 'Local mock AI is active. Backend server is not required.',
+                value: backendMockEnabled,
+                onChanged: (value) {
+                  ref.read(backendMockModeProvider.notifier).state = value;
+                },
+              ),
+              const SizedBox(height: 8),
+              _SettingsDropdownTile<String>(
+                title: 'Backend Scenario',
+                value: backendDebugScenario,
+                values: _backendScenarioValues,
+                labelFor: _backendScenarioLabel,
+                onChanged: (value) {
+                  ref.read(backendDebugScenarioProvider.notifier).state = value;
+                },
+                compact: true,
+                muted: true,
+              ),
+              const SizedBox(height: 8),
+              const _SettingsHelperText(
+                text:
+                    'Backend scenario is developer-only and only applies when Backend Mock Mode is on.',
+              ),
+            ],
             const SizedBox(height: 12),
             _ResetTravelerSettingsButton(
               onTap: () => _resetTravelerSettings(ref),
@@ -131,6 +152,29 @@ class ProfileScreen extends ConsumerWidget {
       ),
     );
   }
+}
+
+const _backendScenarioValues = [
+  'normal',
+  'ocr_low_confidence',
+  'ocr_empty_text',
+  'ocr_failure',
+  'analysis_low_quality',
+  'analysis_empty_result',
+  'analysis_failure',
+];
+
+String _backendScenarioLabel(String value) {
+  return switch (value) {
+    'normal' => 'Normal',
+    'ocr_low_confidence' => 'OCR low confidence',
+    'ocr_empty_text' => 'OCR empty text',
+    'ocr_failure' => 'OCR failure',
+    'analysis_low_quality' => 'Analysis low quality',
+    'analysis_empty_result' => 'Analysis empty result',
+    'analysis_failure' => 'Analysis failure',
+    _ => value,
+  };
 }
 
 void _updateTravelerSettings(WidgetRef ref, TravelerSettingsModel settings) {
@@ -283,6 +327,8 @@ class _SettingsDropdownTile<T> extends StatelessWidget {
     required this.values,
     required this.labelFor,
     required this.onChanged,
+    this.compact = false,
+    this.muted = false,
   });
 
   final String title;
@@ -290,16 +336,19 @@ class _SettingsDropdownTile<T> extends StatelessWidget {
   final List<T> values;
   final String Function(T value) labelFor;
   final ValueChanged<T> onChanged;
+  final bool compact;
+  final bool muted;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 86,
+      height: compact ? 74 : 86,
       margin: const EdgeInsets.only(bottom: 8),
       padding: const EdgeInsets.symmetric(horizontal: 22),
       decoration: BoxDecoration(
-        color: AppColors.surface,
+        color: muted ? AppColors.accentSoft : AppColors.surface,
         borderRadius: BorderRadius.circular(20),
+        border: muted ? Border.all(color: AppColors.border) : null,
       ),
       child: Row(
         children: [

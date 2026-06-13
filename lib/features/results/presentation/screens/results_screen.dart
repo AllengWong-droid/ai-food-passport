@@ -23,6 +23,7 @@ class ResultsScreen extends ConsumerWidget {
     final aiRequest = ref.watch(latestAiAnalysisRequestProvider);
     final activeAiProvider = ref.watch(latestAiProviderLabelProvider);
     final backendMockEnabled = ref.watch(backendMockModeProvider);
+    final backendDebugScenario = ref.watch(backendDebugScenarioProvider);
     final backendErrorCode = ref.watch(latestBackendErrorCodeProvider);
     final copy = LocalizedResultCopy(aiRequest?.outputLanguage ?? 'English');
 
@@ -104,6 +105,7 @@ class ResultsScreen extends ConsumerWidget {
                   providerMode: aiRequest.providerMode.name,
                   activeProvider: activeAiProvider,
                   backendMockEnabled: backendMockEnabled,
+                  backendDebugScenario: backendDebugScenario,
                   backendErrorCode: backendErrorCode,
                   dishCount: dishes.length,
                 ),
@@ -198,6 +200,7 @@ class _AiDebugSection extends StatelessWidget {
     required this.providerMode,
     required this.activeProvider,
     required this.backendMockEnabled,
+    required this.backendDebugScenario,
     required this.backendErrorCode,
     required this.dishCount,
   });
@@ -212,6 +215,7 @@ class _AiDebugSection extends StatelessWidget {
   final String providerMode;
   final String activeProvider;
   final bool backendMockEnabled;
+  final String backendDebugScenario;
   final String? backendErrorCode;
   final int dishCount;
 
@@ -236,6 +240,7 @@ class _AiDebugSection extends StatelessWidget {
             label: 'Backend mock enabled',
             value: backendMockEnabled ? 'true' : 'false',
           ),
+          _DebugLine(label: 'Backend debug scenario', value: backendDebugScenario),
           _DebugLine(label: 'Backend error code', value: backendErrorCode ?? 'None'),
           const _DebugLine(label: 'Backend base URL', value: BackendAiConfig.baseUrl),
           _DebugLine(label: 'Provider mode', value: providerMode),

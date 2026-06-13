@@ -12,11 +12,13 @@ class BackendMockMenuAnalysisRepository implements AiRepository {
     http.Client? client,
     this.baseUrl = BackendAiConfig.baseUrl,
     this.enabled = BackendAiConfig.mockEnabled,
+    this.debugScenario = 'normal',
   }) : _client = client ?? http.Client();
 
   final http.Client _client;
   final String baseUrl;
   final bool enabled;
+  final String debugScenario;
 
   static const providerSource = 'backend_mock_adapter';
 
@@ -81,7 +83,7 @@ class BackendMockMenuAnalysisRepository implements AiRepository {
   }
 
   Map<String, dynamic> _toBackendRequestJson(AiAnalysisRequest request) {
-    return {
+    final payload = <String, dynamic>{
       'ocrResult': {
         'rawText': request.ocrResult.rawText,
         'detectedLanguage': request.ocrResult.detectedLanguage,
@@ -108,6 +110,12 @@ class BackendMockMenuAnalysisRepository implements AiRepository {
       'outputLanguage': request.outputLanguage,
       'providerMode': request.providerMode.name,
     };
+
+    if (debugScenario != 'normal') {
+      payload['debugScenario'] = debugScenario;
+    }
+
+    return payload;
   }
 
   List<DishAnalysisModel> _parseDishes(dynamic decodedBody) {

@@ -33,6 +33,10 @@ final backendMockModeProvider = StateProvider<bool>((ref) {
   return false;
 });
 
+final backendDebugScenarioProvider = StateProvider<String>((ref) {
+  return 'normal';
+});
+
 final latestAiProviderLabelProvider = StateProvider<String>((ref) {
   return 'mock_ai';
 });

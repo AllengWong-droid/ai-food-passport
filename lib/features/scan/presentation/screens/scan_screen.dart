@@ -218,8 +218,12 @@ class _ScanScreenState extends ConsumerState<ScanScreen> {
     final scanRepository = ref.read(scanRepositoryProvider);
     final ocrRepository = ref.read(ocrRepositoryProvider);
     final useBackendMock = !forceLocalMock && ref.read(backendMockModeProvider);
+    final backendDebugScenario = ref.read(backendDebugScenarioProvider);
     final aiRepository = useBackendMock
-        ? BackendMockMenuAnalysisRepository(enabled: true)
+        ? BackendMockMenuAnalysisRepository(
+            enabled: true,
+            debugScenario: backendDebugScenario,
+          )
         : ref.read(aiRepositoryProvider);
     final tastePassport = ref.read(tastePassportProvider);
     final travelerSettings = ref.read(travelerSettingsProvider);
