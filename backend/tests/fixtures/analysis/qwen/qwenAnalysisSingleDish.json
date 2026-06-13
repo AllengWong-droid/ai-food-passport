@@ -1,0 +1,14 @@
+{
+  "output": {
+    "choices": [
+      {
+        "message": {
+          "content": "{\"dishes\":[{\"dishName\":\"Beef Noodle Soup\",\"description\":\"Braised beef noodle soup with rich broth.\",\"ingredients\":[\"Beef\",\"Wheat noodles\"],\"allergens\":[\"Wheat\",\"Soy\"],\"tasteScore\":94,\"safetyScore\":88,\"valueScore\":93,\"recommendationReason\":\"Strong savory value pick from Qwen analysis.\",\"localPrice\":180,\"localCurrency\":\"TWD\",\"homeCurrency\":\"EUR\",\"exchangeRate\":0.0289,\"assessment\":\"Good Value\"}],\"confidence\":0.91,\"warnings\":[]}"
+        }
+      }
+    ]
+  },
+  "usage": {
+    "total_tokens": 280
+  }
+}

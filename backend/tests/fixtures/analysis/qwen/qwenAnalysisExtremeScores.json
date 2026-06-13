@@ -1,0 +1,14 @@
+{
+  "output": {
+    "choices": [
+      {
+        "message": {
+          "content": "{\"dishes\":[{\"dishName\":\"Extreme Dish\",\"description\":\"A dish with extreme values.\",\"ingredients\":[\"Test\"],\"allergens\":[],\"tasteScore\":150,\"safetyScore\":-20,\"valueScore\":999,\"recommendationReason\":\"Extreme test dish.\",\"localPrice\":-50,\"localCurrency\":\"JPY\",\"homeCurrency\":\"EUR\",\"exchangeRate\":1,\"assessment\":\"Unknown\",\"confidence\":2.5}],\"confidence\":1.5,\"warnings\":[\"LOW_ANALYSIS_CONFIDENCE\",\"LOW_ANALYSIS_CONFIDENCE\",\"NEEDS_REVIEW\",\"UNKNOWN_WARNING\",\"bad_code\"]}"
+        }
+      }
+    ]
+  },
+  "usage": {
+    "total_tokens": 100
+  }
+}

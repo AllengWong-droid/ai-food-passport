@@ -1,0 +1,16 @@
+{
+  "output": {
+    "choices": [
+      {
+        "message": {
+          "content": "{\"dishes\":[{\"dishName\":\"Tonkotsu Ramen\",\"description\":\"Rich pork broth with noodles, egg, scallion, and sliced chashu.\",\"ingredients\":[\"Pork broth\",\"Wheat noodles\",\"Egg\",\"Scallion\",\"Chashu\"],\"allergens\":[\"Wheat\",\"Egg\"],\"tasteScore\":96,\"safetyScore\":84,\"valueScore\":86,\"recommendationReason\":\"Qwen analysis identified this as a top savory and umami-forward dish.\",\"localPrice\":980,\"localCurrency\":\"JPY\",\"homeCurrency\":\"EUR\",\"exchangeRate\":0.00675,\"assessment\":\"Fair\",\"spiceLevel\":null},{\"dishName\":\"Miso Katsu Skewers\",\"description\":\"Panko-fried pork skewers with hatcho miso glaze.\",\"ingredients\":[\"Pork\",\"Panko\",\"Miso\",\"Egg\",\"Wheat\"],\"allergens\":[\"Soy\",\"Wheat\",\"Egg\"],\"tasteScore\":82,\"safetyScore\":70,\"valueScore\":89,\"recommendationReason\":\"Qwen ranked this as good value while flagging common allergens.\",\"localPrice\":800,\"localCurrency\":\"JPY\",\"homeCurrency\":\"EUR\",\"exchangeRate\":0.00675,\"assessment\":\"Good Value\",\"spiceLevel\":null}],\"confidence\":0.96,\"warnings\":[],\"localCurrency\":\"JPY\",\"homeCurrency\":\"EUR\",\"exchangeRate\":0.00675}"
+        }
+      }
+    ]
+  },
+  "usage": {
+    "prompt_tokens": 250,
+    "completion_tokens": 350,
+    "total_tokens": 600
+  }
+}

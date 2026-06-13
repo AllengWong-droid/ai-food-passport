@@ -1,9 +1,10 @@
 # Analysis Provider Selection
 
-> **Status (2026-06-13): CONTRACT DEFINED — NO REAL PROVIDER ACTIVE**
+> **Status (2026-06-13): QWEN ANALYSIS ADAPTER SCAFFOLD EXISTS — DISABLED BY DEFAULT**
 >
-> Phase 12E analysis provider contract is in place. All normalization, safety,
-> and fixture tests pass. No real analysis provider is active yet.
+> Phase 12F Qwen analysis provider adapter scaffold is in place. It conforms to the
+> analysis provider contract, supports fake transport offline testing (58 unit tests),
+> and remains disabled by default. No real Qwen analysis API calls yet.
 > `mock_ai` remains the only active default.
 
 This document evaluates candidate AI menu analysis providers for the AI Food Passport backend.
@@ -102,7 +103,7 @@ It covers tradeoffs and recommends the first real analysis provider to implement
 
 ## Implementation Order (Recommended)
 
-1. **Phase 12F** — Qwen analysis provider adapter (skeleton → real, behind env gates)
+1. **Phase 12F** — Qwen analysis provider adapter (skeleton → scaffold, fake transport, disabled) ✅ COMPLETE
 2. **Phase 12G** — Qwen analysis transport (HTTPS, timeout, retries)
 3. **Phase 12H** — Provider fallback routing (Qwen → DeepSeek → mock)
 4. **Phase 13** — Unified Qwen VL OCR + analysis call (consolidate two steps)
@@ -145,7 +146,10 @@ Same safety pattern as Qwen OCR:
 - [x] Normalization helpers implemented (dishes, scores, prices, warnings)
 - [x] Fixture-based tests (101 tests) passing
 - [x] `mock_ai` remains the only active analysis provider
-- [ ] Qwen analysis adapter (Phase 12F — not started)
+- [x] Qwen analysis adapter scaffold (`qwenAnalysisProvider.js`) — Phase 12F
+- [x] Qwen analysis adapter unit tests (58 tests) passing — all offline
+- [x] Qwen analysis disabled by default (`realAnalysisEnabled: false`)
+- [ ] Qwen analysis real transport (Phase 12G — not started)
 - [ ] DeepSeek analysis adapter (not started)
 - [ ] OpenAI analysis adapter (not started)
 - [ ] Real analysis provider calls (blocked until API key obtained)

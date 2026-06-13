@@ -1,4 +1,5 @@
 const mockMenuAnalysisProvider = require('./mockMenuAnalysisProvider');
+const qwenAnalysisProvider = require('./qwenAnalysisProvider');
 const qwenAnalysisProviderSkeleton = require('./qwenAnalysisProviderSkeleton');
 const deepSeekAnalysisProviderSkeleton = require('./deepSeekAnalysisProviderSkeleton');
 const openAiAnalysisProviderSkeleton = require('./openAiAnalysisProviderSkeleton');
@@ -11,6 +12,7 @@ const providers = {
     realAnalysisEnabled: false,
     analyzeMenuText: mockMenuAnalysisProvider.analyzeMenuText
   },
+  [AnalysisProviderName.QWEN_ANALYSIS]: qwenAnalysisProvider,
   [AnalysisProviderName.QWEN_ANALYSIS_SKELETON]: qwenAnalysisProviderSkeleton,
   [AnalysisProviderName.DEEPSEEK_ANALYSIS_SKELETON]: deepSeekAnalysisProviderSkeleton,
   [AnalysisProviderName.OPENAI_ANALYSIS_SKELETON]: openAiAnalysisProviderSkeleton

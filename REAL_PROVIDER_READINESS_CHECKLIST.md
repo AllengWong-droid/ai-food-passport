@@ -38,6 +38,8 @@ Use this checklist before enabling any real OCR, Qwen, DeepSeek, OpenAI, Google 
 - [ ] Provider selection documented (`backend/ANALYSIS_PROVIDER_SELECTION.md`) with Qwen/DeepSeek/OpenAI tradeoff analysis.
 - [ ] First real analysis provider candidate identified (Qwen recommended for china-friendly deployment).
 - [ ] `AnalysisProviderMode.ANALYSIS` added to types for future real providers.
+- [ ] Qwen analysis provider adapter scaffold exists (`qwenAnalysisProvider.js`) — conforms to contract, fake transport seam, 58 unit tests, disabled by default.
+- [ ] `AnalysisProviderName.QWEN_ANALYSIS` ('qwen_analysis') registered in analysis provider registry.
 - [ ] `mock_ai` remains the only active default analysis provider.
 
 ## Secret Storage

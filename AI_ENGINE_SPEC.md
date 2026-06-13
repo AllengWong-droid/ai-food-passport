@@ -96,7 +96,9 @@ The Qwen OCR adapter scaffold (`backend/src/providers/ocr/qwenOcrProvider.js`) i
 
 The Qwen OCR real transport (`backend/src/providers/ocr/qwenOcrTransport.js`) is implemented behind explicit env gates: `OCR_PROVIDER=qwen_ocr`, `QWEN_OCR_PROVIDER_ENABLED=true`, and a valid `QWEN_API_KEY`. Without all gates, the transport creation returns a controlled `OCR_PROVIDER_NOT_CONFIGURED` error. Automated tests are 100% offline via stubbed `https.request`. A manual smoke test guide is available at `backend/QWEN_OCR_MANUAL_SMOKE_TEST.md`.
 
-No real OCR provider is active by default. `mock_ocr` remains the default.
+The Qwen analysis provider adapter scaffold (`backend/src/providers/analysis/qwenAnalysisProvider.js`) is in place. It conforms to the analysis provider contract, supports a fake transport test seam for offline testing (58 unit tests), and remains disabled by default. It does NOT perform real Qwen analysis API calls yet. Real Qwen analysis integration requires an explicit future phase with backend-only secret config, timeout, cost guard, rate limit, and deployment env vars.
+
+No real OCR provider is active by default. `mock_ocr` remains the default. No real analysis provider is active by default. `mock_ai` remains the default.
 
 ## Analysis Provider Contract
 
@@ -140,7 +142,11 @@ Disabled skeletons:
 - `deepseek_analysis_skeleton`
 - `openai_analysis_skeleton`
 
-Selecting a disabled skeleton returns `ANALYSIS_PROVIDER_NOT_CONFIGURED`. Invalid provider config returns `ANALYSIS_PROVIDER_INVALID`. No skeleton provider calls the network or requires a key today.
+Disabled adapter scaffold (Phase 12F):
+
+- `qwen_analysis` — conforms to analysis contract, supports fake transport offline testing, does NOT call real Qwen API yet.
+
+Selecting a disabled skeleton returns `ANALYSIS_PROVIDER_NOT_CONFIGURED`. Selecting `qwen_analysis` without full config also returns `ANALYSIS_PROVIDER_NOT_CONFIGURED`. Invalid provider config returns `ANALYSIS_PROVIDER_INVALID`. No provider calls the network or requires a key today.
 
 Missing or empty `ANALYSIS_PROVIDER` defaults to `mock_ai`.
 

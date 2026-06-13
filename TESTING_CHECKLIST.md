@@ -400,6 +400,31 @@ Invoke-RestMethod `
 - [ ] Confirm no API keys or secrets are added.
 - [ ] Confirm no Flutter files were changed.
 
+## Phase 12F: Qwen Analysis Provider Adapter QA
+
+- [ ] Confirm `backend/src/providers/analysis/qwenAnalysisProvider.js` exists and exports `analyzeMenuText`, `validateQwenAnalysisConfig`, `createFakeQwenAnalysisTransport`, `normalizeQwenAnalysisResponse`.
+- [ ] Run `cd backend && node --test tests/unit/qwenAnalysisProvider.test.js`. Confirm all 58 tests pass.
+- [ ] Confirm `analyzeMenuText` with fake transport returns contract-conforming result (6 keys: provider, mode, confidence, dishes, warnings, rawMetadata).
+- [ ] Confirm `analyzeMenuText` without transport throws `ANALYSIS_PROVIDER_NOT_CONFIGURED`.
+- [ ] Confirm `validateQwenAnalysisConfig` returns `{ enabled: false }` when QWEN_ANALYSIS_PROVIDER_ENABLED is not `"true"`.
+- [ ] Confirm `validateQwenAnalysisConfig` returns `{ enabled: false }` when QWEN_API_KEY is missing.
+- [ ] Confirm `validateQwenAnalysisConfig` returns `{ enabled: false }` for placeholder keys (`sk-placeholder`, `sk-test`, `sk-dummy`, `sk-example`, short keys).
+- [ ] Confirm `validateQwenAnalysisConfig` does not crash with null/undefined env vars.
+- [ ] Confirm `createFakeQwenAnalysisTransport` returns a transport that resolves with a Qwen analysis API-like envelope.
+- [ ] Confirm `normalizeQwenAnalysisResponse` parses JSON content from `output.choices[0].message.content`.
+- [ ] Confirm `normalizeQwenAnalysisResponse` restructures flat dish price fields into `priceIntelligence` nested object.
+- [ ] Confirm `normalizeQwenAnalysisResponse(null)` returns safe defaults (dishes: [], confidence: 0, EMPTY_RESULT warning).
+- [ ] Confirm `normalizeQwenAnalysisResponse` strips forbidden fields (apiKey, stack, image/base64, rawPrompt, rawOcrText) via `normalizeAnalysisResult`.
+- [ ] Confirm `normalizeQwenAnalysisResponse` clamps confidence, scores, and prices through contract normalization.
+- [ ] Confirm `normalizeQwenAnalysisResponse` result has exactly 6 keys matching the analysis contract shape.
+- [ ] Confirm no real network calls in any test (all tests use fake transport or test config validation).
+- [ ] Confirm `realAnalysisEnabled` is config-driven and stays `false` by default.
+- [ ] Confirm `qwen_analysis` is registered in `analysisProviderRegistry.js` alongside `qwen_analysis_skeleton` (safety fallback).
+- [ ] Confirm `mock_ai` remains the default active analysis provider (registry check).
+- [ ] Confirm all existing tests still pass (contract 102, OCR contract 80, Qwen OCR adapter 34, Qwen OCR transport 34, analysis contract 101).
+- [ ] Confirm no real Qwen analysis API calls, API keys, secrets, or Firebase are added.
+- [ ] Confirm no Flutter files were changed.
+
 ## Known Environment Issues
 
 - On some local Codex/Windows shells, Flutter and Dart commands may hang due to cache/permission restrictions.

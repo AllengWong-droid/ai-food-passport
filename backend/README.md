@@ -46,7 +46,10 @@ Flutter uses local `MockAiRepository` by default. Developer Backend Mock Mode ca
 - Analysis provider contract unit tests (`tests/unit/analysisProviderContract.test.js`, 101 tests).
 - Analysis test fixture data (`tests/fixtures/analysis/`).
 - Analysis provider selection documentation (`backend/ANALYSIS_PROVIDER_SELECTION.md`).
+- Qwen analysis provider adapter scaffold (`src/providers/analysis/qwenAnalysisProvider.js`) — disabled by default, fake transport test seam, 58 unit tests.
+- Qwen analysis test fixture data (`tests/fixtures/analysis/qwen/`).
 - `AnalysisProviderMode.ANALYSIS` added to types for future real providers.
+- `AnalysisProviderName.QWEN_ANALYSIS` ('qwen_analysis') added as real provider name (distinct from skeleton).
 
 ## What Is Not Implemented
 
@@ -64,7 +67,8 @@ Flutter uses local `MockAiRepository` by default. Developer Backend Mock Mode ca
 - No production cost enforcement.
 - No API keys or secrets committed.
 - Non-mock OCR providers other than Qwen are skeleton-only and disabled.
-- Non-mock analysis providers are skeleton-only and disabled.
+- Non-mock analysis providers are skeleton-only and disabled (except Qwen analysis which has a scaffold adapter).
+- Qwen analysis adapter scaffold exists but is disabled by default.
 - Analysis provider contract is defined; real providers must normalize through it.
 
 ## Install Dependencies
@@ -163,6 +167,23 @@ Registered as `qwen_ocr` in the OCR provider registry. The original `qwen_ocr_sk
 
 See `backend/OCR_PROVIDER_SELECTION.md` for the full provider selection rationale.
 
+## Qwen Analysis Provider Adapter (Phase 12F)
+
+File: `src/providers/analysis/qwenAnalysisProvider.js`
+
+The Qwen analysis provider adapter scaffold conforms to the analysis provider contract and prepares for future real Qwen analysis integration. Key characteristics:
+
+- **Disabled by default**: `realAnalysisEnabled` is config-driven (`false` without all env gates). The adapter throws `ANALYSIS_PROVIDER_NOT_CONFIGURED` when selected without a test transport.
+- **Config validation**: `validateQwenAnalysisConfig()` checks `QWEN_ANALYSIS_PROVIDER_ENABLED`, `QWEN_API_KEY` (shared with Qwen OCR), `QWEN_ANALYSIS_MODEL`, and `QWEN_ANALYSIS_BASE_URL` — without ever logging the key.
+- **Fake transport test seam**: `createFakeQwenAnalysisTransport(simulatedResult)` returns a transport function that mimics Qwen analysis API responses — zero network calls.
+- **Contract conformance**: `normalizeQwenAnalysisResponse(rawQwenResponse)` parses Qwen analysis API response structure (output.choices[0].message.content as JSON), restructures flat dish price fields into `priceIntelligence`, and passes everything through `normalizeAnalysisResult()`.
+- **Real Qwen analysis API calls**: NOT implemented (future phase). Currently the adapter only calls the provided transport (fake in tests, null in production).
+- **Shared API key**: Uses `QWEN_API_KEY` (same env var as Qwen OCR) — no separate analysis-only key needed.
+
+Registered as `qwen_analysis` in the analysis provider registry. The original `qwen_analysis_skeleton` remains as a safety fallback.
+
+See `backend/ANALYSIS_PROVIDER_SELECTION.md` for the full provider selection rationale.
+
 ## Analysis Provider Configuration
 
 `ANALYSIS_PROVIDER` defaults to `mock_ai`.
@@ -170,11 +191,12 @@ See `backend/OCR_PROVIDER_SELECTION.md` for the full provider selection rational
 Supported values:
 
 - `mock_ai`
+- `qwen_analysis` (disabled adapter scaffold, future real provider)
 - `qwen_analysis_skeleton`
 - `deepseek_analysis_skeleton`
 - `openai_analysis_skeleton`
 
-Only `mock_ai` is active and usable today. Skeleton providers do not call the network. If selected, they return the standardized error code `ANALYSIS_PROVIDER_NOT_CONFIGURED`.
+Only `mock_ai` is active and usable today. The Qwen analysis adapter (`qwen_analysis`) has a scaffold with fake transport test seam but does NOT call the real Qwen API yet. Skeleton providers do not call the network. If selected, disabled providers return the standardized error code `ANALYSIS_PROVIDER_NOT_CONFIGURED`.
 
 Safety behavior:
 
@@ -385,6 +407,7 @@ Response shape:
   "activeAnalysisProvider": "mock_ai",
   "availableAnalysisProviders": [
     "mock_ai",
+    "qwen_analysis",
     "qwen_analysis_skeleton",
     "deepseek_analysis_skeleton",
     "openai_analysis_skeleton"
@@ -534,6 +557,8 @@ Current provider files:
 - `src/providers/analysis/mockMenuAnalysisProvider.js`
 - `src/providers/analysis/analysisProviderTypes.js`
 - `src/providers/analysis/analysisProviderRegistry.js`
+- `src/providers/analysis/analysisProviderContract.js`
+- `src/providers/analysis/qwenAnalysisProvider.js` (Phase 12F disabled adapter scaffold)
 - `src/providers/analysis/qwenAnalysisProviderSkeleton.js`
 - `src/providers/analysis/deepSeekAnalysisProviderSkeleton.js`
 - `src/providers/analysis/openAiAnalysisProviderSkeleton.js`

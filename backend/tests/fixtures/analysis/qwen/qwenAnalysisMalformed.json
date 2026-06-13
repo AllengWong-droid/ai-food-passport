@@ -1,0 +1,14 @@
+{
+  "output": {
+    "choices": [
+      {
+        "message": {
+          "content": "This is not JSON at all, just a plain text error message from the API."
+        }
+      }
+    ]
+  },
+  "usage": {
+    "total_tokens": 50
+  }
+}

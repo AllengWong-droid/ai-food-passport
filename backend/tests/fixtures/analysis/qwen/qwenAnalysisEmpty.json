@@ -1,0 +1,16 @@
+{
+  "output": {
+    "choices": [
+      {
+        "message": {
+          "content": "{\"dishes\":[],\"confidence\":0,\"warnings\":[\"ANALYSIS_EMPTY_RESULT\"]}"
+        }
+      }
+    ]
+  },
+  "usage": {
+    "prompt_tokens": 100,
+    "completion_tokens": 50,
+    "total_tokens": 150
+  }
+}

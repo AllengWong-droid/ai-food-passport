@@ -1,0 +1,16 @@
+{
+  "output": {
+    "choices": [
+      {
+        "message": {
+          "content": "{\"dishes\":[{\"dishName\":\"Fish and Chips\",\"description\":\"Crisp battered fish with fries.\",\"ingredients\":[\"White fish\",\"Wheat batter\",\"Potato\"],\"allergens\":[\"Fish\",\"Wheat\",\"Egg\"],\"tasteScore\":78,\"safetyScore\":70,\"valueScore\":75,\"recommendationReason\":\"Low-confidence recommendation from partial menu data.\",\"localPrice\":14.90,\"localCurrency\":\"SGD\",\"homeCurrency\":\"EUR\",\"exchangeRate\":0.68,\"assessment\":\"Fair\"}],\"confidence\":0.48,\"warnings\":[\"LOW_ANALYSIS_CONFIDENCE\",\"NEEDS_REVIEW\"]}"
+        }
+      }
+    ]
+  },
+  "usage": {
+    "prompt_tokens": 120,
+    "completion_tokens": 200,
+    "total_tokens": 320
+  }
+}

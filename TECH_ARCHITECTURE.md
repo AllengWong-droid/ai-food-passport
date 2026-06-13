@@ -85,6 +85,7 @@ Analysis provider registry:
 
 - active default: `mock_ai`
 - available skeletons: `qwen_analysis_skeleton`, `deepseek_analysis_skeleton`, `openai_analysis_skeleton`
+- disabled adapter scaffold: `qwen_analysis` (Phase 12F — conforms to contract, fake transport tests, disabled by default)
 - analysis provider contract defined (`analysisProviderContract.js`)
 - real analysis enabled: `false`
 
@@ -340,6 +341,22 @@ Phase 11C implements CORS enforcement and request body limit enforcement:
 - `realOcrEnabled: false` — hard-coded; Qwen adapter stays disabled by default.
 - All existing contract tests (102) and OCR contract tests (80) still pass. New Qwen adapter tests: 34/34 passing.
 - All existing contract tests still pass. New OCR unit tests: 80/80 passing.
+
+## Phase 12F: Qwen Analysis Provider Disabled Adapter Scaffold
+
+- `backend/src/providers/analysis/qwenAnalysisProvider.js` — Qwen analysis provider adapter that conforms to the analysis provider contract.
+  - `analyzeMenuText(params, { transport })` — accepts a transport (test seam) or defaults to disabled (throws ANALYSIS_PROVIDER_NOT_CONFIGURED).
+  - `validateQwenAnalysisConfig()` — validates `QWEN_ANALYSIS_PROVIDER_ENABLED`, `QWEN_API_KEY`, `QWEN_ANALYSIS_MODEL`, `QWEN_ANALYSIS_BASE_URL` env vars. Detects placeholder keys without logging them.
+  - `createFakeQwenAnalysisTransport(simulatedResult, { shouldThrow })` — creates a fake transport that returns a Qwen analysis API-like envelope. Zero network calls.
+  - `normalizeQwenAnalysisResponse(rawQwenResponse)` — parses Qwen analysis API response (output.choices[0].message.content as JSON), restructures flat dish price fields into priceIntelligence, passes through `normalizeAnalysisResult()`.
+- `backend/src/providers/analysis/analysisProviderTypes.js` — added `QWEN_ANALYSIS: 'qwen_analysis'` provider name.
+- `backend/src/providers/analysis/analysisProviderRegistry.js` — registered `qwenAnalysisProvider` as `QWEN_ANALYSIS`. `qwen_analysis_skeleton` retained as safety fallback.
+- `backend/tests/fixtures/analysis/qwen/` — 7 Qwen-specific analysis fixtures: qwenAnalysisSuccess, qwenAnalysisEmpty, qwenAnalysisLowConfidence, qwenAnalysisMalformed, qwenAnalysisWithSecrets, qwenAnalysisSingleDish, qwenAnalysisExtremeScores.
+- `backend/tests/unit/qwenAnalysisProvider.test.js` — 58 unit tests: normalization success/single dish/empty result/low confidence/malformed input/forbidden field stripping/score clamping/contract shape stability, analyzeMenuText with fake transport/error handling/no transport, validateQwenAnalysisConfig, realAnalysisEnabled stays false, no real network calls, mock_ai default unchanged.
+- `backend/README.md`, `backend/ANALYSIS_PROVIDER_SELECTION.md`, `AI_ENGINE_SPEC.md`, `TECH_ARCHITECTURE.md`, `ROADMAP.md`, `TESTING_CHECKLIST.md`, `REAL_PROVIDER_READINESS_CHECKLIST.md` — updated for Phase 12F.
+- Flutter files unchanged. No real provider calls, API keys, secrets, or Firebase added.
+- `realAnalysisEnabled` is config-driven (`false` without all env gates). Qwen analysis stays disabled by default.
+- All existing tests pass (contract: 102, OCR contract: 80, Qwen OCR adapter: 34, Qwen OCR transport: 34, analysis contract: 101, Qwen analysis adapter: 58 = 409 total).
 
 ## Phase 12C: Qwen OCR Real Transport Behind Explicit Safety Gates
 
