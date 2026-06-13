@@ -21,7 +21,7 @@ let serverProcess = null;
  * @returns {Promise<void>}
  */
 function startServer(envOverrides) {
-  var mergedEnv = { ...process.env, NODE_ENV: 'test' };
+  var mergedEnv = { ...process.env, NODE_ENV: 'test', PORT: String(PORT) };
   if (envOverrides) {
     Object.assign(mergedEnv, envOverrides);
   }
@@ -40,12 +40,22 @@ function startServer(envOverrides) {
     });
 
     // Poll until server is ready
-    const startTime = Date.now();
-    const poll = setInterval(() => {
-      http.get(BASE_URL + '/health', (res) => {
+    var startTime = Date.now();
+    var poll = setInterval(function () {
+      // Guard: if the spawned process has already exited (e.g. port conflict),
+      // stop polling and reject immediately. Without this check, the poll
+      // loop might connect to an old server instance still listening on the
+      // same port, giving a false positive.
+      if (serverProcess && serverProcess.exitCode !== null) {
+        clearInterval(poll);
+        reject(new Error('Server process exited prematurely with code ' + serverProcess.exitCode));
+        return;
+      }
+
+      http.get(BASE_URL + '/health', function (res) {
         clearInterval(poll);
         resolve();
-      }).on('error', () => {
+      }).on('error', function () {
         if (Date.now() - startTime > 5000) {
           clearInterval(poll);
           reject(new Error('Server failed to start within 5 seconds'));
@@ -58,23 +68,44 @@ function startServer(envOverrides) {
 function stopServer() {
   return new Promise((resolve) => {
     if (serverProcess) {
-      const proc = serverProcess;
+      var proc = serverProcess;
       serverProcess = null;
 
       // On Windows, SIGTERM may not work; use taskkill as primary
       if (process.platform === 'win32') {
         try {
-          const { execSync } = require('child_process');
-          execSync(`taskkill /pid ${proc.pid} /T /F 2>nul`, { stdio: 'ignore' });
+          var { execSync } = require('child_process');
+          execSync('taskkill /pid ' + proc.pid + ' /T /F 2>nul', { stdio: 'ignore' });
         } catch (_) {
           // Process may have already exited
         }
-        resolve();
+
+        // Poll until the process is actually dead, then wait an extra
+        // small delay for the OS to release the port. Without this,
+        // the next startServer may accidentally connect to the old
+        // server instance still occupying the same port, causing
+        // cross-contamination between test scenarios.
+        var killPollStart = Date.now();
+        var killPoll = setInterval(function () {
+          try {
+            process.kill(proc.pid, 0);
+            // Process still alive — keep waiting
+            if (Date.now() - killPollStart > 5000) {
+              // Force timeout after 5 seconds
+              clearInterval(killPoll);
+              resolve();
+            }
+          } catch (_e) {
+            // Process is dead — wait 200ms for port release, then resolve
+            clearInterval(killPoll);
+            setTimeout(resolve, 200);
+          }
+        }, 100);
       } else {
         proc.kill('SIGTERM');
-        proc.on('exit', () => resolve());
+        proc.on('exit', function () { resolve(); });
         // Force kill after 2 seconds
-        setTimeout(() => {
+        setTimeout(function () {
           try { proc.kill('SIGKILL'); } catch (_) {}
           resolve();
         }, 2000);
