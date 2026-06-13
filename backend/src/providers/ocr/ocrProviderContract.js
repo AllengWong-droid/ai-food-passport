@@ -77,7 +77,8 @@ const SAFE_METADATA_KEYS = new Set([
   'modelVersion',
   'ocrEngine',
   'pageCount',
-  'detectedOrientation'
+  'detectedOrientation',
+  'totalTokens'
 ]);
 
 /**

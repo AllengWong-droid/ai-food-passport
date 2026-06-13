@@ -8,7 +8,8 @@
 
 - Active OCR provider: `mock_ocr` (deterministic local text generator)
 - Real OCR enabled: `false`
-- Provider skeletons exist but are disabled: Qwen OCR, Google Vision, OpenAI Vision
+- Qwen OCR adapter scaffold: `backend/src/providers/ocr/qwenOcrProvider.js` (disabled, testable via fake transport)
+- Provider skeletons exist but are disabled: Qwen OCR (skeleton), Google Vision, OpenAI Vision
 - The OCR provider contract (`ocrProviderContract.js`) defines the standard shape all future real providers must produce
 - The `/health` endpoint reports all available and configured providers
 - Provider safety guards (timeout, rate limit, cost budget, logging redaction) are already skeleton-ready

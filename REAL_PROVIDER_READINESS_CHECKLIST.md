@@ -12,6 +12,9 @@ Use this checklist before enabling any real OCR, Qwen, DeepSeek, OpenAI, Google 
 - [ ] 80 unit tests pass for contract normalization, leakage prevention, and edge cases.
 - [ ] Provider selection documented (`backend/OCR_PROVIDER_SELECTION.md`) with tradeoff analysis.
 - [ ] First real OCR provider candidate identified (Qwen OCR/VL recommended for china mode).
+- [ ] Qwen OCR adapter scaffold exists (`qwenOcrProvider.js`) with config validation, fake transport seam, and 34 unit tests.
+- [ ] Qwen adapter remains disabled by default (`realOcrEnabled: false`).
+- [ ] Qwen adapter conforms to OCR provider contract (normalizeOcrResult/normalizeOcrError).
 - [ ] No real provider calls, API keys, or secrets have been added.
 
 ## Secret Storage

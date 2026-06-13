@@ -90,7 +90,11 @@ The backend defines a standardized OCR result contract in `backend/src/providers
 
 Normalization helpers (`normalizeOcrResult`, `normalizeOcrError`) sanitise raw provider output, stripping stack traces, API keys, secrets, image data, and raw HTTP responses before results reach any API response.
 
-Provider selection documentation (`backend/OCR_PROVIDER_SELECTION.md`) evaluates Qwen OCR/VL, OpenAI Vision, and Google Vision as future candidates. Qwen OCR/VL is the recommended first real OCR provider for `china`-mode routing, given CJK accuracy, China data compliance, and unified OCR+analysis pipeline. No real provider is active yet.
+Provider selection documentation (`backend/OCR_PROVIDER_SELECTION.md`) evaluates Qwen OCR/VL, OpenAI Vision, and Google Vision as future candidates. Qwen OCR/VL is the recommended first real OCR provider for `china`-mode routing, given CJK accuracy, China data compliance, and unified OCR+analysis pipeline.
+
+The Qwen OCR adapter scaffold (`backend/src/providers/ocr/qwenOcrProvider.js`) is now in place. It conforms to the OCR provider contract, remains disabled by default, and supports a fake transport test seam for unit testing. Real Qwen API calls are NOT yet implemented.
+
+No real provider is active yet.
 
 ## Analysis Provider Registry
 

@@ -1,0 +1,9 @@
+{
+  "description": "Malformed Qwen OCR response (missing output.choices)",
+  "text": "Some partial text",
+  "languageHints": ["en"],
+  "confidence": "high",
+  "warnings": [],
+  "usage": { "total_tokens": 200 },
+  "malformed": true
+}

@@ -1,0 +1,8 @@
+{
+  "description": "Empty text Qwen OCR response (unreadable image)",
+  "text": "",
+  "languageHints": [],
+  "confidence": 0.1,
+  "warnings": ["OCR_EMPTY_TEXT"],
+  "usage": { "total_tokens": 120 }
+}

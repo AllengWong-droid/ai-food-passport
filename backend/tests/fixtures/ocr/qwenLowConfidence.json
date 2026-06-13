@@ -1,0 +1,8 @@
+{
+  "description": "Low confidence Qwen OCR response (blurry image)",
+  "text": "Tonkotsu Ramen JPY 980\nMiso Katsu Skewers JPY 800",
+  "languageHints": ["ja"],
+  "confidence": 0.32,
+  "warnings": ["LOW_OCR_CONFIDENCE"],
+  "usage": { "total_tokens": 380 }
+}

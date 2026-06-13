@@ -302,6 +302,34 @@ Invoke-RestMethod `
 - [ ] Confirm no real provider calls, API keys, secrets, or Firebase are added.
 - [ ] Confirm no Flutter files were changed.
 
+## Phase 12B: Qwen OCR Adapter QA
+
+- [ ] Confirm `backend/src/providers/ocr/qwenOcrProvider.js` exists and exports `extractMenuText`, `validateQwenOcrConfig`, `createFakeQwenTransport`, `normalizeQwenResponse`.
+- [ ] Run `cd backend && node --test tests/unit/qwenOcrProvider.test.js`. Confirm all 34 tests pass.
+- [ ] Confirm `extractMenuText` with fake transport returns contract-conforming result (7 keys, provider/mode/text/languageHints/confidence/warnings/rawMetadata).
+- [ ] Confirm `extractMenuText` without transport throws `OCR_PROVIDER_NOT_CONFIGURED`.
+- [ ] Confirm `validateQwenOcrConfig` returns `{ enabled: false }` when QWEN_OCR_PROVIDER_ENABLED is not `"true"`.
+- [ ] Confirm `validateQwenOcrConfig` returns `{ enabled: false }` when QWEN_API_KEY is missing.
+- [ ] Confirm `validateQwenOcrConfig` returns `{ enabled: false }` for placeholder keys (`sk-placeholder`, `sk-test`, short keys).
+- [ ] Confirm `validateQwenOcrConfig` does not crash with null/undefined env vars.
+- [ ] Confirm `createFakeQwenTransport` returns a transport that resolves with a Qwen API-like envelope (output.choices, usage, languageHints, confidence, warnings).
+- [ ] Confirm `normalizeQwenResponse` handles Qwen VL envelope format (`output.choices[0].message.content`).
+- [ ] Confirm `normalizeQwenResponse` falls back to direct `text` field when envelope is absent.
+- [ ] Confirm `normalizeQwenResponse(null)` returns safe defaults (text: '', confidence: 0).
+- [ ] Confirm `normalizeQwenResponse` strips forbidden fields (apiKey, stack, image/base64) via `normalizeOcrResult`.
+- [ ] Confirm `normalizeQwenResponse` correctly handles non-numeric confidence (passes to clampConfidence).
+- [ ] Confirm `normalizeQwenResponse` result has exactly 7 keys matching the OCR contract shape.
+- [ ] Confirm no real network calls in any test (all tests use fake transport or test config validation).
+- [ ] Confirm `realOcrEnabled: false` (hard-coded in qwenOcrProvider.js).
+- [ ] Confirm `qwen_ocr` is registered in `ocrProviderRegistry.js` alongside `qwen_ocr_skeleton` (safety fallback).
+- [ ] Confirm `mock_ocr` remains the active default provider.
+- [ ] Confirm `npm run test:contract` still passes (102 tests).
+- [ ] Confirm `node --test tests/unit/ocrProviderContract.test.js` still passes (80 tests).
+- [ ] Confirm `npm run dev` starts successfully.
+- [ ] Confirm `GET /health` works and reports `activeOcrProvider: mock_ocr`, `realOcrEnabled: false`.
+- [ ] Confirm no real Qwen API calls, API keys, secrets, or Firebase are added.
+- [ ] Confirm no Flutter files were changed.
+
 ## Known Environment Issues
 
 - On some local Codex/Windows shells, Flutter and Dart commands may hang due to cache/permission restrictions.

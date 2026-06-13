@@ -136,6 +136,22 @@ These helpers are tested with 80 unit tests covering success, low confidence, em
 
 Future real OCR provider adapters must call `normalizeOcrResult()` before returning any result, and `normalizeOcrError()` inside catch blocks. This guarantees the analyzeMenu route and downstream analysis code never receive raw, untrusted provider output.
 
+## Qwen OCR Provider Adapter (Phase 12B)
+
+File: `src/providers/ocr/qwenOcrProvider.js`
+
+The Qwen OCR provider adapter scaffold conforms to the OCR provider contract and prepares for future real Qwen OCR integration. Key characteristics:
+
+- **Disabled by default**: `realOcrEnabled: false` (hard-coded for Phase 12B). The adapter throws `OCR_PROVIDER_NOT_CONFIGURED` when selected without a test transport.
+- **Config validation**: `validateQwenOcrConfig()` checks `QWEN_OCR_PROVIDER_ENABLED`, `QWEN_API_KEY`, and placeholder detection without ever logging the key.
+- **Fake transport test seam**: `createFakeQwenTransport(simulatedResult)` returns a transport function that mimics Qwen API responses — zero network calls.
+- **Contract conformance**: `normalizeQwenResponse(rawQwenResponse)` flattens Qwen VL API response structure into the OCR contract shape, then passes through `normalizeOcrResult()`.
+- **Real Qwen API calls**: NOT implemented (future phase). Currently the adapter only calls the provided transport (fake in tests, null in production).
+
+Registered as `qwen_ocr` in the OCR provider registry. The original `qwen_ocr_skeleton` remains as a safety fallback.
+
+See `backend/OCR_PROVIDER_SELECTION.md` for the full provider selection rationale.
+
 ## Analysis Provider Configuration
 
 `ANALYSIS_PROVIDER` defaults to `mock_ai`.

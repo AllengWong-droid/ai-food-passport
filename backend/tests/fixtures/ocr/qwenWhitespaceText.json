@@ -1,0 +1,8 @@
+{
+  "description": "Qwen OCR response with only whitespace text (edge case)",
+  "text": "   \n\t   ",
+  "languageHints": [],
+  "confidence": 0.2,
+  "warnings": ["OCR_EMPTY_TEXT"],
+  "usage": { "total_tokens": 100 }
+}

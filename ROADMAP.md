@@ -42,6 +42,7 @@
 - Phase 11A: Backend Mock Contract Tests
 - Phase 11B: Backend Production Deployment Readiness Skeleton
 - Phase 12A: Real OCR Provider Contract and Selection Prep
+- Phase 12B: Qwen OCR Provider Disabled Adapter Scaffold
 
 ## Current MVP Alpha
 
@@ -67,6 +68,7 @@ Backend Mock Mode is disabled by default. Provider mode remains informational on
 - Provider timeout, rate-limit, budget, and redaction policy enforcement
 - OCR provider contract defined with normalization helpers and 80 unit tests
 - OCR provider selection documented (Qwen OCR/VL recommended first candidate)
+- Qwen OCR adapter scaffold created with fake transport test seam and 34 unit tests
 - Real OCR adapter implementation behind disabled backend skeletons
 - Real provider gateway implementation behind backend only
 - Qwen/DeepSeek/OpenAI adapter skeletons on backend

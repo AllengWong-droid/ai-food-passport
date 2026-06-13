@@ -1,0 +1,6 @@
+{
+  "description": "Simulated Qwen API error response",
+  "error": true,
+  "errorMessage": "Qwen API request failed: rate limit exceeded",
+  "errorCode": "RATE_LIMIT_EXCEEDED"
+}

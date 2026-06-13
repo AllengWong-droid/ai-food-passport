@@ -319,3 +319,23 @@ Phase 11C implements CORS enforcement and request body limit enforcement:
 - `mockOcrProvider.js` updated to include `rawMetadata: null` for explicit contract conformance.
 - Flutter files unchanged. No real provider calls, API keys, or secrets added.
 - All existing contract tests still pass. New OCR unit tests: 80/80 passing.
+
+## Phase 12B: Qwen OCR Provider Disabled Adapter Scaffold
+
+- `backend/src/providers/ocr/qwenOcrProvider.js` — Qwen OCR provider adapter that conforms to the OCR provider contract.
+  - `extractMenuText(image, { transport })` — accepts a transport (test seam) or defaults to disabled (throws OCR_PROVIDER_NOT_CONFIGURED).
+  - `validateQwenOcrConfig()` — validates `QWEN_OCR_PROVIDER_ENABLED`, `QWEN_API_KEY`, `QWEN_OCR_MODEL`, `QWEN_OCR_BASE_URL` env vars. Detects placeholder keys without logging them.
+  - `createFakeQwenTransport(simulatedResult, { shouldThrow })` — creates a fake transport that returns a Qwen API-like envelope. Zero network calls.
+  - `normalizeQwenResponse(rawQwenResponse)` — flattens Qwen VL API response structure, falls back to direct `text` field, passes through `normalizeOcrResult()`.
+- `backend/src/providers/ocr/ocrProviderTypes.js` — added `QWEN_OCR: 'qwen_ocr'` provider name and `OCR: 'ocr'` mode.
+- `backend/src/providers/ocr/ocrProviderRegistry.js` — registered `qwenOcrProvider` as `QWEN_OCR`. `qwen_ocr_skeleton` retained as safety fallback.
+- `backend/src/providers/ocr/ocrProviderContract.js` — added `totalTokens` to `SAFE_METADATA_KEYS` whitelist.
+- `backend/tests/fixtures/ocr/` — 9 new Qwen-specific fixtures: qwenSuccess, qwenLowConfidence, qwenEmptyText, qwenMalformed, qwenWithSecrets, qwenWhitespaceText, qwenChineseMenu, qwenApiError.
+- `backend/tests/unit/qwenOcrProvider.test.js` — 34 unit tests: normalization success/low confidence/empty text/malformed/forbidden field stripping/confidence clamping/contract shape stability, extractMenuText with fake transport/error handling/no transport, validateQwenOcrConfig (missing/placeholder/valid key), no real network calls.
+- `backend/README.md` — added Qwen OCR Provider Adapter section.
+- `backend/OCR_PROVIDER_SELECTION.md` — updated to reference adapter scaffold existence.
+- `AI_ENGINE_SPEC.md`, `TECH_ARCHITECTURE.md`, `ROADMAP.md`, `TESTING_CHECKLIST.md`, `REAL_PROVIDER_READINESS_CHECKLIST.md` — updated for Phase 12B.
+- Flutter files unchanged. No real provider calls, API keys, secrets, or Firebase added.
+- `realOcrEnabled: false` — hard-coded; Qwen adapter stays disabled by default.
+- All existing contract tests (102) and OCR contract tests (80) still pass. New Qwen adapter tests: 34/34 passing.
+- All existing contract tests still pass. New OCR unit tests: 80/80 passing.

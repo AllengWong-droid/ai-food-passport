@@ -1,0 +1,8 @@
+{
+  "description": "Successful Qwen OCR response with Japanese menu text",
+  "text": "Tonkotsu Ramen JPY 980\nMiso Katsu Skewers JPY 800\nGyoza (5 pcs) JPY 480",
+  "languageHints": ["ja", "en"],
+  "confidence": 0.96,
+  "warnings": [],
+  "usage": { "total_tokens": 420 }
+}

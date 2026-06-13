@@ -1,0 +1,8 @@
+{
+  "description": "Qwen OCR response with Chinese menu text (mixed with English prices)",
+  "text": "宫保鸡丁 RMB 38\n鱼香肉丝 RMB 42\n麻婆豆腐 RMB 35",
+  "languageHints": ["zh", "en"],
+  "confidence": 0.98,
+  "warnings": [],
+  "usage": { "total_tokens": 380 }
+}
