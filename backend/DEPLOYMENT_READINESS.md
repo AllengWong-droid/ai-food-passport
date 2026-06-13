@@ -1,170 +1,244 @@
-# Backend Deployment Readiness
+# Deployment Readiness — AI Food Passport Backend
 
-Phase 11C — CORS enforcement and request body limit enforcement.
-
-## Purpose
-
-This document tracks what is required before the AI Food Passport backend can be deployed to a production environment for real Flutter app users (App Store / TestFlight).
-
-The backend is currently **mock-only**. No real OCR or AI provider calls are implemented. Deployment readiness at this stage means:
-
-- The backend can be started in production mode (`NODE_ENV=production`)
-- Environment variables are parsed safely with documented defaults
-- CORS origin validation is enforced (not just skeleton)
-- Request body size is limited with a controlled error envelope
-- Health check reports deployment readiness metadata
-- Contract tests pass before any deployment
+> **Status**: Planning only. No deployment has been performed.
+> **Date**: 2026-06-13
+> **Phase**: 13A
+> **productionReady**: `false`
 
 ---
 
-## Current Status (Phase 11C)
+## Required Environment Variables
 
-| Area | Status | Notes |
-|---|---|---|---|
-| Runtime config (`runtimeConfig.js`) | ✅ Ready | Parses NODE_ENV, PORT, HOST, ALLOWED_ORIGINS, PUBLIC_BACKEND_URL, REQUEST_BODY_LIMIT |
-| Environment variable validation | ✅ Ready | Warnings (not crashes) on invalid values |
-| `/health` deployment metadata | ✅ Ready | Exposes `nodeEnv`, `port`, `host`, `corsConfigured`, `corsEnforcementReady`, `requestBodyLimitBytes`, `requestBodyLimitReady`, `productionReady`, `deploymentReadinessReady` |
-| CORS enforcement | ✅ Ready | Origin validation via `corsEnforcement.js`. Dev: permissive localhost. Prod: explicit origins only, no `*`. OPTIONS preflight handled. |
-| Request body limit | ✅ Ready | `REQUEST_BODY_LIMIT` enforced. Oversized bodies return `413` with `REQUEST_BODY_TOO_LARGE` controlled error envelope. |
-| Secrets management | ⚠️ Documented | `.env.example` placeholders only; no real keys anywhere |
-| Contract tests | ✅ Ready | `npm run test:contract` passes (102 tests) |
-| Real provider calls | ❌ Disabled | All real providers are skeletons |
-| HTTPS / TLS | ❌ Not configured | Must be handled by deployment platform (e.g. Cloud Run, Heroku) |
-| Rate limiting | ❌ Skeleton | Config parsed, not enforced |
-| Cost guards | ❌ Skeleton | Config parsed, not enforced |
-| Logging redaction | ✅ Skeleton | `redactForLogs` and `redactError` available, not yet wrapped on live paths |
-| Safe error envelopes | ✅ Ready | `extractSafeErrorCode` and `buildSafeLogEntry` available; all API responses use controlled envelopes |
+### Runtime Configuration
+
+| Variable              | Required | Default                    | Description                                      |
+|-----------------------|----------|----------------------------|--------------------------------------------------|
+| `NODE_ENV`            | Yes      | `development`              | Set to `production` for deployment               |
+| `PORT`                | Yes      | `3000`                     | HTTP server listen port                          |
+| `HOST`                | No       | `0.0.0.0`                  | Bind address (use `0.0.0.0` for cloud)           |
+| `ALLOWED_ORIGINS`     | No       | `*`                        | CORS allowed origins (comma-separated)           |
+| `PUBLIC_BACKEND_URL`  | No       | `http://localhost:3000`    | Public-facing backend URL for Flutter config     |
+| `REQUEST_BODY_LIMIT`  | No       | `10mb`                     | Max request body size (for image uploads)        |
+
+### Provider Safety Controls
+
+| Variable                      | Default   | Description                                     |
+|-------------------------------|-----------|-------------------------------------------------|
+| `PROVIDER_TIMEOUT_MS`         | `15000`   | Timeout for each provider call (ms)             |
+| `PROVIDER_MAX_RETRIES`        | `1`       | Max retries on transient provider failure       |
+| `PROVIDER_DAILY_REQUEST_LIMIT`| `100`     | Max provider requests per day (0 = unlimited)   |
+| `PROVIDER_MONTHLY_BUDGET_USD` | `5`       | Soft budget cap (USD, 0 = unlimited)            |
+
+### Provider Selection (mock by default)
+
+| Variable              | Default        | Description                           |
+|-----------------------|----------------|---------------------------------------|
+| `OCR_PROVIDER`        | `mock_ocr`     | OCR provider selection                |
+| `ANALYSIS_PROVIDER`   | `mock_ai`      | AI analysis provider selection        |
+
+### Qwen OCR Gate (ALL must be set to enable real Qwen OCR)
+
+| Variable                       | Required | Default                                              |
+|--------------------------------|----------|------------------------------------------------------|
+| `OCR_PROVIDER`                 | Yes      | `qwen_ocr`                                           |
+| `QWEN_OCR_PROVIDER_ENABLED`    | Yes      | `true`                                               |
+| `QWEN_API_KEY`                 | Yes      | (real DashScope API key)                             |
+| `QWEN_OCR_MODEL`               | No       | `qwen-vl-max`                                        |
+| `QWEN_OCR_BASE_URL`            | No       | `https://dashscope.aliyuncs.com/compatible-mode/v1`  |
+
+### Qwen Analysis Gate (ALL must be set to enable real Qwen Analysis)
+
+| Variable                        | Required | Default                                                       |
+|---------------------------------|----------|---------------------------------------------------------------|
+| `ANALYSIS_PROVIDER`             | Yes      | `qwen_analysis`                                               |
+| `QWEN_ANALYSIS_PROVIDER_ENABLED`| Yes      | `true`                                                        |
+| `QWEN_API_KEY`                  | Yes      | (same key as OCR)                                             |
+| `QWEN_ANALYSIS_MODEL`           | No       | `qwen-max`                                                    |
+| `QWEN_ANALYSIS_BASE_URL`        | No       | `https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions` |
+
+---
+
+## Startup Commands
+
+### Development (current)
+```bash
+cd backend
+npm install
+NODE_ENV=development node src/server.js
+```
+
+### Production (future, do NOT run yet)
+```bash
+cd backend
+npm ci --omit=dev                # Install only production deps
+NODE_ENV=production node src/server.js
+```
+
+### Health check
+```bash
+curl http://localhost:3000/health
+# Expected: {"status":"ok","activeOcrProvider":"mock_ocr","activeAnalysisProvider":"mock_ai","realProvidersEnabled":false}
+```
+
+---
+
+## Secret Handling Policy
+
+### Where secrets live
+| Secret Type          | Location                                 | Never In               |
+|----------------------|------------------------------------------|------------------------|
+| Provider API keys    | Backend deployment env vars ONLY         | Flutter, Git, client   |
+| Qwen API key         | `QWEN_API_KEY` env var on server         | `.env` (in gitignore)  |
+| Firebase (if added)  | Backend env vars / service account file  | Flutter, client        |
+
+### Rules (mandatory)
+1. Flutter `BACKEND_BASE_URL` is the ONLY backend-dependent config in the app
+2. Flutter MUST NEVER contain provider API keys
+3. Provider keys live ONLY in backend deployment environment variables
+4. `.env` is in `.gitignore` — never committed
+5. All secrets are excluded from error messages, logs, and HTTP responses (enforced by sanitization code)
+6. Dry-run and contract tests verify no secret leakage in error paths
+
+---
+
+## Cost and Rate-Limit Controls
+
+### Provider daily request limit
+```javascript
+// in src/providers/providerSafetyGuards.js
+// PROVIDER_DAILY_REQUEST_LIMIT (default: 100)
+// When limit is hit, requests return a controlled error without calling the provider
+```
+
+### Monthly budget cap
+```javascript
+// PROVIDER_MONTHLY_BUDGET_USD (default: $5)
+// Tracks cumulative estimated provider cost
+// When cap is hit, real provider calls are disabled until the next month
+```
+
+### Timeout wrapper
+```javascript
+// PROVIDER_TIMEOUT_MS (default: 15000)
+// All provider calls pass through withProviderTimeout()
+// Timeouts return clean ANALYSIS_FAILED / OCR_FAILED errors
+```
+
+### Retry policy
+```javascript
+// PROVIDER_MAX_RETRIES (default: 1)
+// Only retries on transient errors (network, 5xx)
+// Does NOT retry on auth errors (4xx) or malformed responses
+```
+
+---
+
+## Rollback Steps
+
+If the deployment causes issues, rollback by:
+
+1. **Render dashboard**: One-click "Deploy" → "Rollback to previous deploy"
+2. **Manual**: Re-deploy the last known-good commit
+3. **Emergency**: Set `OCR_PROVIDER=mock_ocr` and `ANALYSIS_PROVIDER=mock_ai` to disable all real providers
+4. **Flutter**: App continues to work with mock data (no backend dependency for basic UI)
 
 ---
 
 ## Pre-Deployment Checklist
 
-Before deploying to a real production environment, complete:
+Before attempting the first deployment:
 
-### 1. Real Provider Phase
-- [ ] Activate one real OCR provider (e.g. Qwen OCR)
-- [ ] Activate one real analysis provider (e.g. Qwen analysis)
-- [ ] Wrap real provider calls with `withProviderTimeout`
-- [ ] Wrap real provider calls with `redactForLogs` for logging
-- [ ] Wrap real provider catch handlers with `extractSafeErrorCode`
-- [ ] Add cost guards and rate limits
-- [ ] Integration test real providers in `china` providerMode
-
-### 2. CORS Enforcement ✅ (Completed in Phase 11C)
-- [x] Validate `ALLOWED_ORIGINS` in production (reject unrecognised origins)
-- [x] Remove `Access-Control-Allow-Origin: *` for non-localhost requests in production
-- [x] Handle OPTIONS preflight with origin validation
-- [ ] Test Flutter web production build CORS behaviour
-
-### 3. Secrets Management
-- [ ] Deploy backend with real API keys as deployment environment variables (NOT in `.env` file)
-- [ ] Verify no secrets appear in `/health` or any API response
-- [ ] Verify `redactForLogs` masks secrets in all log output
-- [ ] Rotate any accidentally-committed keys immediately
-
-### 4. Deployment Platform Configuration
-- [ ] Configure `HOST=0.0.0.0` for containerised deployments
-- [ ] Set `PORT` to match deployment platform's assigned port
-- [ ] Set `PUBLIC_BACKEND_URL` to the deployed HTTPS URL
-- [ ] Configure `ALLOWED_ORIGINS` to the Flutter app's production origin(s)
-- [ ] Enable HTTPS (via load balancer or deployment platform)
-- [ ] Configure health check endpoint for platform's liveness probe
-
-### 5. Flutter App Configuration
-- [ ] Update Flutter `AnalyzeMenuService` to call `PUBLIC_BACKEND_URL` in production
-- [ ] Keep Flutter calling `localhost:8787` in development mode
-- [ ] Test Flutter production build against deployed backend
-
-### 6. Final Contract Test Pass
-- [ ] `npm run test:contract` passes against the deployed backend (smoke test)
-- [ ] All 7 `debugScenario` values return controlled responses
-- [ ] Invalid provider config returns controlled errors (not stack traces)
+- [ ] All backend tests pass: `node --test`
+- [ ] Contract tests pass: `node --test tests/contract/`
+- [ ] `git diff --check` passes (no trailing whitespace)
+- [ ] Secret scan: no `sk-` keys in committed files
+- [ ] `backend/.env` is in `.gitignore` and untracked
+- [ ] `NODE_ENV=production` does not crash the server (test locally)
+- [ ] `/health` returns expected JSON
+- [ ] `POST /api/analyze-menu` works with mock providers
+- [ ] CORS allows Flutter dev origin (if configured)
+- [ ] Body limit rejects oversized requests
+- [ ] No stack traces in error responses
+- [ ] No secrets in log output
+- [ ] `productionReady` remains `false`
 
 ---
 
-## Environment Variables Reference
+## Future Deployment Smoke Checklist
 
-See `backend/.env.example` for the full list.
+> **Do NOT execute this checklist yet.** This is for when real API keys become available
+> and the decision is made to deploy with real providers.
 
-### Critical for Production
+### Phase 1: Deploy with mock providers
+- [ ] Deploy backend to recommended platform (Render)
+- [ ] Verify `GET /health` returns `{"status":"ok"}`
+- [ ] Verify `POST /api/analyze-menu` returns mock data (`ok: true`)
+- [ ] Verify CORS headers allow Flutter origin
+- [ ] Verify body limit rejects oversized image payloads
+- [ ] Verify error responses contain no stack traces
+- [ ] Verify log output contains no API keys or secrets
+- [ ] Run contract tests against deployed backend
 
-| Variable | Required in Production | Notes |
-|---|---|---|
-| `NODE_ENV` | Yes | Must be `production` |
-| `PORT` | Yes | Match deployment platform port |
-| `HOST` | Yes | Usually `0.0.0.0` for containers |
-| `ALLOWED_ORIGINS` | Yes | Comma-separated Flutter app origins |
-| `PUBLIC_BACKEND_URL` | Yes | HTTPS URL for Flutter to call |
-| `OCR_PROVIDER` | Yes | Must be a real provider (not `mock_ocr`) |
-| `ANALYSIS_PROVIDER` | Yes | Must be a real provider (not `mock_ai`) |
-| `PROVIDER_MODE` | Yes | `china` or `global` for production use |
-| `PROVIDER_TIMEOUT_MS` | Recommended | Prevent hanging calls |
-| `PROVIDER_MAX_RETRIES` | Recommended | 0 for launch, 1-2 after stabilising |
+### Phase 2: Enable real Qwen OCR (manual smoke test)
+- [ ] Set `QWEN_API_KEY` to a valid DashScope key
+- [ ] Set `OCR_PROVIDER=qwen_ocr`
+- [ ] Set `QWEN_OCR_PROVIDER_ENABLED=true`
+- [ ] Send a known menu image via `POST /api/analyze-menu`
+- [ ] Verify OCR returns real extracted text (not mock)
+- [ ] Verify no API key appears in response or logs
+- [ ] Verify error handling on malformed images
+- [ ] Set `OCR_PROVIDER=mock_ocr` and `QWEN_OCR_PROVIDER_ENABLED=false` to revert
 
----
+### Phase 3: Enable real Qwen Analysis (manual smoke test)
+- [ ] Set `QWEN_API_KEY` validated from Phase 2
+- [ ] Set `ANALYSIS_PROVIDER=qwen_analysis`
+- [ ] Set `QWEN_ANALYSIS_PROVIDER_ENABLED=true`
+- [ ] Send a known menu text via `POST /api/analyze-menu`
+- [ ] Verify analysis returns real AI-generated dishes
+- [ ] Verify no API key appears in response or logs
+- [ ] Verify error handling on empty/malformed prompts
+- [ ] Revert if any issue is found
 
-## What "productionReady: false" Means
-
-The `/health` endpoint returns `productionReady: false` until:
-
-1. At least one real OCR provider is configured and working
-2. At least one real analysis provider is configured and working
-3. CORS enforcement is implemented ✅ (Completed in Phase 11C)
-4. Rate limiting and cost guards are enforced
-5. Logging redaction is wrapped on all provider request/response logging
-6. Contract tests pass with real providers
-
-While `productionReady: false`, the backend is safe for local development and testing, but **must not** be exposed to real users.
-
----
-
-## Deployment Platform Notes
-
-### Recommended Platforms
-- **Google Cloud Run**: Good for containerised Node.js, automatic HTTPS
-- **Fly.io**: Simple container deployment with global edge
-- **Render**: Easy Node.js deployment with free tier
-- **Heroku**: Classic PaaS, straightforward environment variable management
-
-### Platform-Agnostic Requirements
-- Must support setting environment variables
-- Must support health check endpoints (`GET /health`)
-- Must provide HTTPS (either natively or via a load balancer)
-- Must allow CORS configuration (no wildcard `*` in production)
+### Phase 4: Both providers together (manual smoke test)
+- [ ] Set all gates for both OCR and Analysis
+- [ ] Full pipeline test: image → OCR → analysis → dishes
+- [ ] Verify end-to-end latency is acceptable
+- [ ] Verify cost tracking works
+- [ ] Only after all checks pass → consider setting `productionReady=true`
 
 ---
 
-## Current Mock Backend Behaviour (Preserved)
+## Flutter Configuration
 
-All existing behaviour is preserved in Phase 11C:
+### Development (current)
+```dart
+// lib/config.dart or similar
+const String BACKEND_BASE_URL = 'http://localhost:3000';
+```
 
-- `GET /health` → returns extended metadata (new fields: `corsEnforcementReady`, `requestBodyLimitBytes`, `requestBodyLimitReady`)
-- `POST /api/analyze-menu` with `{}` → returns mock dishes
-- `providerMode: mock` → mock path, no fallback
-- `providerMode: china/global/auto` → safely resolves to mock with fallback metadata
-- All 7 `debugScenario` values → controlled mock behaviour
-- Invalid JSON → `BAD_REQUEST` with no stack trace
-- Invalid `OCR_PROVIDER` / `ANALYSIS_PROVIDER` → controlled error codes
-- Oversized request body → `413` with `REQUEST_BODY_TOO_LARGE` controlled envelope
+### Production (future)
+```dart
+// Point to deployed backend — MUST be configurable, never hardcoded
+const String BACKEND_BASE_URL = 'https://your-app.onrender.com';
+// OR: load from environment/build config
+```
 
----
-
-## Next Phases
-
-After Phase 11C, the recommended next steps are:
-
-1. **Phase 12**: Real provider skeleton activation (Qwen OCR or Google Vision)
-2. **Phase 13**: Real analysis provider activation (Qwen analysis or DeepSeek)
-3. **Phase 14**: Cost guards and rate limiting enforcement
-4. **Phase 15**: Production deployment dry run (staging environment)
-5. **Phase 16**: Flutter production backend URL configuration
-6. **Phase 17**: Full integration test with real providers
+### Rules
+- Flutter MUST NOT contain any provider API keys
+- Flutter MUST NOT contain any secrets beyond the backend URL
+- If Firebase is added later, Firebase config belongs in Flutter, but service account keys belong on the backend
+- `BACKEND_BASE_URL` should be the ONLY backend-dependent configuration in Flutter
 
 ---
 
-## Contact / History
+## What This Phase Does NOT Do
 
-- Phase 11B implemented by: AI assistant
-- Phase 11C implemented by: AI assistant
-- Date: 2026-06-13
-- Tags: `phase-11b-backend-deployment-readiness-skeleton`, `phase-11c-cors-and-body-limit-enforcement`
+- ❌ No deployment has been performed
+- ❌ No accounts created on any platform
+- ❌ No production environment variables set on any server
+- ❌ No domain purchased or configured
+- ❌ No real API keys added
+- ❌ No Flutter code changed
+- ❌ No backend runtime behavior changed
+- ❌ `productionReady` remains `false`
+- ❌ No cost/budget tracking is active (only documented)

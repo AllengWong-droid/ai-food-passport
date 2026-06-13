@@ -237,6 +237,39 @@ Phase 10B adds backend skeleton modules for this policy:
 
 The safety config appears in `/health`. Rate and cost guards are not enforced in the current mock path.
 
+## Deployment Target Strategy (Phase 13A)
+
+**Recommended first deployment target**: Render (render.com)
+
+See full comparison in `backend/DEPLOYMENT_TARGETS.md`. Key factors:
+
+- True ongoing free tier (750 instance hours/month) — sufficient for TestFlight MVP
+- Zero-code-change Node.js deployment (our backend runs as-is)
+- Free managed TLS + custom domain
+- Simple env var secret management via dashboard
+- Built-in health checks on `/health`
+- Acceptable China latency (~178 ms)
+- Free Postgres for future data persistence
+- Sleep after 15 min idle (mitigated with external uptime monitor)
+
+Alternatives evaluated: Railway (no viable free tier), Fly.io (credit card friction for Chinese users, Docker complexity), VPS (monthly cost, manual setup), Cloudflare Workers (requires framework rewrite — incompatible with Node.js `http.createServer`).
+
+**Production env vars documented** in `backend/DEPLOYMENT_READINESS.md`:
+
+- Runtime: `NODE_ENV`, `PORT`, `HOST`, `ALLOWED_ORIGINS`, `PUBLIC_BACKEND_URL`, `REQUEST_BODY_LIMIT`
+- Provider safety: `PROVIDER_TIMEOUT_MS`, `PROVIDER_MAX_RETRIES`, `PROVIDER_DAILY_REQUEST_LIMIT`, `PROVIDER_MONTHLY_BUDGET_USD`
+- Qwen OCR gates: `OCR_PROVIDER`, `QWEN_OCR_PROVIDER_ENABLED`, `QWEN_API_KEY`, `QWEN_OCR_MODEL`, `QWEN_OCR_BASE_URL`
+- Qwen Analysis gates: `ANALYSIS_PROVIDER`, `QWEN_ANALYSIS_PROVIDER_ENABLED`, `QWEN_ANALYSIS_MODEL`, `QWEN_ANALYSIS_BASE_URL`
+
+**Key rules**:
+- Flutter production builds must use `BACKEND_BASE_URL=https://your-deployed-backend`
+- Flutter must never contain provider API keys
+- Provider keys must only live in backend deployment env vars
+- Backend `/health` should be checked after deployment
+- Contract tests must pass before deployment
+- Real providers should remain off until manual smoke test passes
+- `productionReady` remains `false` in this phase
+
 Phase 10C adds logging redaction and safe error response utilities:
 - `backend/src/utils/redactForLogs.js`
 - `backend/src/utils/safeErrorResponse.js`

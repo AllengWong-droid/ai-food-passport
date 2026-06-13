@@ -463,6 +463,29 @@ Invoke-RestMethod `
 - [ ] Confirm no real Qwen analysis API calls, API keys, secrets, or Firebase are added.
 - [ ] Confirm no Flutter files were changed.
 
+## Phase 13A: Deployment Target Prep QA
+
+- [ ] Confirm `backend/DEPLOYMENT_TARGETS.md` exists with comparison of Render, Railway, Fly.io, VPS, Cloudflare Workers.
+- [ ] Confirm recommended deployment target (Render) is documented with rationale.
+- [ ] Confirm `backend/DEPLOYMENT_READINESS.md` updated with production env vars, startup commands, health checks, secret handling, cost controls, rollback steps.
+- [ ] Confirm deployment smoke checklist is documented (deploy → /health → CORS → body limit → no stack traces → no secrets in logs → only then real providers).
+- [ ] Confirm Flutter production config rule documented: `BACKEND_BASE_URL` only; no provider keys in Flutter.
+- [ ] Confirm `REAL_PROVIDER_READINESS_CHECKLIST.md` updated with deployment target selection section.
+- [ ] Confirm `ROADMAP.md` updated with Phase 13A.
+- [ ] Confirm `TECH_ARCHITECTURE.md` updated with Phase 13A section.
+- [ ] Confirm `README.md` updated with deployment docs reference.
+- [ ] Confirm `backend/README.md` updated with Phase 13A entries.
+- [ ] Run `node --test` — confirm all 509 tests still pass.
+- [ ] Run `npm run test:contract` — confirm all contract tests still pass.
+- [ ] Run `git diff --check` — confirm pass (no trailing whitespace errors).
+- [ ] Secret scan: no `sk-` keys in committed files.
+- [ ] Confirm `backend/.env` is untracked and in `.gitignore`.
+- [ ] Confirm no backend runtime behavior changed (`GET /health`, `POST /api/analyze-menu` unchanged).
+- [ ] Confirm `productionReady` remains `false`.
+- [ ] Confirm no real provider calls, no API keys, no secrets, no Firebase added.
+- [ ] Confirm no Flutter files were changed.
+- [ ] Confirm no deployment was performed (this phase is doc/config planning only).
+
 ## Known Environment Issues
 
 - On some local Codex/Windows shells, Flutter and Dart commands may hang due to cache/permission restrictions.

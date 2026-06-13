@@ -49,6 +49,7 @@
 - Phase 12F: Qwen Analysis Provider Disabled Adapter Scaffold
 - Phase 12G: Qwen Analysis Real Transport Behind Explicit Safety Gates
 - Phase 12H: Real Provider Gated End-to-End Dry Run Tests
+- Phase 13A: Production Backend Deployment Target Prep
 
 ## Current MVP Alpha
 

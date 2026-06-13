@@ -129,6 +129,19 @@ Use this checklist before enabling any real OCR, Qwen, DeepSeek, OpenAI, Google 
 - [ ] Timeout, retry, daily limit, and monthly budget variables are configured.
 - [ ] CORS, authentication, and rate limiting are production-reviewed.
 
+## Deployment Target Selection (Phase 13A)
+
+- [ ] Deployment target comparison exists (`backend/DEPLOYMENT_TARGETS.md`) — Render, Railway, Fly.io, VPS, Cloudflare Workers compared.
+- [ ] Recommended first deployment target (Render) documented with rationale.
+- [ ] Deployment readiness doc updated (`backend/DEPLOYMENT_READINESS.md`) with required env vars, startup commands, health checks, secret handling, cost/rate-limit controls.
+- [ ] Production env vars documented: `NODE_ENV`, `PORT`, `HOST`, `ALLOWED_ORIGINS`, `PUBLIC_BACKEND_URL`, `REQUEST_BODY_LIMIT`, provider safety vars, Qwen OCR vars, Qwen Analysis vars.
+- [ ] Flutter production config rule stated: `BACKEND_BASE_URL` is the only backend-dependent config; no provider keys in Flutter.
+- [ ] Future deployment smoke checklist documented (deploy → /health → CORS → body limit → no stack traces → no secrets in logs → only then enable real providers).
+- [ ] No deployment performed (this phase is doc/config planning only).
+- [ ] No runtime behavior changed.
+- [ ] No real provider calls, no API keys, no secrets added.
+- [ ] `productionReady` remains `false`.
+
 ## Rollback Plan
 
 - [ ] Real provider can be disabled quickly.

@@ -55,6 +55,8 @@ Flutter uses local `MockAiRepository` by default. Developer Backend Mock Mode ca
 - Enhanced test helper (`tests/testHelper.js`) — startServer now accepts optional env overrides for multi-scenario contract tests.
 - `AnalysisProviderMode.ANALYSIS` added to types for future real providers.
 - `AnalysisProviderName.QWEN_ANALYSIS` ('qwen_analysis') added as real provider name (distinct from skeleton).
+- Deployment target comparison (`DEPLOYMENT_TARGETS.md`) — Render, Railway, Fly.io, VPS, Cloudflare Workers compared; Render recommended.
+- Updated deployment readiness doc (`DEPLOYMENT_READINESS.md`) with production env vars, startup commands, health checks, secret handling, cost controls, rollback steps, and future smoke checklist.
 
 ## What Is Not Implemented
 
