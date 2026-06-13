@@ -142,6 +142,29 @@ Use this checklist before enabling any real OCR, Qwen, DeepSeek, OpenAI, Google 
 - [ ] No real provider calls, no API keys, no secrets added.
 - [ ] `productionReady` remains `false`.
 
+## Render Blueprint and Dry-Run (Phase 13B)
+
+- [ ] `backend/render.yaml` exists with safe placeholder-only values.
+- [ ] `render.yaml` does NOT contain `QWEN_API_KEY`.
+- [ ] `render.yaml` has `QWEN_OCR_PROVIDER_ENABLED=false` and `QWEN_ANALYSIS_PROVIDER_ENABLED=false`.
+- [ ] `render.yaml` has `OCR_PROVIDER=mock_ocr` and `ANALYSIS_PROVIDER=mock_ai`.
+- [ ] `render.yaml` has `autoDeployTrigger: 'off'` (safe default).
+- [ ] `render.yaml` uses `sync: false` for `ALLOWED_ORIGINS` and `PUBLIC_BACKEND_URL`.
+- [ ] `backend/RENDER_DEPLOYMENT_DRY_RUN.md` exists (8-part dry-run checklist).
+- [ ] `RENDER_DEPLOYMENT_DRY_RUN.md` Part 0 documents Blueprint vs. Manual Dashboard decision.
+- [ ] `RENDER_DEPLOYMENT_DRY_RUN.md` Part 1 has local preflight commands.
+- [ ] `RENDER_DEPLOYMENT_DRY_RUN.md` Part 2 has Render Dashboard manual setup values.
+- [ ] `RENDER_DEPLOYMENT_DRY_RUN.md` Part 3 has first-deploy smoke tests (mock providers only).
+- [ ] `RENDER_DEPLOYMENT_DRY_RUN.md` Part 4 verifies real providers remain disabled.
+- [ ] `RENDER_DEPLOYMENT_DRY_RUN.md` Part 5 documents future steps to enable real Qwen providers.
+- [ ] `RENDER_DEPLOYMENT_DRY_RUN.md` Part 6 has rollback plan.
+- [ ] `RENDER_DEPLOYMENT_DRY_RUN.md` Part 7 has Render free tier caveats.
+- [ ] `RENDER_DEPLOYMENT_DRY_RUN.md` Part 8 has dry-run validation checklist.
+- [ ] No deployment was performed (this phase is doc/config only).
+- [ ] No runtime behavior changed.
+- [ ] No real provider calls, no API keys, no secrets added.
+- [ ] `productionReady` remains `false`.
+
 ## Rollback Plan
 
 - [ ] Real provider can be disabled quickly.

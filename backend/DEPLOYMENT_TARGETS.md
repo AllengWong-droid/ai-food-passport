@@ -245,3 +245,82 @@ Phase 19 (optional) → Alibaba Cloud VPS for dedicated China deployment
 - ❌ No domain has been purchased or configured
 - ❌ No real API keys have been added
 - ❌ `productionReady` remains `false`
+
+---
+
+## Phase 13B: Render.yaml and Dry-Run Checklist (2026-06-13)
+
+### What Was Added
+
+1. **`backend/render.yaml`** — Render Blueprint (Infrastructure-as-Code) template
+   - Safe placeholder-only values (no secrets)
+   - `QWEN_API_KEY` intentionally absent
+   - Real providers disabled by default (`QWEN_OCR_PROVIDER_ENABLED=false`, `QWEN_ANALYSIS_PROVIDER_ENABLED=false`)
+   - `healthCheckPath: /health` configured
+   - `autoDeployTrigger: 'off'` (safe default)
+   - `sync: false` used for `ALLOWED_ORIGINS` and `PUBLIC_BACKEND_URL` (prompted on first create)
+
+2. **`backend/RENDER_DEPLOYMENT_DRY_RUN.md`** — Comprehensive dry-run checklist
+   - Part 0: Blueprint vs. Manual Dashboard setup decision
+   - Part 1: Local preflight commands (all tests, /health, CORS, secret scan)
+   - Part 2: Render Dashboard manual setup values reference
+   - Part 3: First deploy smoke tests (mock providers only)
+   - Part 4: Verify real providers remain disabled
+   - Part 5: Future steps to enable real Qwen providers (after key is available)
+   - Part 6: Rollback plan (Render Dashboard + env var revert)
+   - Part 7: Render free tier caveats and mitigations
+
+### render.yaml Decision: Why It Is Committed
+
+The `render.yaml` file is committed to the repo as a **reference/documentation file**, NOT to enable automatic Blueprint sync. Reasons:
+
+1. Documents the intended Render configuration in version control
+2. Can be used for future Blueprint sync (with `autoDeployTrigger: 'off'`)
+3. Serves as a template for other contributors
+4. `QWEN_API_KEY` is intentionally absent — must be set in Dashboard
+
+**Recommended first deploy method**: Manual Dashboard Setup (see `RENDER_DEPLOYMENT_DRY_RUN.md` Part 0)
+
+### Files Added
+
+| File | Status | Description |
+|------|--------|-------------|
+| `backend/render.yaml` | New | Render Blueprint template (safe values only) |
+| `backend/RENDER_DEPLOYMENT_DRY_RUN.md` | New | Dry-run checklist (8 parts) |
+
+### render.yaml Key Configuration
+
+```yaml
+services:
+  - type: web
+    name: ai-food-passport-backend
+    runtime: node
+    plan: free
+    region: oregon
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /health
+    autoDeployTrigger: 'off'
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: OCR_PROVIDER
+        value: mock_ocr          # ← real providers OFF by default
+      - key: ANALYSIS_PROVIDER
+        value: mock_ai           # ← real providers OFF by default
+      - key: QWEN_OCR_PROVIDER_ENABLED
+        value: 'false'
+      - key: QWEN_ANALYSIS_PROVIDER_ENABLED
+        value: 'false'
+      # QWEN_API_KEY is NOT here — set manually in Dashboard
+```
+
+### Next Steps (When Ready to Deploy)
+
+1. Push `backend/` code to GitHub
+2. Follow `RENDER_DEPLOYMENT_DRY_RUN.md` Part 0 → choose Manual Setup
+3. Follow Part 1 → run all local preflight checks
+4. Follow Part 2 → configure Render Dashboard
+5. Follow Part 3 → first deploy with mock providers only
+6. Only after mock deploy succeeds → Part 5 (enable real Qwen providers)

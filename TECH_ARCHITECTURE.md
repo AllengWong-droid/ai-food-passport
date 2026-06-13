@@ -270,6 +270,47 @@ Alternatives evaluated: Railway (no viable free tier), Fly.io (credit card frict
 - Real providers should remain off until manual smoke test passes
 - `productionReady` remains `false` in this phase
 
+## Render Deployment Configuration (Phase 13B)
+
+**Render Blueprint (`backend/render.yaml`)**: committed as a reference/documentation file. Not auto-synced to Render.
+
+### render.yaml Key Properties
+
+| Property | Value | Purpose |
+|----------|-------|---------|
+| `autoDeployTrigger` | `'off'` | Prevents accidental auto-deploy on push |
+| `healthCheckPath` | `/health` | Render pings every 30s; 3 failures → unhealthy |
+| `QWEN_OCR_PROVIDER_ENABLED` | `'false'` | Real providers OFF by default |
+| `QWEN_ANALYSIS_PROVIDER_ENABLED` | `'false'` | Real providers OFF by default |
+| `OCR_PROVIDER` | `mock_ocr` | Safe default |
+| `ANALYSIS_PROVIDER` | `mock_ai` | Safe default |
+| `QWEN_API_KEY` | *absent* | Never in Git; set in Dashboard |
+| `sync: false` on sensitive vars | `true` | Prompted on first create |
+
+### Committed Files (Phase 13B)
+
+| File | Status | Description |
+|------|--------|-------------|
+| `backend/render.yaml` | New | Render Blueprint template (safe values only) |
+| `backend/RENDER_DEPLOYMENT_DRY_RUN.md` | New | 8-part dry-run checklist |
+
+### Deployment Strategy
+
+1. **First deploy**: Manual Dashboard Setup (recommended)
+   - Push code to GitHub
+   - Dashboard → New + → Web Service → connect repo
+   - Fill in settings manually (see `RENDER_DEPLOYMENT_DRY_RUN.md` Part 2)
+   - Deploy
+
+2. **Future**: Blueprint sync (optional)
+   - Connect `render.yaml` as Blueprint
+   - Set `autoDeployTrigger: 'off'`
+   - Manually sync after config changes
+
+### No Deployment Performed
+
+This phase is documentation and config only. No Render account was created, no deployment was made, no real API keys were added. `productionReady` remains `false`.
+
 Phase 10C adds logging redaction and safe error response utilities:
 - `backend/src/utils/redactForLogs.js`
 - `backend/src/utils/safeErrorResponse.js`

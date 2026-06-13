@@ -57,6 +57,8 @@ Flutter uses local `MockAiRepository` by default. Developer Backend Mock Mode ca
 - `AnalysisProviderName.QWEN_ANALYSIS` ('qwen_analysis') added as real provider name (distinct from skeleton).
 - Deployment target comparison (`DEPLOYMENT_TARGETS.md`) — Render, Railway, Fly.io, VPS, Cloudflare Workers compared; Render recommended.
 - Updated deployment readiness doc (`DEPLOYMENT_READINESS.md`) with production env vars, startup commands, health checks, secret handling, cost controls, rollback steps, and future smoke checklist.
+- Render-specific deployment config (`render.yaml`) — Blueprint template with safe placeholder-only values; committed as reference file only.
+- Render deployment dry-run checklist (`RENDER_DEPLOYMENT_DRY_RUN.md`) — 8-part preflight and smoke-test checklist covering manual Dashboard setup, local preflight, first-deploy verification, rollback plan, and Render free-tier caveats.
 
 ## What Is Not Implemented
 

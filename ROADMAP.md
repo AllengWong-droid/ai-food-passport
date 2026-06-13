@@ -50,6 +50,7 @@
 - Phase 12G: Qwen Analysis Real Transport Behind Explicit Safety Gates
 - Phase 12H: Real Provider Gated End-to-End Dry Run Tests
 - Phase 13A: Production Backend Deployment Target Prep
+- Phase 13B: Render Deployment Config Dry Run
 
 ## Current MVP Alpha
 

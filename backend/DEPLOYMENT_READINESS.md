@@ -1,11 +1,71 @@
 # Deployment Readiness — AI Food Passport Backend
 
-> **Status**: Planning only. No deployment has been performed.
+> **Status**: Render config prepared (dry-run only). No deployment has been performed.
 > **Date**: 2026-06-13
-> **Phase**: 13A
+> **Phase**: 13B
 > **productionReady**: `false`
 
 ---
+
+## Render Blueprint Configuration
+
+> **File**: `backend/render.yaml` (committed as reference/documentation)
+
+### Key Decisions
+
+1. **`render.yaml` is committed** as a reference file, NOT to enable automatic Blueprint sync.
+2. **First deploy should use Manual Dashboard Setup** (see `RENDER_DEPLOYMENT_DRY_RUN.md` Part 0).
+3. **`QWEN_API_KEY` is intentionally absent** from `render.yaml` — set manually in Dashboard.
+4. **`ALLOWED_ORIGINS` uses `sync: false`** — prompted on first Blueprint create, then managed in Dashboard.
+
+### render.yaml Safety Properties
+
+| Property | Value | Why |
+|----------|-------|-----|
+| `autoDeployTrigger` | `'off'` | Prevents accidental auto-deploy on push |
+| `QWEN_OCR_PROVIDER_ENABLED` | `'false'` | Real providers OFF by default |
+| `QWEN_ANALYSIS_PROVIDER_ENABLED` | `'false'` | Real providers OFF by default |
+| `OCR_PROVIDER` | `mock_ocr` | Safe default |
+| `ANALYSIS_PROVIDER` | `mock_ai` | Safe default |
+| `QWEN_API_KEY` | *absent* | Never in Git |
+| `sync: false` on sensitive vars | `true` | Prompted on create, then manual |
+
+### Render Dashboard Setup Reference
+
+See `RENDER_DEPLOYMENT_DRY_RUN.md` for the full walkthrough.
+
+**Quick reference — Dashboard values:**
+
+| Field | Value |
+|-------|-------|
+| Service Type | Web Service |
+| Runtime | Node |
+| Region | Oregon (or Singapore for better China latency) |
+| Root Directory | `backend` |
+| Build Command | `npm install` |
+| Start Command | `npm start` |
+| Health Check Path | `/health` |
+| Plan | Free |
+
+---
+
+## Dry-Run Documentation
+
+> **File**: `backend/RENDER_DEPLOYMENT_DRY_RUN.md`
+
+This file contains the full pre-flight and smoke-test checklist:
+
+| Part | Topic |
+|------|-------|
+| Part 0 | Blueprint vs. Manual Dashboard decision |
+| Part 1 | Local preflight (tests, /health, CORS, secret scan) |
+| Part 2 | Render Dashboard configuration values |
+| Part 3 | First deploy smoke tests (mock providers only) |
+| Part 4 | Verify real providers stay disabled |
+| Part 5 | Future: enabling real Qwen providers |
+| Part 6 | Rollback plan |
+| Part 7 | Render free tier caveats |
+| Part 8 | Dry-run validation checklist |
 
 ## Required Environment Variables
 

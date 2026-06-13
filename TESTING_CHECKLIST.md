@@ -486,6 +486,47 @@ Invoke-RestMethod `
 - [ ] Confirm no Flutter files were changed.
 - [ ] Confirm no deployment was performed (this phase is doc/config planning only).
 
+## Phase 13B: Render Deployment Config Dry Run QA
+
+- [ ] Confirm `backend/render.yaml` exists with safe placeholder-only values.
+- [ ] Confirm `render.yaml` does NOT contain `QWEN_API_KEY`.
+- [ ] Confirm `render.yaml` has `QWEN_OCR_PROVIDER_ENABLED=false` and `QWEN_ANALYSIS_PROVIDER_ENABLED=false`.
+- [ ] Confirm `render.yaml` has `OCR_PROVIDER=mock_ocr` and `ANALYSIS_PROVIDER=mock_ai`.
+- [ ] Confirm `render.yaml` has `healthCheckPath: /health`.
+- [ ] Confirm `render.yaml` has `autoDeployTrigger: 'off'` (safe default).
+- [ ] Confirm `render.yaml` uses `sync: false` for `ALLOWED_ORIGINS` and `PUBLIC_BACKEND_URL`.
+- [ ] Confirm `backend/RENDER_DEPLOYMENT_DRY_RUN.md` exists (8-part dry-run checklist).
+- [ ] Confirm `RENDER_DEPLOYMENT_DRY_RUN.md` Part 0 documents Blueprint vs. Manual Dashboard decision.
+- [ ] Confirm `RENDER_DEPLOYMENT_DRY_RUN.md` Part 1 has local preflight commands (tests, /health, CORS, secret scan).
+- [ ] Confirm `RENDER_DEPLOYMENT_DRY_RUN.md` Part 2 has Render Dashboard manual setup values reference.
+- [ ] Confirm `RENDER_DEPLOYMENT_DRY_RUN.md` Part 3 has first-deploy smoke tests (mock providers only).
+- [ ] Confirm `RENDER_DEPLOYMENT_DRY_RUN.md` Part 4 verifies real providers remain disabled.
+- [ ] Confirm `RENDER_DEPLOYMENT_DRY_RUN.md` Part 5 documents future steps to enable real Qwen providers.
+- [ ] Confirm `RENDER_DEPLOYMENT_DRY_RUN.md` Part 6 has rollback plan (Dashboard + env var revert).
+- [ ] Confirm `RENDER_DEPLOYMENT_DRY_RUN.md` Part 7 has Render free tier caveats and mitigations.
+- [ ] Confirm `RENDER_DEPLOYMENT_DRY_RUN.md` Part 8 has dry-run validation checklist.
+- [ ] Run `cd backend && node --test` — confirm all 509 tests still pass.
+- [ ] Run `cd backend && npm run test:contract` — confirm all contract tests still pass.
+- [ ] Run `cd backend && npm run dev` — confirm server starts.
+- [ ] Confirm `GET /health` returns expected JSON locally (`ok: true`, `activeOcrProvider: mock_ocr`).
+- [ ] Confirm `POST /api/analyze-menu` with `{}` returns mock dishes locally.
+- [ ] Confirm CORS preflight returns correct headers locally.
+- [ ] Run secret scan: no `sk-` real keys in committed files.
+- [ ] Confirm `backend/.env` is in `.gitignore` and untracked.
+- [ ] Confirm no backend runtime behavior changed (`/health`, `/api/analyze-menu` unchanged).
+- [ ] Confirm `productionReady` remains `false`.
+- [ ] Confirm no real provider calls, no API keys, no secrets, no Firebase added.
+- [ ] Confirm no Flutter files were changed.
+- [ ] Confirm no deployment was performed (this phase is dry-run doc only).
+- [ ] Run `git diff --check` — confirm pass (no trailing whitespace errors).
+- [ ] Confirm `backend/DEPLOYMENT_TARGETS.md` updated with Phase 13B section (render.yaml and dry-run checklist).
+- [ ] Confirm `backend/DEPLOYMENT_READINESS.md` updated with Phase 13B status and render.yaml reference.
+- [ ] Confirm `REAL_PROVIDER_READINESS_CHECKLIST.md` updated with Phase 13B section.
+- [ ] Confirm `ROADMAP.md` updated with Phase 13B.
+- [ ] Confirm `TECH_ARCHITECTURE.md` updated with Phase 13B section.
+- [ ] Confirm `README.md` updated with Phase 13B description.
+- [ ] Confirm `backend/README.md` updated with Phase 13B entries.
+
 ## Known Environment Issues
 
 - On some local Codex/Windows shells, Flutter and Dart commands may hang due to cache/permission restrictions.

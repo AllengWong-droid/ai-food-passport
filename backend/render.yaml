@@ -1,0 +1,139 @@
+# Render.com Deployment Configuration (Blueprint / Infrastructure-as-Code)
+#
+# Status: TEMPLATE ONLY. Do NOT deploy directly without reading this header.
+# This file defines the recommended Render service configuration for the
+# AI Food Passport backend. It uses ONLY safe placeholder values.
+# Real secrets (QWEN_API_KEY, ALLOWED_ORIGINS) must be set manually
+# in the Render Dashboard after the first deploy.
+#
+# ============================================================
+#  First-Deployment Recommendation (Phase 13B)
+# ============================================================
+# For the VERY FIRST deploy, use MANUAL DASHBOARD SETUP instead of
+# auto-syncing this file. Reasons:
+#
+#   1. QWEN_API_KEY must never be committed — it is NOT in this file.
+#   2. ALLOWED_ORIGINS must be set to your real Flutter app domain.
+#   3. Render auto-sync will overwrite manual Dashboard changes.
+#   4. Manual setup is simpler for a small MVP.
+#
+# After the first successful manual deploy, you can:
+#   a) Download the Dashboard config as a render.yaml reference, OR
+#   b) Enable Blueprint sync with this file (set autoDeployTrigger: 'off'
+#      and manually trigger syncs to avoid accidental overwrites).
+#
+# This file is COMMITTED to the repo as DOCUMENTATION of the intended
+# Render configuration. It is NOT automatically synced to Render unless
+# you explicitly connect a Blueprint.
+#
+# ============================================================
+#  How to Use This File (Future)
+# ============================================================
+# 1. Push this repo to GitHub.
+# 2. In Render Dashboard: New + → Blueprint → Connect this repo.
+# 3. Render will prompt for any `sync: false` env vars — enter them.
+# 4. After creation, DISABLE auto-sync (Dashboard → Blueprint → Auto Sync: Off).
+# 5. Set QWEN_API_KEY manually in Dashboard → Environment.
+# 6. Set ALLOWED_ORIGINS manually in Dashboard → Environment.
+# 7. Future config changes: edit this file → commit → manually sync Blueprint.
+#
+# ============================================================
+#  Health Check
+# ============================================================
+# Render will call GET /health every 30 seconds.
+# Expected response: HTTP 200 with JSON body containing "ok": true.
+# If the check fails 3 times in a row, Render marks the service as unhealthy.
+#
+# ============================================================
+
+services:
+  - type: web
+    name: ai-food-passport-backend
+    runtime: node
+    plan: free                       # Free tier: 750 hrs/month, sleeps after 15 min idle
+    region: oregon                   # US West (acceptable latency from China ~178 ms)
+    # repo is set automatically when Blueprint is linked to a GitHub repo
+    branch: main                     # change to your default branch
+    rootDir: backend                 # monorepo: backend lives in /backend
+
+    # Build & start
+    buildCommand: npm install
+    startCommand: npm start           # resolves to: node src/server.js
+
+    # Health check (must return HTTP 200)
+    healthCheckPath: /health
+
+    # Auto-deploy: 'commit' = deploy on every push (dev only); 'off' = manual (recommended for prod)
+    autoDeployTrigger: 'off'
+
+    # Environment variables (safe defaults only — NO SECRETS HERE)
+    envVars:
+      # ── Runtime ──────────────────────────────────────────────
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000                  # Render sets this automatically; explicit here for clarity
+      - key: HOST
+        value: 0.0.0.0
+
+      # ── CORS (CHANGE THIS before production!) ────────────────
+      # Set to your Flutter app's domain(s), e.g.:
+      #   https://ai-food-passport.example.com,https://*.onrender.com
+      # For TestFlight MVP with Expo/Flutter dev: use wide CORS or
+      # set this manually in the Dashboard after deploy.
+      - key: ALLOWED_ORIGINS
+        value: 'https://*.onrender.com,http://localhost:3000,http://localhost:8081'
+        sync: false                   # Prompt for value on first Blueprint create
+
+      # ── Request body limit ───────────────────────────────────
+      - key: REQUEST_BODY_LIMIT
+        value: 10mb
+
+      # ── Public backend URL (set after first deploy) ──────────
+      # Replace with your actual Render URL after first deploy, e.g.:
+      #   https://ai-food-passport-backend.onrender.com
+      - key: PUBLIC_BACKEND_URL
+        value: https://your-app.onrender.com
+        sync: false
+
+      # ── Provider selection (MOCK by default — safe) ─────────
+      - key: OCR_PROVIDER
+        value: mock_ocr
+      - key: ANALYSIS_PROVIDER
+        value: mock_ai
+      - key: QWEN_OCR_PROVIDER_ENABLED
+        value: 'false'
+      - key: QWEN_ANALYSIS_PROVIDER_ENABLED
+        value: 'false'
+
+      # ── Provider safety ──────────────────────────────────────
+      - key: PROVIDER_TIMEOUT_MS
+        value: '15000'
+      - key: PROVIDER_MAX_RETRIES
+        value: '0'
+
+      # ── Qwen API Key (NOT SET HERE — use Dashboard) ─────────
+      # DO NOT add QWEN_API_KEY here. Set it manually in the
+      # Render Dashboard → Environment after the first deploy.
+      # Once a real key is set in Dashboard, it will persist across
+      # redeployments and will NOT be overwritten by this file
+      # (because QWEN_API_KEY is absent from this envVars list).
+
+      # ── Qwen OCR (only used when QWEN_OCR_PROVIDER_ENABLED=true) ──
+      - key: QWEN_OCR_MODEL
+        value: qwen-vl-max
+      - key: QWEN_OCR_BASE_URL
+        value: https://dashscope.aliyuncs.com/compatible-mode/v1
+
+      # ── Qwen Analysis (only used when QWEN_ANALYSIS_PROVIDER_ENABLED=true) ──
+      - key: QWEN_ANALYSIS_MODEL
+        value: qwen-max
+      - key: QWEN_ANALYSIS_BASE_URL
+        value: https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions
+
+# Optional: Free Postgres database (uncomment to enable)
+# databases:
+#   - name: ai-food-passport-db
+#     databaseName: ai_food_passport
+#     plan: free                   # 1 GB, expires after 30 days (paid plan to persist)
+#     region: oregon
