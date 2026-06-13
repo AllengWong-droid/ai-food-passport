@@ -5,4 +5,14 @@ function createDisabledOcrProviderError(provider) {
   return error;
 }
 
-module.exports = { createDisabledOcrProviderError };
+function createInvalidOcrProviderError(provider) {
+  const error = new Error('OCR provider is invalid.');
+  error.code = 'OCR_PROVIDER_INVALID';
+  error.provider = provider;
+  return error;
+}
+
+module.exports = {
+  createDisabledOcrProviderError,
+  createInvalidOcrProviderError
+};

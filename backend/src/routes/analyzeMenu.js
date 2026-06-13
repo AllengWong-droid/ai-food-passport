@@ -89,6 +89,14 @@ async function handleAnalyzeMenu(request, response, body, startedAt) {
       return;
     }
 
+    if (error.code === 'OCR_PROVIDER_INVALID') {
+      sendJson(request, response, 500, errorPayload(
+        'OCR_PROVIDER_INVALID',
+        'OCR provider setting is invalid.'
+      ));
+      return;
+    }
+
     if (error.code === 'ANALYSIS_FAILED') {
       sendJson(request, response, 502, errorPayload(
         'ANALYSIS_FAILED',

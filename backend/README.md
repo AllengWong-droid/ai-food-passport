@@ -86,6 +86,15 @@ Supported values:
 
 Only `mock_ocr` is active and usable today. Skeleton providers do not call the network. If selected, they return the standardized error code `OCR_PROVIDER_NOT_CONFIGURED`.
 
+Safety behavior:
+
+- Missing or empty `OCR_PROVIDER` uses `mock_ocr`.
+- For missing or empty `OCR_PROVIDER`, `/health` reports `configuredOcrProvider: null` and `activeOcrProvider: mock_ocr`.
+- Unknown `OCR_PROVIDER` values do not crash the server.
+- Unknown values make `/health` return `configValid: false`.
+- Unknown values make `POST /api/analyze-menu` return `OCR_PROVIDER_INVALID`.
+- Skeleton provider values return `OCR_PROVIDER_NOT_CONFIGURED`.
+
 ## Health Check
 
 ```powershell
@@ -100,6 +109,7 @@ Response shape:
   "service": "ai-food-passport-backend",
   "mode": "mock",
   "ocrProvider": "mock_ocr",
+  "configuredOcrProvider": "mock_ocr",
   "activeOcrProvider": "mock_ocr",
   "availableOcrProviders": [
     "mock_ocr",
@@ -109,6 +119,8 @@ Response shape:
   ],
   "realOcrEnabled": false,
   "providerRoutingReady": true,
+  "configValid": true,
+  "configWarnings": [],
   "analysisProvider": "mock_ai",
   "timestamp": "2026-06-13T00:00:00.000Z"
 }
@@ -435,6 +447,34 @@ Analysis failure shape:
 ```
 
 Unknown routes return the same envelope with `NOT_FOUND`.
+
+Invalid OCR provider configuration returns:
+
+```json
+{
+  "ok": false,
+  "data": null,
+  "error": {
+    "code": "OCR_PROVIDER_INVALID",
+    "message": "OCR provider setting is invalid.",
+    "details": null
+  }
+}
+```
+
+Disabled OCR provider skeletons return:
+
+```json
+{
+  "ok": false,
+  "data": null,
+  "error": {
+    "code": "OCR_PROVIDER_NOT_CONFIGURED",
+    "message": "OCR provider is not configured.",
+    "details": null
+  }
+}
+```
 
 ## CORS
 

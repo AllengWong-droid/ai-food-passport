@@ -1,10 +1,6 @@
 const http = require('http');
 const { handleAnalyzeMenu, sendJson, errorPayload } = require('./routes/analyzeMenu');
-const {
-  getActiveOcrProviderName,
-  getAvailableOcrProviders,
-  isRealOcrEnabled
-} = require('./providers/ocr/ocrProviderRegistry');
+const { getOcrProviderConfigStatus } = require('./providers/ocr/ocrProviderRegistry');
 
 const port = Number(process.env.PORT || 8787);
 
@@ -35,15 +31,19 @@ const server = http.createServer((request, response) => {
         return;
       }
 
+      const ocrProviderStatus = getOcrProviderConfigStatus();
       sendJson(request, response, 200, {
         ok: true,
         service: 'ai-food-passport-backend',
         mode: 'mock',
         ocrProvider: 'mock_ocr',
-        activeOcrProvider: getActiveOcrProviderName(),
-        availableOcrProviders: getAvailableOcrProviders(),
-        realOcrEnabled: isRealOcrEnabled(),
-        providerRoutingReady: true,
+        configuredOcrProvider: ocrProviderStatus.configuredOcrProvider,
+        activeOcrProvider: ocrProviderStatus.activeOcrProvider,
+        availableOcrProviders: ocrProviderStatus.availableOcrProviders,
+        realOcrEnabled: ocrProviderStatus.realOcrEnabled,
+        providerRoutingReady: ocrProviderStatus.providerRoutingReady,
+        configValid: ocrProviderStatus.configValid,
+        configWarnings: ocrProviderStatus.configWarnings,
         analysisProvider: 'mock_ai',
         timestamp: new Date().toISOString()
       });
