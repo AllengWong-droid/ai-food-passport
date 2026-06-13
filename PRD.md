@@ -49,7 +49,10 @@ Implemented:
 - Output language affecting local mock Results/Dish Detail helper text
 - Provider mode setting for future routing, informational only
 - OCR-first multi-provider routing skeleton for future China/global support
-- Disabled OpenAI/backend/multi-provider skeletons
+- Local backend mock proxy for developer testing, disabled by default
+- Backend OCR-first mock pipeline with standardized response envelopes
+- Backend and Flutter debug scenarios for OCR/analysis success, low quality, empty result, and failure recovery
+- Disabled OpenAI/multi-provider skeletons
 
 Not implemented:
 
@@ -57,7 +60,7 @@ Not implemented:
 - Real Qwen
 - Real DeepSeek
 - Real OpenAI
-- Real backend proxy
+- Real production backend proxy
 - Real provider routing
 - Firebase
 - Subscriptions
@@ -79,6 +82,22 @@ Not implemented:
 9. User reviews ranked Results.
 10. User opens Dish Detail.
 11. User returns to Results and Scan.
+
+## Developer Backend Mock Flow
+
+In debug builds, developers can enable Backend Mock Mode from Profile and choose a Backend Scenario. This optionally calls the local backend mock server at `POST /api/analyze-menu`.
+
+Supported scenarios:
+
+- `normal`
+- `ocr_low_confidence`
+- `ocr_empty_text`
+- `ocr_failure`
+- `analysis_low_quality`
+- `analysis_empty_result`
+- `analysis_failure`
+
+This is for local testing only. It is not a production user feature and does not call real providers.
 
 ## Future Production Features
 

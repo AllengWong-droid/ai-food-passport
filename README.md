@@ -1,28 +1,28 @@
 # AI Food Passport
 
-AI Food Passport is a Flutter MVP Alpha that helps travelers understand restaurant menus, compare prices in their home currency, and choose dishes that fit their taste and safety profile.
+AI Food Passport is a Flutter MVP Alpha that helps travelers understand menus, compare prices in their home currency, and choose dishes that fit their taste and safety profile.
 
-## Problem
+## Current Status
 
-Travelers often face menus they cannot read, prices they cannot quickly compare, and ingredients or allergens they cannot confidently identify. AI Food Passport demonstrates a practical scan-to-recommendation flow while keeping production integrations safely mocked or skeleton-only.
+The Flutter app still runs on local mock OCR and local `MockAiRepository` by default. It does not require the backend server for the normal user flow.
 
-## Current MVP Alpha Capabilities
+A local backend mock proxy now exists for developer testing. Backend Mock Mode is disabled by default and can be enabled manually in Profile during debug builds. The backend uses an OCR-first mock pipeline and exposes controlled debug scenarios for success, low confidence, empty text, analysis quality, and failure recovery.
 
-- Scan works with or without selecting an image.
-- Gallery image selection and image preview work on Flutter Web.
-- Processing overlay explains scan progress and improves perceived latency.
-- Friendly fallback/failure recovery UX is prepared for future OCR/AI failures.
-- Mock OCR returns realistic Japanese, Chinese, or English menu text.
-- Mock AI ranks dishes using OCR text, taste passport, allergies, dietary preferences, location, and traveler settings.
-- Results show dish recommendations, safety/value/taste scores, and price intelligence.
-- Dish Detail shows local menu price, traveler home-currency price, exchange rate, value explanation, ingredients, and recommendation reason.
-- Dish Detail back navigation returns to Results.
-- Profile includes persisted traveler settings: home country, home currency, output language, and provider mode.
-- Traveler settings can be reset to Germany / EUR / English / mock.
+No real OCR, Qwen, DeepSeek, OpenAI, Firebase, subscriptions, production authentication, real exchange rates, API keys, or secrets are implemented.
+
+## MVP Alpha Capabilities
+
+- Scanner-style Scan screen works with or without selecting an image.
+- Gallery image selection and preview work on Flutter Web.
+- Processing overlay explains scan progress.
+- Friendly recovery UX handles future OCR/backend/analysis failures.
+- Results show deterministic dish recommendations and price intelligence.
+- Dish Detail shows local price, traveler home-currency price, exchange rate, ingredients, and recommendation reason.
+- Traveler settings persist locally with `shared_preferences`.
 - Home currency affects deterministic mock price conversion.
 - Output language affects local mock Results and Dish Detail helper text.
-- Provider mode exists for future routing but is informational only.
-- Developer Debug remains collapsed/secondary.
+- Backend Mock Mode can optionally call the local backend mock server.
+- Developer Backend Scenario selector can test backend mock success and failure states.
 
 ## Current User Flow
 
@@ -31,9 +31,33 @@ Travelers often face menus they cannot read, prices they cannot quickly compare,
 3. Optionally select a menu image from Gallery.
 4. Tap the main scan button.
 5. See staged processing messages.
-6. Review Results with price intelligence and traveler-context copy.
-7. Open Dish Detail for a recommendation.
+6. Review Results with price intelligence.
+7. Open Dish Detail.
 8. Return to Results, then back to Scan.
+
+## Developer Backend Mock Flow
+
+1. Start the backend mock server:
+
+```bash
+cd backend
+npm run dev
+```
+
+2. Open Flutter in debug mode.
+3. In Profile, enable Backend Mock Mode.
+4. Optionally choose a Backend Scenario:
+   - `normal`
+   - `ocr_low_confidence`
+   - `ocr_empty_text`
+   - `ocr_failure`
+   - `analysis_low_quality`
+   - `analysis_empty_result`
+   - `analysis_failure`
+5. Run Scan.
+6. Confirm Results or friendly recovery UX appears.
+
+Backend Mock Mode remains a developer/test feature and is disabled by default.
 
 ## Tech Stack
 
@@ -43,63 +67,84 @@ Travelers often face menus they cannot read, prices they cannot quickly compare,
 - GoRouter
 - image_picker
 - shared_preferences
-- Clean, feature-based structure
-- Repository interfaces for Auth, Passport, Scan, OCR, AI, and Price layers
+- Node.js backend mock server using built-in Node modules
 
 ## Architecture Summary
 
-The app uses typed domain models and repository interfaces so mock implementations can later be replaced without redesigning the user flow.
+Default Flutter flow:
 
-- Domain models live under `lib/features/shared/domain/models/`.
-- Repository interfaces live under `lib/features/shared/domain/repositories/`.
-- Mock implementations live under `lib/features/shared/data/`.
-- Future AI adapter skeletons live under `lib/features/shared/data/ai/`.
-- Local mock presentation copy lives under `lib/features/shared/presentation/`.
-- The active AI provider is still `MockAiRepository`.
-- `OpenAiMenuAnalysisRepository` is disabled and makes no network calls.
-- `BackendMenuAnalysisRepository` is disabled and not wired into the app.
-- `MultiProviderMenuAnalysisRepository` is disabled and represents future OCR-first China/global routing.
+```text
+Flutter Scan
+-> local Mock OCR
+-> local Mock AI
+-> Results / Dish Detail
+```
+
+Optional developer backend mock flow:
+
+```text
+Flutter Scan
+-> local Mock OCR
+-> BackendMockMenuAnalysisRepository
+-> POST /api/analyze-menu
+-> mock OCR provider
+-> mock analysis provider
+-> standardized response envelope
+-> Flutter Results or Recovery UX
+```
+
+The backend keeps future provider keys server-side by design, but no real provider calls or keys exist today.
 
 ## Implemented Versus Planned
 
 Implemented:
 
-- Mock OCR
-- Mock AI
-- Deterministic mock price intelligence
-- Deterministic mock exchange rates for supported traveler currencies
-- Local traveler settings persistence with `shared_preferences`
-- Local mock UI copy for English, Traditional Chinese, Simplified Chinese, and Japanese
-- OCR-first multi-provider routing contract/skeleton
+- Local mock OCR and mock AI
+- Deterministic price intelligence
+- Local traveler settings persistence
+- Multilingual mock helper copy
+- Backend mock server
+- Backend health endpoint
+- Backend API envelopes
+- OCR-first backend mock provider skeleton
+- Backend OCR/analysis failure simulations
+- Flutter Backend Mock Mode toggle
+- Flutter Backend Scenario selector
+- Flutter backend error-to-recovery mapping
 
 Not implemented:
 
 - Real OCR
-- Real Qwen
-- Real DeepSeek
-- Real OpenAI
-- Real backend proxy
-- Real provider routing
+- Real Qwen, DeepSeek, OpenAI, Claude, Gemini, or other provider calls
+- Real backend provider routing
+- Real exchange-rate API
 - Firebase
 - Subscriptions
 - Production authentication
-- Real exchange-rate API
-- Real translation
+- App Store readiness
 
-## How To Run Locally
+## Run Locally
+
+Flutter only:
 
 ```bash
 flutter pub get
 flutter run -d web-server
 ```
 
-Optional:
+Backend mock server:
+
+```bash
+cd backend
+npm run dev
+```
+
+Optional checks:
 
 ```bash
 flutter analyze
+git diff --check
 ```
-
-If local Flutter/Dart tooling hangs or analyzer crashes, verify the web-server flow manually and record the exact terminal output.
 
 ## Current Verified Phases
 
@@ -111,14 +156,14 @@ If local Flutter/Dart tooling hangs or analyzer crashes, verify the web-server f
 - Phase 5A: AI Engine Adapter Preparation
 - Phase 5B: OpenAI Adapter Skeleton
 - Phase 5D: UX Alignment + Price Intelligence
-- Phase 6A: OCR-First Multi-Provider Routing Skeleton
-- Phase 6B: Perceived Latency Scan Flow
-- Phase 6C: Fallback/Failure UX
-- Phase 6C1: Dish Detail Navigation Fix
-- Phase 6D: Scan UI Cleanup
-- Phase 6E: Traveler Locale/Provider Settings
-- Phase 6F: Settings Connected To Mock Analysis Context
-- Phase 6G: Local Persistence For Traveler Settings
-- Phase 6H: Reset Traveler Settings
-- Phase 6I: Results Personalization Polish
-- Phase 6J: Multilingual Mock Results Presentation
+- Phase 6A-6J: Scan UX, traveler settings, persistence, personalization, multilingual mock presentation
+- Phase 6K: Documentation Sync
+- Phase 7A: Backend Mock Server Skeleton
+- Phase 7B: Flutter Backend Mock Adapter
+- Phase 7C: Optional Backend Mock Mode Toggle
+- Phase 7D: Backend Health, CORS, and API Contract Hardening
+- Phase 8A: Backend OCR Adapter Skeleton
+- Phase 8B: OCR Failure Simulation
+- Phase 8C: Analysis Failure Simulation
+- Phase 8D: Flutter Backend Error Mapping
+- Phase 8E: Flutter Developer Backend Scenario Tester

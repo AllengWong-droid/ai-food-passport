@@ -21,25 +21,44 @@
 - Phase 6H: Reset Traveler Settings
 - Phase 6I: Results Personalization Polish
 - Phase 6J: Multilingual Mock Results Presentation
+- Phase 6K: Documentation Sync
+- Phase 7A: Backend Mock Server Skeleton
+- Phase 7B: Flutter Backend Mock Adapter
+- Phase 7C: Optional Backend Mock Mode Toggle
+- Phase 7D: Backend Health, CORS, and API Contract Hardening
+- Phase 8A: Backend OCR Adapter Skeleton
+- Phase 8B: OCR Failure, Low Confidence, and Empty Text Simulation
+- Phase 8C: Backend Analysis Failure, Empty Result, and Low Quality Simulation
+- Phase 8D: Flutter Backend Error Response Mapping
+- Phase 8E: Flutter Developer Backend Scenario Tester
 
 ## Current MVP Alpha
 
-The app demonstrates the intended product flow with mocks:
+The normal app flow remains local mock by default:
 
-Scan -> optional Gallery preview -> processing overlay -> mock OCR -> mock AI -> Results with deterministic price intelligence -> Dish Detail -> back navigation.
+```text
+Scan -> optional Gallery preview -> processing overlay -> local mock OCR -> local Mock AI -> Results -> Dish Detail
+```
 
-Profile traveler settings persist locally and influence mock home-currency prices and local helper text. Provider mode is visible for future planning but remains informational only.
+Developer backend testing is optional:
+
+```text
+Scan -> local mock OCR -> Backend Mock Mode -> backend OCR-first mock pipeline -> Results or Recovery UX
+```
+
+Backend Mock Mode is disabled by default. Provider mode remains informational only.
 
 ## Next
 
-- Backend proxy implementation for server-side provider calls
-- Real OCR adapter behind `OcrRepository`
-- Qwen, DeepSeek, and OpenAI provider adapter skeletons behind the backend
-- Real provider health checks, latency policy, and fallback routing
+- Backend mock scenario QA automation
+- Backend provider contract tests
+- Real OCR adapter plan
+- Real provider gateway implementation behind backend only
+- Qwen/DeepSeek/OpenAI adapter skeletons on backend
+- Provider health checks and fallback routing policy
 - Real exchange-rate service
-- Production auth and persistence
+- Production authentication and persistence
 - Saved scan history
-- App Store preparation
 
 ## Later Product Expansion
 
@@ -48,3 +67,13 @@ Profile traveler settings persist locally and influence mock home-currency price
 - Production allergy/safety disclaimers
 - Subscription and purchase flow
 - App Store screenshots, preview video, metadata, and support documentation
+
+## Still Not Implemented
+
+- Real OCR
+- Real Qwen, DeepSeek, OpenAI, Claude, Gemini, or other provider calls
+- Real production backend provider routing
+- Firebase
+- Subscriptions
+- Real exchange-rate API
+- App Store readiness

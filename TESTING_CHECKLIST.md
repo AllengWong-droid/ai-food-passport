@@ -5,74 +5,134 @@
 - [ ] Run `flutter pub get`.
 - [ ] Run `flutter run -d web-server`.
 - [ ] Confirm the app opens in a browser.
+- [ ] Confirm the backend is not required for default app usage.
 
-## Profile Settings
+## Default Local Mock Flow
 
-- [ ] Open Profile.
-- [ ] Change Home country.
-- [ ] Change Home currency to `TWD`.
-- [ ] Change Output language to Traditional Chinese or Simplified Chinese.
-- [ ] Change Provider mode to `china`.
-- [ ] Refresh/restart the app.
-- [ ] Confirm settings persisted.
-- [ ] Tap Reset traveler settings.
-- [ ] Confirm settings return to Germany / EUR / English / mock.
-- [ ] Refresh/restart again and confirm defaults remain.
-- [ ] Confirm provider mode is presented as future/informational only.
-
-## Scan Flow
-
+- [ ] Keep Backend Mock Mode disabled in Profile.
 - [ ] Open Scan.
 - [ ] Tap the main scan button without selecting an image.
 - [ ] Confirm the processing overlay appears.
 - [ ] Confirm Results opens.
 - [ ] Return to Scan.
-- [ ] Tap Gallery.
-- [ ] Select a menu image.
-- [ ] Confirm image preview appears on Flutter Web.
-- [ ] Tap the main scan button.
-- [ ] Confirm the processing overlay appears.
+- [ ] Select an image from Gallery.
+- [ ] Confirm image preview appears.
+- [ ] Tap scan again.
 - [ ] Confirm Results opens.
 - [ ] Confirm no "Select a menu image first" message appears.
+- [ ] Confirm Active provider in collapsed AI Debug is `mock_ai`.
 
-## Results
+## Profile Settings
+
+- [ ] Change Home country.
+- [ ] Change Home currency to `TWD`.
+- [ ] Change Output language.
+- [ ] Change Provider mode.
+- [ ] Refresh/restart the app.
+- [ ] Confirm settings persisted.
+- [ ] Tap Reset traveler settings.
+- [ ] Confirm settings return to Germany / EUR / English / mock.
+- [ ] Confirm provider mode is future/informational only.
+
+## Results And Dish Detail
 
 - [ ] Confirm dish result cards appear.
 - [ ] Confirm taste, safety, and value scores appear.
 - [ ] Confirm local price appears.
 - [ ] Confirm traveler home-currency price appears.
 - [ ] Confirm price assessment appears.
-- [ ] Confirm Results shows a traveler context summary such as "Prices converted to EUR/TWD/USD".
-- [ ] Change Home currency in Profile and rescan.
-- [ ] Confirm Results reflects the selected home currency.
-- [ ] Change Output language in Profile and rescan.
-- [ ] Confirm Results helper text changes language.
-
-## Dish Detail
-
+- [ ] Confirm Results shows traveler context copy.
+- [ ] Change Home currency and rescan.
+- [ ] Confirm Results and Dish Detail reflect the selected currency.
+- [ ] Change Output language and rescan.
+- [ ] Confirm helper text changes language.
 - [ ] Tap a dish card.
 - [ ] Confirm Dish Detail opens.
-- [ ] Confirm local menu price is clearly labeled.
-- [ ] Confirm traveler home-currency price is clearly labeled.
-- [ ] Confirm exchange rate appears.
-- [ ] Confirm recommendation reason appears.
-- [ ] Confirm ingredients appear.
-- [ ] Confirm hidden ingredient watch appears.
-- [ ] Confirm selected Output language affects helper labels.
-- [ ] Tap the Dish Detail back arrow.
+- [ ] Confirm local price, home-currency price, exchange rate, ingredients, and recommendation reason appear.
+- [ ] Tap Dish Detail back.
 - [ ] Confirm it returns to Results.
-- [ ] Tap the Results back arrow.
+- [ ] Tap Results back.
 - [ ] Confirm it returns to Scan.
+
+## Backend Mock Server
+
+- [ ] Run `cd backend`.
+- [ ] Run `npm run dev`.
+- [ ] Confirm the server starts on `http://localhost:8787`.
+- [ ] Test health:
+
+```powershell
+Invoke-RestMethod -Method Get -Uri "http://127.0.0.1:8787/health"
+```
+
+- [ ] Test default POST:
+
+```powershell
+Invoke-RestMethod `
+  -Method Post `
+  -Uri "http://127.0.0.1:8787/api/analyze-menu" `
+  -ContentType "application/json" `
+  -Body "{}"
+```
+
+## Flutter Backend Mock Mode
+
+- [ ] Start the backend mock server.
+- [ ] Open Profile in Flutter debug mode.
+- [ ] Enable Backend Mock Mode.
+- [ ] Set Backend Scenario to `normal`.
+- [ ] Run Scan.
+- [ ] Confirm Results opens.
+- [ ] Confirm collapsed AI Debug shows Active provider `backend_mock`.
+- [ ] Confirm Backend Mock Mode can be turned off and local mock still works without backend.
+
+## Backend Scenario QA
+
+- [ ] Set Backend Scenario to `ocr_low_confidence`.
+- [ ] Run Scan.
+- [ ] Confirm Results opens normally.
+- [ ] Set Backend Scenario to `analysis_low_quality`.
+- [ ] Run Scan.
+- [ ] Confirm Results opens normally.
+- [ ] Set Backend Scenario to `ocr_failure`.
+- [ ] Run Scan.
+- [ ] Confirm OCR-friendly recovery appears.
+- [ ] Tap Continue with sample result.
+- [ ] Confirm local mock Results opens.
+- [ ] Set Backend Scenario to `ocr_empty_text`.
+- [ ] Run Scan.
+- [ ] Confirm no-readable-text recovery appears.
+- [ ] Tap Continue with sample result.
+- [ ] Confirm local mock Results opens.
+- [ ] Set Backend Scenario to `analysis_failure`.
+- [ ] Run Scan.
+- [ ] Confirm analysis-friendly recovery appears.
+- [ ] Tap Continue with sample result.
+- [ ] Confirm local mock Results opens.
+- [ ] Set Backend Scenario to `analysis_empty_result`.
+- [ ] Run Scan.
+- [ ] Confirm no-dishes-found recovery appears.
+- [ ] Tap Continue with sample result.
+- [ ] Confirm local mock Results opens.
+
+## Error UX Checks
+
+- [ ] Stop the backend server while Backend Mock Mode is enabled.
+- [ ] Run Scan.
+- [ ] Confirm friendly recovery appears.
+- [ ] Confirm Try again is available.
+- [ ] Confirm Choose another image is available.
+- [ ] Confirm Continue with sample result works.
+- [ ] Confirm no raw stack traces appear.
+- [ ] Confirm no raw backend JSON appears in normal UI.
 
 ## Developer Debug
 
-- [ ] Expand OCR Debug only after Results appears.
-- [ ] Confirm OCR raw text, detected language, confidence, and source appear.
-- [ ] Expand AI Debug.
-- [ ] Confirm Home country, Home currency, Output language, and Provider mode appear.
-- [ ] Confirm Active provider remains `mock_ai`.
-- [ ] Confirm Qwen, DeepSeek, OpenAI, real OCR, and backend routing are disabled/planned.
-- [ ] Confirm Debug remains collapsed/secondary by default.
+- [ ] Confirm OCR Debug and AI Debug are collapsed/secondary.
+- [ ] Confirm AI Debug shows Backend mock enabled.
+- [ ] Confirm AI Debug shows selected Backend Scenario.
+- [ ] Confirm AI Debug shows last backend error code when available.
+- [ ] Confirm Qwen, DeepSeek, OpenAI, real OCR, and real provider routing are disabled/planned.
 
 ## Negative Checks
 
@@ -80,11 +140,11 @@
 - [ ] Confirm no Qwen call happens.
 - [ ] Confirm no DeepSeek call happens.
 - [ ] Confirm no OpenAI call happens.
-- [ ] Confirm no backend proxy call happens.
 - [ ] Confirm no Firebase call happens.
 - [ ] Confirm no real exchange-rate API call happens.
+- [ ] Confirm no API keys or secrets are present.
 
 ## Known Environment Issues
 
-- On some local Codex/Windows shells, Flutter and Dart commands may hang or fail due to cache/permission restrictions.
+- On some local Codex/Windows shells, Flutter and Dart commands may hang due to cache/permission restrictions.
 - If `flutter analyze` fails due to analyzer/server/environment issues, record the exact terminal output and manually verify the web-server flow.

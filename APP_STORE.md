@@ -14,12 +14,13 @@ Current app behavior uses:
 - Local traveler settings persistence
 - Local mock multilingual helper copy
 - Debug OCR and AI panels
-- Disabled provider/backend skeletons
+- Optional developer backend mock mode, disabled by default
+- OCR-first backend mock pipeline for local testing only
 
 ## Not Yet Ready For Store Submission
 
 - No production OCR
-- No real backend
+- No production backend
 - No real Qwen integration
 - No real DeepSeek integration
 - No real OpenAI integration
@@ -31,6 +32,7 @@ Current app behavior uses:
 - No privacy policy copy finalized
 - No medical/allergen disclaimer review
 - No App Store screenshots or metadata finalized
+- Developer backend scenario testing is not a production user feature
 
 ## Future App Store Work
 

@@ -2,17 +2,37 @@
 
 ## Current State
 
-The MVP Alpha uses `MockAiRepository` as the active AI engine. It accepts a typed `AiAnalysisRequest` and returns `List<DishAnalysisModel>`.
+The active default Flutter AI engine is still `MockAiRepository`. It accepts `AiAnalysisRequest` and returns `List<DishAnalysisModel>`.
 
-No real OCR, Qwen, DeepSeek, OpenAI, backend, provider routing, or exchange-rate API calls are made.
+The project also includes an optional local backend mock path for developer testing. Backend Mock Mode is disabled by default and does not replace the local mock flow unless manually enabled in Profile during debug builds.
 
-## Active Pipeline
+No real OCR, Qwen, DeepSeek, OpenAI, Claude, Gemini, Firebase, provider routing, or exchange-rate API calls are made.
 
-1. Scan screen creates or uses a mock/default image source.
-2. Mock OCR returns typed `OcrResult`.
-3. Scan builds `AiAnalysisRequest`.
-4. `MockAiRepository` returns deterministic dish results.
-5. Results and Dish Detail present price intelligence and local mock helper copy.
+## Default Flutter Pipeline
+
+```text
+Scan screen
+-> local mock/default image source
+-> MockOcrRepository returns OcrResult
+-> AiAnalysisRequest is built
+-> MockAiRepository returns deterministic dishes
+-> Results / Dish Detail
+```
+
+## Optional Backend Mock Pipeline
+
+```text
+Scan screen
+-> MockOcrRepository returns OcrResult
+-> AiAnalysisRequest is sent by BackendMockMenuAnalysisRepository
+-> POST /api/analyze-menu
+-> backend mock OCR provider
+-> backend mock analysis provider
+-> standardized backend envelope
+-> Flutter parses dishes or maps backend errors to recovery UX
+```
+
+This is mock-only and local-development-only.
 
 ## Input Model
 
@@ -33,7 +53,7 @@ Provider mode is informational only in the MVP Alpha.
 
 ## Output Model
 
-The AI layer currently returns `List<DishAnalysisModel>`.
+The Flutter AI layer returns `List<DishAnalysisModel>`.
 
 Each dish includes:
 
@@ -47,6 +67,58 @@ Each dish includes:
 - Recommendation reason
 - Price intelligence
 
+## Backend Envelope
+
+Successful backend mock responses use:
+
+```json
+{
+  "ok": true,
+  "data": {
+    "routing": {
+      "ocrProvider": "mock_ocr",
+      "analysisProvider": "mock_ai",
+      "warnings": []
+    },
+    "ocr": {},
+    "dishes": []
+  },
+  "error": null,
+  "routing": {},
+  "dishes": []
+}
+```
+
+Error backend mock responses use:
+
+```json
+{
+  "ok": false,
+  "data": null,
+  "error": {
+    "code": "ANALYSIS_FAILED",
+    "message": "Could not analyze the menu.",
+    "details": null
+  }
+}
+```
+
+Flutter maps backend error codes to friendly Scan recovery states.
+
+## Backend Debug Scenarios
+
+Developer scenarios:
+
+- `normal`
+- `ocr_low_confidence`
+- `ocr_empty_text`
+- `ocr_failure`
+- `analysis_low_quality`
+- `analysis_empty_result`
+- `analysis_failure`
+
+These scenarios are only sent when Backend Mock Mode is enabled and a non-normal scenario is selected.
+
 ## Price Intelligence
 
 Mock price intelligence includes:
@@ -58,7 +130,7 @@ Mock price intelligence includes:
 - Exchange rate
 - Assessment: Cheap, Fair, Expensive, or Good Value
 
-Home currency conversion uses deterministic mock rates for supported currencies. No real exchange-rate API is implemented.
+Home currency conversion uses deterministic mock rates. No real exchange-rate API is implemented.
 
 ## Output Language
 
@@ -77,38 +149,19 @@ This is not real translation. Dish content remains deterministic mock data.
 - OpenAI response schema
 - OpenAI response parser
 - OpenAI repository skeleton
-- Backend proxy repository skeleton
+- Backend provider gateway skeleton
 - Multi-provider routing repository skeleton
-
-## Future Response Shape
-
-Future provider responses should map to:
-
-```json
-{
-  "dishes": [
-    {
-      "dishName": "Sample Dish",
-      "description": "Short explanation",
-      "ingredients": ["Ingredient"],
-      "allergens": ["Allergen"],
-      "tasteScore": 90,
-      "safetyScore": 85,
-      "valueScore": 80,
-      "recommendationReason": "Why this dish fits",
-      "priceIntelligence": {
-        "localPrice": 1200,
-        "localCurrency": "JPY",
-        "homePrice": 8.1,
-        "homeCurrency": "USD",
-        "exchangeRate": 0.00675,
-        "assessment": "Fair"
-      }
-    }
-  ]
-}
-```
 
 ## Future Integration Rule
 
-Real provider calls must be made through a backend proxy. Flutter should send typed requests to the backend and receive structured dish results. API keys must stay server-side.
+Real provider calls must be made through a backend proxy. Flutter should never store provider API keys.
+
+Future OCR-first routing should support:
+
+- China-friendly OCR and analysis providers such as Qwen and DeepSeek
+- Global providers such as OpenAI or another approved provider
+- Provider health checks
+- Fallback routing
+- Structured responses that map to `DishAnalysisModel`
+
+All of that remains future work.

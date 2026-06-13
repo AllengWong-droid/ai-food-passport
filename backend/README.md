@@ -4,7 +4,7 @@
 
 This folder contains a minimal mock backend proxy skeleton for AI Food Passport. It prepares the shape of a future server that can protect API keys, run OCR-first routing, and call OCR/AI providers from a trusted backend.
 
-Flutter uses local `MockAiRepository` by default. Developer Backend Mock Mode can optionally call this server during local testing.
+Flutter uses local `MockAiRepository` by default. Developer Backend Mock Mode can optionally call this server during local testing. Flutter's developer selector uses `normal` for the default success scenario and sends no `debugScenario` field in that case.
 
 ## What Is Implemented
 
@@ -202,7 +202,7 @@ The OCR provider returns deterministic local text and metadata. It does not read
 
 ## Mock OCR Debug Scenarios
 
-`POST /api/analyze-menu` accepts an optional `debugScenario` field for local testing:
+`POST /api/analyze-menu` accepts an optional `debugScenario` field for local testing. Omitting it is equivalent to Flutter's `normal` scenario.
 
 - `ocr_success`: default successful mock OCR flow.
 - `ocr_low_confidence`: returns OCR text with confidence `0.42`, keeps `ok: true`, and includes `LOW_OCR_CONFIDENCE`.

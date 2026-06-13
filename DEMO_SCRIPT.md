@@ -1,114 +1,99 @@
-# AI Food Passport Written Demo Walkthrough
+# AI Food Passport Demo Walkthrough
 
-## Short Demo
+## Opening
 
-Opening:
 "AI Food Passport helps travelers understand menus abroad, compare prices in their own currency, and choose dishes that fit their taste and safety profile."
 
-Flow:
+Clarify early:
+
+"This MVP Alpha uses local mock OCR, local mock AI, and an optional mock backend for developer testing. No real OCR or real AI providers are being called."
+
+## Normal User Flow
 
 1. Open Profile.
 2. Show Home country, Home currency, Output language, and Provider mode.
 3. Explain that settings persist locally and can be reset.
 4. Open Scan.
-5. Optionally select a menu image from Gallery.
+5. Optionally choose a Gallery image.
 6. Tap the main scan button.
-7. Show the processing overlay.
-8. Show Results with prices converted to the selected home currency.
-9. Change Output language and run another scan to show localized helper text.
-10. Open Dish Detail and show local price, home-currency price, and value explanation.
+7. Show staged processing.
+8. Show Results with local price and home-currency price.
+9. Open Dish Detail.
+10. Show recommendation reason, ingredients, local price, home-currency price, and exchange rate.
 
-Closing:
-"This MVP Alpha uses mock OCR and mock AI, but the product flow, domain models, local settings, price intelligence, and future provider-routing skeleton are in place."
+Suggested narration:
 
-## Detailed Demo Script
+"The normal app flow does not require the backend. It runs with local mock OCR and local mock AI, so the product experience can be tested without secrets or provider accounts."
 
-### 1. Profile Settings
+## Developer Backend Mock Mode Flow
 
-Say:
-"The traveler can set their home country, home currency, output language, and provider mode. These settings are persisted locally with shared preferences."
+Before the demo, start the backend:
 
-Show:
+```bash
+cd backend
+npm run dev
+```
 
-- Home country
-- Home currency
-- Output language
-- Provider mode
-- Reset traveler settings
+Steps:
 
-Clarify:
-"Provider mode is currently informational only. Mock AI remains active in this MVP. China, Global, and Auto are future routing modes."
+1. Open Profile in Flutter debug mode.
+2. Enable Backend Mock Mode.
+3. Set Backend Scenario to `normal`.
+4. Run Scan.
+5. Show that Results still appear.
+6. Expand AI Debug briefly and show Active provider `backend_mock`.
 
-### 2. Scan
+Suggested narration:
 
-Say:
-"The scan flow works whether or not an image is selected. On web, Gallery image preview is real, while OCR remains mocked."
+"For developer testing, Flutter can optionally call a local backend mock server. The backend route is OCR-first: request, mock OCR provider, mock analysis provider, standardized response envelope, then Flutter Results."
 
-Show:
+## Failure And Recovery Demo
 
-- Scanner-style Scan screen
-- Gallery image preview if available
-- Main scan button
+Use Profile -> Backend Scenario:
 
-### 3. Processing Overlay
+- `ocr_failure`
+- `ocr_empty_text`
+- `analysis_failure`
+- `analysis_empty_result`
 
-Say:
-"After tapping scan, the app shows staged progress so the user does not feel stuck."
+For each scenario:
 
-Messages include:
+1. Select the scenario.
+2. Run Scan.
+3. Show friendly recovery copy.
+4. Tap Continue with sample result.
+5. Confirm local mock Results opens.
 
-- Reading menu image
-- Recognizing dishes
-- Checking taste and allergy fit
-- Comparing local prices
-- Preparing recommendations
+Suggested narration:
 
-### 4. Results
+"These scenarios simulate future real provider failures without calling real providers. The user sees friendly recovery actions, not stack traces or raw backend JSON."
 
-Say:
-"Results show deterministic mock dish recommendations with price intelligence. Prices are converted into the selected traveler home currency using mock rates."
+## Low Confidence Demo
 
-Show:
+Use Profile -> Backend Scenario:
 
-- Traveler context summary
-- Dish cards
-- Local price
-- Home-currency price
-- Price assessment
-- Taste, safety, and value scores
+- `ocr_low_confidence`
+- `analysis_low_quality`
 
-### 5. Multilingual Helper Text
+Steps:
 
-Say:
-"Output language changes local helper text in Results and Dish Detail. This is deterministic mock UI copy, not real translation."
+1. Select `ocr_low_confidence`.
+2. Run Scan.
+3. Confirm Results still opens.
+4. Select `analysis_low_quality`.
+5. Run Scan.
+6. Confirm Results still opens.
 
-Try:
+Suggested narration:
 
-- English
-- Traditional Chinese
-- Simplified Chinese
-- Japanese
+"Low-confidence scenarios still return recommendations, but the backend metadata marks the response for review. This prepares the app for future provider quality signals."
 
-### 6. Dish Detail
+## Future Provider Routing Explanation
 
 Say:
-"Dish Detail explains why a dish was recommended and separates local menu price from the traveler's selected currency price."
 
-Show:
+"The backend mock architecture is designed for future OCR-first provider routing. In a future China-friendly mode, OCR could route to Qwen-OCR or Qwen-VL and analysis to Qwen or DeepSeek. In a global mode, OCR or analysis could route to OpenAI or another global provider. Those integrations are not implemented yet, and no API keys are in Flutter."
 
-- Recommendation reason
-- Ingredients
-- Hidden ingredient watch
-- Local menu price
-- Your currency price
-- Exchange rate
-- Value explanation
-- Back navigation to Results
+## Closing
 
-### 7. Future Provider Routing
-
-Say:
-"The architecture prepares for OCR-first routing. In the future, China mode could use Qwen-OCR or Qwen-VL plus Qwen or DeepSeek analysis, while Global mode could use OpenAI or other global providers through a backend proxy."
-
-Clarify:
-"No real OCR, Qwen, DeepSeek, OpenAI, backend proxy, Firebase, or real exchange-rate API is implemented yet."
+"The MVP Alpha now demonstrates the core user experience, local traveler settings, deterministic price intelligence, an optional backend mock proxy, OCR-first provider structure, and friendly fallback UX. Real OCR, real AI providers, Firebase, subscriptions, and App Store readiness remain future work."
