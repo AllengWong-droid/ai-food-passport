@@ -216,6 +216,8 @@ This is not real translation. Dish content remains deterministic mock data.
 
 Real provider calls must be made through a backend proxy. Flutter should never store provider API keys.
 
+Provider keys alone must not enable real calls. Future real providers require explicit adapter implementation, config validation, timeout behavior, rate/cost controls, redacted logging, fallback QA, and rollout/rollback planning.
+
 Future OCR-first routing should support:
 
 - China-friendly OCR and analysis providers such as Qwen and DeepSeek
@@ -225,3 +227,14 @@ Future OCR-first routing should support:
 - Structured responses that map to `DishAnalysisModel`
 
 All of that remains future work.
+
+## Future Provider Safety Settings
+
+Placeholder backend settings are documented in `backend/.env.example`:
+
+- `PROVIDER_TIMEOUT_MS`
+- `PROVIDER_MAX_RETRIES`
+- `PROVIDER_MONTHLY_BUDGET_USD`
+- `PROVIDER_DAILY_REQUEST_LIMIT`
+
+These settings do not currently enable real providers. They are readiness placeholders for a future provider implementation phase.

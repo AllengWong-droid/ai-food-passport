@@ -211,3 +211,19 @@ Future routing should remain OCR-first:
 3. Price intelligence and recommendation output.
 
 China mode may later route through Qwen-OCR/Qwen-VL and Qwen or DeepSeek. Global mode may later route through OpenAI or another global provider. This is planned only.
+
+## Secret And Provider Safety Direction
+
+Real provider keys must live in backend environment variables or a managed production secret store. Flutter must never contain provider keys.
+
+`backend/.env.example` contains placeholder-only variables for future providers and provider safety controls. A real `.env` file must remain local and ignored by Git.
+
+Future provider adapters should enforce:
+
+- Provider timeouts.
+- No automatic retries by default.
+- Friendly standardized failure envelopes.
+- No raw provider error leakage.
+- No stack traces in user-facing responses.
+- Logging redaction for secrets, headers, raw images, and sensitive menu/user data.
+- Rate and cost guards before production.

@@ -10,6 +10,8 @@ A local backend mock proxy now exists for developer testing. Backend Mock Mode i
 
 The backend also has OCR and analysis provider registries plus a provider routing decision skeleton. `mock_ocr` and `mock_ai` remain the only active providers. Provider modes `china`, `global`, and `auto` are future routing hints only; they safely resolve to mock providers and return routing metadata for debug visibility.
 
+Phase 10A adds secret-handling and real-provider readiness documentation. Future provider environment variables are placeholder-only in `backend/.env.example`; real keys must stay backend-only and must never be committed.
+
 No real OCR, Qwen, DeepSeek, OpenAI, Firebase, subscriptions, production authentication, real exchange rates, API keys, or secrets are implemented.
 
 ## MVP Alpha Capabilities
@@ -117,6 +119,7 @@ Implemented:
 - Flutter Backend Scenario selector
 - Flutter backend error-to-recovery mapping
 - Flutter AI Debug display for backend requested/resolved provider mode
+- Backend secret-handling documentation and real-provider readiness checklist
 
 Not implemented:
 
@@ -128,6 +131,11 @@ Not implemented:
 - Subscriptions
 - Production authentication
 - App Store readiness
+
+Safety docs:
+
+- `backend/SECURITY_AND_SECRETS.md`
+- `REAL_PROVIDER_READINESS_CHECKLIST.md`
 
 ## Run Locally
 
@@ -178,3 +186,4 @@ git diff --check
 - Phase 9C: Real Analysis Provider Skeleton
 - Phase 9D: Backend Provider Routing Decision Skeleton
 - Phase 9E: Flutter Provider Mode Routing Visibility
+- Phase 10A: Secret Handling and Real Provider Readiness Plan

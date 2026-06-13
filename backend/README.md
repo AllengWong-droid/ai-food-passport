@@ -681,10 +681,17 @@ This is a local development convenience only. It is not a production CORS or aut
 ## Security Notes
 
 - `.env` is ignored by Git.
-- `.env.example` contains empty placeholder names only.
+- `.env.example` contains placeholder values only.
 - Do not put real provider keys in Flutter.
 - Future real provider calls should happen only from backend code.
 - This mock backend contains no API keys or secrets.
+- Provider keys alone do not enable real calls; skeleton providers remain disabled until explicitly implemented.
+- Provider timeout, retry, budget, and request-limit variables are placeholders for future real provider phases.
+
+More detail:
+
+- `backend/SECURITY_AND_SECRETS.md`
+- `../REAL_PROVIDER_READINESS_CHECKLIST.md`
 
 ## Future Steps
 
@@ -694,4 +701,5 @@ This is a local development convenience only. It is not a production CORS or aut
 - Provider health checks.
 - Fallback routing.
 - Real exchange rates.
+- Timeout, rate-limit, cost guard, and logging redaction implementation.
 - Production authentication and rate limiting.

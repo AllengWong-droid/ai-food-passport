@@ -169,6 +169,16 @@ Invoke-RestMethod `
 - [ ] Confirm no Firebase call happens.
 - [ ] Confirm no real exchange-rate API call happens.
 - [ ] Confirm no API keys or secrets are present.
+- [ ] Confirm no real `.env` file is committed.
+- [ ] Confirm `backend/.env.example` contains placeholders only.
+- [ ] Confirm `backend/.gitignore` ignores `.env`.
+- [ ] Confirm Flutter source contains no provider API key variables.
+
+## Future Provider Readiness QA
+
+- [ ] Review `backend/SECURITY_AND_SECRETS.md`.
+- [ ] Review `REAL_PROVIDER_READINESS_CHECKLIST.md`.
+- [ ] Confirm timeout, retry, budget, daily limit, logging redaction, fallback, and rollback items are documented before real provider work starts.
 
 ## Known Environment Issues
 
