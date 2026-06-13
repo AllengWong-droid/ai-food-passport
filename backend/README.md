@@ -4,13 +4,15 @@
 
 This folder contains a minimal mock backend proxy skeleton for AI Food Passport. It prepares the shape of a future server that can protect API keys, run OCR-first routing, and call OCR/AI providers from a trusted backend.
 
-This backend is not wired to the Flutter app yet. The Flutter MVP Alpha still uses mock OCR and `MockAiRepository`.
+Flutter uses local `MockAiRepository` by default. Developer Backend Mock Mode can optionally call this server during local testing.
 
 ## What Is Implemented
 
 - Local Node.js HTTP server using built-in Node modules.
+- `GET /health`.
 - `POST /api/analyze-menu`.
 - Deterministic mock response shaped like the future backend response.
+- Standardized `ok`, `data`, and `error` API envelope.
 - Mock routing metadata:
   - `mode: mock`
   - `ocrProvider: mock_ocr`
@@ -18,7 +20,7 @@ This backend is not wired to the Flutter app yet. The Flutter MVP Alpha still us
   - `fallbackUsed: false`
   - `latencyMs`
 - Mock dish results with `priceIntelligence`.
-- CORS headers for local development.
+- CORS headers for local Flutter Web development origins.
 
 ## What Is Not Implemented
 
@@ -48,6 +50,13 @@ npm install
 
 ```bash
 cd backend
+npm run dev
+```
+
+or:
+
+```bash
+cd backend
 npm start
 ```
 
@@ -61,6 +70,39 @@ You can override the port:
 
 ```bash
 PORT=8790 npm start
+```
+
+## Health Check
+
+```powershell
+Invoke-RestMethod -Method Get -Uri "http://127.0.0.1:8787/health"
+```
+
+Response shape:
+
+```json
+{
+  "ok": true,
+  "service": "ai-food-passport-backend",
+  "mode": "mock",
+  "timestamp": "2026-06-13T00:00:00.000Z"
+}
+```
+
+## Analyze Menu Endpoint
+
+```text
+POST /api/analyze-menu
+```
+
+PowerShell smoke test:
+
+```powershell
+Invoke-RestMethod `
+  -Method Post `
+  -Uri "http://127.0.0.1:8787/api/analyze-menu" `
+  -ContentType "application/json" `
+  -Body "{}"
 ```
 
 ## Example Curl Request
@@ -93,6 +135,37 @@ curl -X POST http://localhost:8787/api/analyze-menu \
 
 ```json
 {
+  "ok": true,
+  "data": {
+    "routing": {
+      "mode": "mock",
+      "ocrProvider": "mock_ocr",
+      "analysisProvider": "mock_ai",
+      "fallbackUsed": false,
+      "latencyMs": 2
+    },
+    "dishes": [
+      {
+        "dishName": "Tonkotsu Ramen",
+        "description": "Rich pork broth with noodles, egg, scallion, and sliced chashu.",
+        "ingredients": ["Pork broth", "Wheat noodles", "Egg", "Scallion", "Chashu"],
+        "allergens": ["Wheat", "Egg"],
+        "tasteScore": 96,
+        "safetyScore": 84,
+        "valueScore": 86,
+        "recommendationReason": "Mock backend selected this because it fits a savory, umami-forward traveler profile.",
+        "priceIntelligence": {
+          "localPrice": 980,
+          "localCurrency": "JPY",
+          "homePrice": 6.1,
+          "homeCurrency": "EUR",
+          "exchangeRate": 0.00622,
+          "assessment": "Fair"
+        }
+      }
+    ]
+  },
+  "error": null,
   "routing": {
     "mode": "mock",
     "ocrProvider": "mock_ocr",
@@ -102,26 +175,38 @@ curl -X POST http://localhost:8787/api/analyze-menu \
   },
   "dishes": [
     {
-      "dishName": "Tonkotsu Ramen",
-      "description": "Rich pork broth with noodles, egg, scallion, and sliced chashu.",
-      "ingredients": ["Pork broth", "Wheat noodles", "Egg", "Scallion", "Chashu"],
-      "allergens": ["Wheat", "Egg"],
-      "tasteScore": 96,
-      "safetyScore": 84,
-      "valueScore": 86,
-      "recommendationReason": "Mock backend selected this because it fits a savory, umami-forward traveler profile.",
-      "priceIntelligence": {
-        "localPrice": 980,
-        "localCurrency": "JPY",
-        "homePrice": 6.1,
-        "homeCurrency": "EUR",
-        "exchangeRate": 0.00622,
-        "assessment": "Fair"
-      }
+      "dishName": "Tonkotsu Ramen"
     }
   ]
 }
 ```
+
+The top-level `routing` and `dishes` fields mirror `data.routing` and `data.dishes` temporarily for Flutter adapter backwards compatibility. The shortened top-level dish above represents the same dish object from `data.dishes`.
+
+## Error Response Shape
+
+```json
+{
+  "ok": false,
+  "data": null,
+  "error": {
+    "code": "BAD_REQUEST",
+    "message": "Request body must be valid JSON.",
+    "details": null
+  }
+}
+```
+
+Unknown routes return the same envelope with `NOT_FOUND`.
+
+## CORS
+
+The mock server allows local Flutter Web development origins such as:
+
+- `http://localhost:<port>`
+- `http://127.0.0.1:<port>`
+
+This is a local development convenience only. It is not a production CORS or authentication policy.
 
 ## Security Notes
 
@@ -129,6 +214,7 @@ curl -X POST http://localhost:8787/api/analyze-menu \
 - `.env.example` contains empty placeholder names only.
 - Do not put real provider keys in Flutter.
 - Future real provider calls should happen only from backend code.
+- This mock backend contains no API keys or secrets.
 
 ## Future Steps
 

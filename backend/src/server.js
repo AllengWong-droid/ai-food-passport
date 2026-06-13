@@ -1,13 +1,14 @@
 const http = require('http');
-const { handleAnalyzeMenu, sendJson } = require('./routes/analyzeMenu');
+const { handleAnalyzeMenu, sendJson, errorPayload } = require('./routes/analyzeMenu');
 
 const port = Number(process.env.PORT || 8787);
 
 const server = http.createServer((request, response) => {
   const startedAt = Date.now();
+  const url = new URL(request.url, `http://${request.headers.host || 'localhost'}`);
 
   if (request.method === 'OPTIONS') {
-    sendJson(response, 204, {});
+    sendJson(request, response, 204, null);
     return;
   }
 
@@ -20,18 +21,33 @@ const server = http.createServer((request, response) => {
   });
 
   request.on('end', () => {
-    if (request.url === '/api/analyze-menu') {
+    if (url.pathname === '/health') {
+      if (request.method !== 'GET') {
+        sendJson(request, response, 405, errorPayload(
+          'METHOD_NOT_ALLOWED',
+          'Use GET /health.'
+        ));
+        return;
+      }
+
+      sendJson(request, response, 200, {
+        ok: true,
+        service: 'ai-food-passport-backend',
+        mode: 'mock',
+        timestamp: new Date().toISOString()
+      });
+      return;
+    }
+
+    if (url.pathname === '/api/analyze-menu') {
       handleAnalyzeMenu(request, response, body, startedAt);
       return;
     }
 
-    sendJson(response, 404, {
-      error: {
-        code: 'not_found',
-        message: 'Route not found.',
-        source: 'mock_backend'
-      }
-    });
+    sendJson(request, response, 404, errorPayload(
+      'NOT_FOUND',
+      'Route not found.'
+    ));
   });
 });
 
