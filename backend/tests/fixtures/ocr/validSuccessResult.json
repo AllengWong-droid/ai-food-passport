@@ -1,0 +1,16 @@
+{
+  "description": "A well-formed, high-confidence OCR result from a future real provider.",
+  "provider": "qwen_ocr_skeleton",
+  "mode": "ocr",
+  "text": "Tonkotsu Ramen JPY 980\nMiso Katsu Skewers JPY 800",
+  "languageHints": ["ja"],
+  "confidence": 0.95,
+  "warnings": [],
+  "rawMetadata": {
+    "processingTimeMs": 1200,
+    "modelVersion": "qwen-vl-max",
+    "ocrEngine": "qwen-vl",
+    "pageCount": 1,
+    "detectedOrientation": "up"
+  }
+}

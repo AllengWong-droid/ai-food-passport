@@ -41,6 +41,7 @@
 - Phase 10C: Backend Logging Redaction and Error Hygiene Skeleton
 - Phase 11A: Backend Mock Contract Tests
 - Phase 11B: Backend Production Deployment Readiness Skeleton
+- Phase 12A: Real OCR Provider Contract and Selection Prep
 
 ## Current MVP Alpha
 
@@ -61,9 +62,11 @@ Backend Mock Mode is disabled by default. Provider mode remains informational on
 ## Next
 
 - Backend deployment readiness documentation and .env.example completed
-- Backend mock scenario QA automation completed (86 contract + unit tests)
+- Backend mock scenario QA automation completed (102 contract + unit tests)
 - Provider routing contract tests for mock/china/global/auto metadata completed
 - Provider timeout, rate-limit, budget, and redaction policy enforcement
+- OCR provider contract defined with normalization helpers and 80 unit tests
+- OCR provider selection documented (Qwen OCR/VL recommended first candidate)
 - Real OCR adapter implementation behind disabled backend skeletons
 - Real provider gateway implementation behind backend only
 - Qwen/DeepSeek/OpenAI adapter skeletons on backend

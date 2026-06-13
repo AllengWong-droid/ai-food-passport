@@ -1,0 +1,14 @@
+{
+  "description": "Low-confidence OCR result with warnings.",
+  "provider": "google_vision_skeleton",
+  "mode": "ocr",
+  "text": "T?nk?tsu R?m?n\n??so Katsu",
+  "languageHints": ["ja"],
+  "confidence": 0.35,
+  "warnings": ["LOW_OCR_CONFIDENCE"],
+  "rawMetadata": {
+    "processingTimeMs": 800,
+    "modelVersion": "google-vision-v1",
+    "pageCount": 1
+  }
+}

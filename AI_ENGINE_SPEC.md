@@ -76,6 +76,22 @@ Selecting a disabled skeleton returns `OCR_PROVIDER_NOT_CONFIGURED`. No skeleton
 
 Missing or empty `OCR_PROVIDER` defaults to `mock_ocr`. Invalid values return `OCR_PROVIDER_INVALID` through the standardized backend error envelope.
 
+## OCR Provider Contract
+
+The backend defines a standardized OCR result contract in `backend/src/providers/ocr/ocrProviderContract.js`. Every future real OCR provider adapter must produce results that conform to this shape:
+
+- `provider` — Known provider name
+- `mode` — Provider mode
+- `text` — Extracted text
+- `languageHints` — Language tags array
+- `confidence` — 0–1, clamped
+- `warnings` — Known warning codes only
+- `rawMetadata` — Safe, whitelisted metadata only
+
+Normalization helpers (`normalizeOcrResult`, `normalizeOcrError`) sanitise raw provider output, stripping stack traces, API keys, secrets, image data, and raw HTTP responses before results reach any API response.
+
+Provider selection documentation (`backend/OCR_PROVIDER_SELECTION.md`) evaluates Qwen OCR/VL, OpenAI Vision, and Google Vision as future candidates. Qwen OCR/VL is the recommended first real OCR provider for `china`-mode routing, given CJK accuracy, China data compliance, and unified OCR+analysis pipeline. No real provider is active yet.
+
 ## Analysis Provider Registry
 
 The backend has a provider registry prepared for future analysis providers.

@@ -1,0 +1,16 @@
+{
+  "description": "Edge cases for confidence clamping.",
+  "provider": "mock_ocr",
+  "mode": "mock",
+  "text": "Test text",
+  "languageHints": ["en"],
+  "confidence": 0.5,
+  "warnings": [],
+  "cases": {
+    "aboveOne": { "confidence": 1.5, "expected": 1 },
+    "belowZero": { "confidence": -0.3, "expected": 0 },
+    "exactlyOne": { "confidence": 1.0, "expected": 1 },
+    "exactlyZero": { "confidence": 0.0, "expected": 0 },
+    "nan": { "confidence": "NaN", "expected": 0 }
+  }
+}

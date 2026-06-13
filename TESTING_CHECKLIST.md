@@ -189,6 +189,7 @@ Invoke-RestMethod `
 ## Backend Contract Tests
 
 - [ ] Run `cd backend && npm run test:contract`. Confirm all 102 tests pass.
+- [ ] Run `cd backend && node --test tests/unit/ocrProviderContract.test.js`. Confirm all 80 OCR contract tests pass.
 - [ ] Confirm `/health` includes `nodeEnv`, `port`, `host`, `corsConfigured`, `allowedOriginsCount`, `corsEnforcementReady`, `requestBodyLimitBytes`, `requestBodyLimitReady`, `productionReady`, `deploymentReadinessReady`.
 - [ ] Confirm `corsEnforcementReady` is `true`.
 - [ ] Confirm `requestBodyLimitReady` is `true`.
@@ -276,7 +277,30 @@ Invoke-RestMethod `
 
 - [ ] Review `backend/SECURITY_AND_SECRETS.md`.
 - [ ] Review `REAL_PROVIDER_READINESS_CHECKLIST.md`.
+- [ ] Review `backend/OCR_PROVIDER_SELECTION.md`.
 - [ ] Confirm timeout, retry, budget, daily limit, logging redaction, fallback, and rollback items are documented before real provider work starts.
+
+## Phase 12A: OCR Provider Contract QA
+
+- [ ] Confirm `backend/src/providers/ocr/ocrProviderContract.js` exists and exports `normalizeOcrResult` and `normalizeOcrError`.
+- [ ] Run `cd backend && node --test tests/unit/ocrProviderContract.test.js`. Confirm all 80 tests pass.
+- [ ] Confirm `normalizeOcrResult` strips stack traces, API keys, secrets, image data, base64, and raw provider responses.
+- [ ] Confirm `normalizeOcrError` returns a safe Error with no stack trace, no raw provider internals, and no secrets.
+- [ ] Confirm confidence clamping to [0, 1] through boundary cases (NaN, -0.3, 1.5, "high", null).
+- [ ] Confirm warning codes are filtered to only known `OcrWarningCode` values; duplicates removed.
+- [ ] Confirm language hints filter non-strings and trim whitespace.
+- [ ] Confirm `rawMetadata` whitelist allows only `processingTimeMs`, `modelVersion`, `ocrEngine`, `pageCount`, `detectedOrientation`.
+- [ ] Confirm `normalizeOcrResult` is idempotent (normalizing a normalized result is a no-op).
+- [ ] Confirm contract result shape is stable (7 keys: provider, mode, text, languageHints, confidence, warnings, rawMetadata).
+- [ ] Confirm `stripForbiddenFields` does not mutate the original object.
+- [ ] Confirm `looksLikeSecret` flags `sk-` prefixed strings, JWT-like strings, long base64-like strings, and very long strings (>500 chars).
+- [ ] Confirm OCR provider selection documentation (`backend/OCR_PROVIDER_SELECTION.md`) recommends Qwen OCR/VL as first candidate.
+- [ ] Confirm `npm run test:contract` still passes (102 tests).
+- [ ] Confirm `npm run dev` starts successfully.
+- [ ] Confirm `GET /health` works.
+- [ ] Confirm `POST /api/analyze-menu` with `{}` returns mock dishes.
+- [ ] Confirm no real provider calls, API keys, secrets, or Firebase are added.
+- [ ] Confirm no Flutter files were changed.
 
 ## Known Environment Issues
 

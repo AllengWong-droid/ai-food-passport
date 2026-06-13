@@ -1,0 +1,13 @@
+{
+  "description": "OCR result with empty text (no readable menu text found).",
+  "provider": "openai_vision_skeleton",
+  "mode": "ocr",
+  "text": "",
+  "languageHints": [],
+  "confidence": 0,
+  "warnings": ["OCR_EMPTY_TEXT"],
+  "rawMetadata": {
+    "processingTimeMs": 500,
+    "modelVersion": "gpt-4-vision"
+  }
+}

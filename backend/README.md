@@ -31,6 +31,10 @@ Flutter uses local `MockAiRepository` by default. Developer Backend Mock Mode ca
 - Logging redaction utility skeleton (`src/utils/redactForLogs.js`).
 - Safe error response helper skeleton (`src/utils/safeErrorResponse.js`).
 - Runtime configuration (`src/config/runtimeConfig.js`) for NODE_ENV, PORT, HOST, ALLOWED_ORIGINS, and PUBLIC_BACKEND_URL.
+- OCR provider contract and normalization helpers (`src/providers/ocr/ocrProviderContract.js`).
+- OCR provider contract unit tests (`tests/unit/ocrProviderContract.test.js`, 80 tests).
+- OCR test fixture data (`tests/fixtures/ocr/`).
+- OCR provider selection documentation (`backend/OCR_PROVIDER_SELECTION.md`).
 - Deployment readiness documentation (`backend/DEPLOYMENT_READINESS.md`).
 - Environment variable exemplar (`backend/.env.example`) with placeholder-only values.
 
@@ -108,6 +112,29 @@ Safety behavior:
 - Unknown values make `/health` return `configValid: false`.
 - Unknown values make `POST /api/analyze-menu` return `OCR_PROVIDER_INVALID`.
 - Skeleton provider values return `OCR_PROVIDER_NOT_CONFIGURED`.
+
+## OCR Provider Contract
+
+File: `src/providers/ocr/ocrProviderContract.js`
+
+Every OCR provider (mock or future real) must produce results that conform to the standardized contract shape. The contract defines:
+
+- `provider` — Known `OcrProviderName` value
+- `mode` — Provider mode (e.g. `mock`, `ocr`)
+- `text` — Extracted menu text (string)
+- `languageHints` — BCP-47 / ISO 639 language tags (string array)
+- `confidence` — Clamped to [0, 1]
+- `warnings` — Known `OcrWarningCode` values only
+- `rawMetadata` — Safe, redacted metadata only (nullable)
+
+### Normalization Helpers
+
+- `normalizeOcrResult(rawProviderResult)` — Sanitises any raw provider output into the contract shape. Strips forbidden fields (stack traces, API keys, secrets, image/base64 data, raw HTTP responses).
+- `normalizeOcrError(error)` — Maps any caught error to a safe Error carrying only `code`, `message`, and `provider`. Stack traces, raw provider internals, and secrets are unconditionally removed.
+
+These helpers are tested with 80 unit tests covering success, low confidence, empty text, forbidden-field leakage, warning preservation, language hints, confidence clamping, malformed input, and error mapping.
+
+Future real OCR provider adapters must call `normalizeOcrResult()` before returning any result, and `normalizeOcrError()` inside catch blocks. This guarantees the analyzeMenu route and downstream analysis code never receive raw, untrusted provider output.
 
 ## Analysis Provider Configuration
 
@@ -909,6 +936,7 @@ The backend enforces `REQUEST_BODY_LIMIT` (default: 1 MB / 1048576 bytes). Overs
 More detail:
 
 - `backend/SECURITY_AND_SECRETS.md`
+- `backend/OCR_PROVIDER_SELECTION.md`
 - `../REAL_PROVIDER_READINESS_CHECKLIST.md`
 
 ## Future Steps

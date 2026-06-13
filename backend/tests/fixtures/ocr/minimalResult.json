@@ -1,0 +1,9 @@
+{
+  "description": "Minimal valid result with only required fields.",
+  "provider": "mock_ocr",
+  "mode": "mock",
+  "text": "Fish and Chips $14.90",
+  "languageHints": ["en"],
+  "confidence": 0.98,
+  "warnings": []
+}

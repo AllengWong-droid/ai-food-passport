@@ -1,0 +1,9 @@
+{
+  "description": "Malformed input with missing or wrong-type fields.",
+  "provider": null,
+  "mode": 12345,
+  "text": null,
+  "languageHints": "not-an-array",
+  "confidence": "high",
+  "warnings": "not-an-array"
+}

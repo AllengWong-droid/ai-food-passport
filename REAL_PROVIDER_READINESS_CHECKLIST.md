@@ -2,7 +2,17 @@
 
 Use this checklist before enabling any real OCR, Qwen, DeepSeek, OpenAI, Google Vision, exchange-rate, or other provider integration.
 
-**Prerequisite**: The backend deployment readiness skeleton must be completed first. See `backend/DEPLOYMENT_READINESS.md` for the full pre-deployment checklist.
+**Prerequisite**: The backend deployment readiness skeleton must be completed first. See `backend/DEPLOYMENT_READINESS.md` for the full pre-deployment checklist. The OCR provider contract must be defined and tested. See `backend/src/providers/ocr/ocrProviderContract.js` and `backend/OCR_PROVIDER_SELECTION.md`.
+
+## OCR Provider Contract
+
+- [ ] `ocrProviderContract.js` defines the standardized OCR result shape.
+- [ ] `normalizeOcrResult()` sanitises raw provider output before it reaches any API response.
+- [ ] `normalizeOcrError()` maps errors to safe codes without leaking stack traces or secrets.
+- [ ] 80 unit tests pass for contract normalization, leakage prevention, and edge cases.
+- [ ] Provider selection documented (`backend/OCR_PROVIDER_SELECTION.md`) with tradeoff analysis.
+- [ ] First real OCR provider candidate identified (Qwen OCR/VL recommended for china mode).
+- [ ] No real provider calls, API keys, or secrets have been added.
 
 ## Secret Storage
 

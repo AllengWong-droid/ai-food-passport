@@ -306,3 +306,16 @@ Phase 11C implements CORS enforcement and request body limit enforcement:
 - `BackendEndpointConfig.validateAndResolve` now also rejects URLs with empty host (e.g., `http://`) — stricter edge-case safety.
 - Run: `flutter test test/shared/config/` → 41/41 tests passing.
 - Backend files unchanged. No secrets or API keys added.
+
+## Phase 12A: Real OCR Provider Contract and Selection Prep
+
+- `backend/src/providers/ocr/ocrProviderContract.js` — Standardised OCR result contract with normalization helpers.
+  - `normalizeOcrResult(rawProviderResult)` — sanitises raw provider output into the contract shape. Strips stack traces, API keys, secrets, image/base64 data, raw HTTP responses.
+  - `normalizeOcrError(error)` — maps any caught error to a safe Error with only `code`, `message`, and `provider`. Stack traces unconditionally removed.
+  - Contract shape: `provider`, `mode`, `text`, `languageHints`, `confidence` (clamped [0,1]), `warnings` (known codes only), `rawMetadata` (whitelisted fields only).
+- `backend/tests/fixtures/ocr/` — 9 fixture files: valid success, low confidence, empty text, secrets leakage, minimal result, malformed input, confidence edge cases, OCR failure error, unknown error.
+- `backend/tests/unit/ocrProviderContract.test.js` — 80 unit tests covering: success normalization, low confidence, empty text, forbidden field leakage (stack/secret/image/base64), warning preservation/dedup, language hints filtering, confidence clamping, malformed input defaults, error mapping (OCR_FAILED, OCR_PROVIDER_NOT_CONFIGURED), provider mapping, idempotency, contract shape stability.
+- `backend/OCR_PROVIDER_SELECTION.md` — Provider selection evaluation: Qwen OCR/VL (recommended first candidate for china mode), OpenAI Vision, Google Vision. Covers cost, latency, region availability, language support, privacy, and deployment complexity tradeoffs.
+- `mockOcrProvider.js` updated to include `rawMetadata: null` for explicit contract conformance.
+- Flutter files unchanged. No real provider calls, API keys, or secrets added.
+- All existing contract tests still pass. New OCR unit tests: 80/80 passing.

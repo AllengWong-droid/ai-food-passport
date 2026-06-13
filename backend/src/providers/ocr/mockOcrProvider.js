@@ -42,7 +42,8 @@ function buildOcrResult({ text, languageHints, confidence, warnings }) {
     text,
     languageHints,
     confidence,
-    warnings
+    warnings,
+    rawMetadata: null
   };
 }
 

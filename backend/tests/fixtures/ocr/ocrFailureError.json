@@ -1,0 +1,12 @@
+{
+  "description": "Simulated OCR provider failure error.",
+  "error": {
+    "code": "OCR_FAILED",
+    "message": "Mock OCR failure scenario requested.",
+    "provider": "mock_ocr",
+    "stack": "Error: Mock OCR failure scenario requested.\n    at extractMenuText (/app/providers/ocr/mockOcrProvider.js:14:19)",
+    "providerRawResponse": { "status": 500, "body": "Internal Server Error" },
+    "apiKey": "sk-secret-key",
+    "imagePayload": "data:image/png;base64,..."
+  }
+}
