@@ -6,6 +6,7 @@ import '../../domain/models/models.dart';
 import '../../domain/repositories/repositories.dart';
 import 'backend_api_exception.dart';
 import 'backend_ai_config.dart';
+import 'backend_routing_metadata.dart';
 
 class BackendMockMenuAnalysisRepository implements AiRepository {
   BackendMockMenuAnalysisRepository({
@@ -13,12 +14,14 @@ class BackendMockMenuAnalysisRepository implements AiRepository {
     this.baseUrl = BackendAiConfig.baseUrl,
     this.enabled = BackendAiConfig.mockEnabled,
     this.debugScenario = 'normal',
+    this.onRoutingMetadata,
   }) : _client = client ?? http.Client();
 
   final http.Client _client;
   final String baseUrl;
   final bool enabled;
   final String debugScenario;
+  final void Function(BackendRoutingMetadata? metadata)? onRoutingMetadata;
 
   static const providerSource = 'backend_mock_adapter';
 
@@ -64,6 +67,7 @@ class BackendMockMenuAnalysisRepository implements AiRepository {
       throw BackendApiException(_parseBackendError(decodedBody));
     }
 
+    onRoutingMetadata?.call(_parseRoutingMetadata(decodedBody));
     _throwIfAnalysisEmptyResult(decodedBody);
     return _parseDishes(decodedBody);
   }
@@ -120,11 +124,13 @@ class BackendMockMenuAnalysisRepository implements AiRepository {
 
   List<DishAnalysisModel> _parseDishes(dynamic decodedBody) {
     if (decodedBody is! Map<String, dynamic>) {
-      throw const FormatException('Backend mock response must be a JSON object.');
+      throw const FormatException(
+          'Backend mock response must be a JSON object.');
     }
 
     final data = decodedBody['data'];
-    final dishes = data is Map<String, dynamic> ? data['dishes'] : decodedBody['dishes'];
+    final dishes =
+        data is Map<String, dynamic> ? data['dishes'] : decodedBody['dishes'];
     if (dishes is! List) {
       throw const FormatException('Backend mock response must include dishes.');
     }
@@ -150,6 +156,18 @@ class BackendMockMenuAnalysisRepository implements AiRepository {
       code: BackendErrorCode.unknown,
       message: 'Backend mock request failed.',
     );
+  }
+
+  BackendRoutingMetadata? _parseRoutingMetadata(
+      Map<String, dynamic> decodedBody) {
+    final data = decodedBody['data'];
+    final routing =
+        data is Map<String, dynamic> ? data['routing'] : decodedBody['routing'];
+    if (routing is! Map<String, dynamic>) {
+      return null;
+    }
+
+    return BackendRoutingMetadata.fromJson(routing);
   }
 
   void _throwIfAnalysisEmptyResult(Map<String, dynamic> decodedBody) {

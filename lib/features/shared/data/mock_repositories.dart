@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../domain/models/models.dart';
 import '../domain/repositories/repositories.dart';
+import 'ai/backend_routing_metadata.dart';
 import 'mock_data.dart';
 import 'traveler_settings_controller.dart';
 
@@ -45,12 +46,18 @@ final latestBackendErrorCodeProvider = StateProvider<String?>((ref) {
   return null;
 });
 
+final latestBackendRoutingMetadataProvider =
+    StateProvider<BackendRoutingMetadata?>((ref) {
+  return null;
+});
+
 final priceRepositoryProvider = Provider<PriceRepository>((ref) {
   return MockPriceRepository();
 });
 
 final travelerSettingsProvider =
-    StateNotifierProvider<TravelerSettingsController, TravelerSettingsModel>((ref) {
+    StateNotifierProvider<TravelerSettingsController, TravelerSettingsModel>(
+        (ref) {
   return TravelerSettingsController();
 });
 
@@ -83,7 +90,8 @@ final latestOcrResultProvider = StateProvider<OcrResult?>((ref) {
   return null;
 });
 
-final latestAiAnalysisRequestProvider = StateProvider<AiAnalysisRequest?>((ref) {
+final latestAiAnalysisRequestProvider =
+    StateProvider<AiAnalysisRequest?>((ref) {
   return null;
 });
 
@@ -91,7 +99,8 @@ final dishAnalysesProvider = StateProvider<List<DishAnalysisModel>>((ref) {
   return ref.watch(aiRepositoryProvider).loadLatestResults();
 });
 
-final dishByIdProvider = Provider.family<DishAnalysisModel, String>((ref, dishId) {
+final dishByIdProvider =
+    Provider.family<DishAnalysisModel, String>((ref, dishId) {
   final dishes = ref.watch(dishAnalysesProvider);
   final aiRepository = ref.watch(aiRepositoryProvider);
 
@@ -134,12 +143,10 @@ class MockScanRepository implements ScanRepository {
   @override
   ScanModel createScanFromImage(String imagePath) {
     final normalizedPath = imagePath.toLowerCase();
-    final isChineseMenu =
-        normalizedPath.contains('china') ||
+    final isChineseMenu = normalizedPath.contains('china') ||
         normalizedPath.contains('chinese') ||
         normalizedPath.contains('zh');
-    final isEnglishMenu =
-        normalizedPath.contains('english') ||
+    final isEnglishMenu = normalizedPath.contains('english') ||
         normalizedPath.contains('harbor') ||
         normalizedPath.contains('en');
 
@@ -228,7 +235,8 @@ class MockAiRepository implements AiRepository {
         DishAnalysisModel(
           dishName: 'Beef Noodle Soup',
           localName: 'Niu Rou Mian',
-          description: 'Braised beef noodle soup with rich broth and tender wheat noodles.',
+          description:
+              'Braised beef noodle soup with rich broth and tender wheat noodles.',
           tasteScore: tasteSummary.toLowerCase().contains('savory') ? 94 : 86,
           safetyScore: allergySummary.toLowerCase().contains('wheat') ? 74 : 88,
           valueScore: 93,
@@ -250,7 +258,12 @@ class MockAiRepository implements AiRepository {
           ),
           recommendationReason:
               'Mock AI matched the savory broth profile against $tasteSummary and flagged wheat noodles for $allergySummary.',
-          ingredients: ['Beef', 'Wheat noodles', 'Soy-braised broth', 'Scallion'],
+          ingredients: [
+            'Beef',
+            'Wheat noodles',
+            'Soy-braised broth',
+            'Scallion'
+          ],
           allergens: ['Wheat', 'Soy'],
           dietaryFlags: ['Beef', dietarySummary],
           hiddenIngredients: ['Broth may include soy sauce and spices'],
@@ -328,7 +341,8 @@ class MockAiRepository implements AiRepository {
           dishName: 'Peanut Sesame Slaw',
           description: 'Crisp vegetable slaw with peanut sesame dressing.',
           tasteScore: 76,
-          safetyScore: allergySummary.toLowerCase().contains('peanut') ? 54 : 82,
+          safetyScore:
+              allergySummary.toLowerCase().contains('peanut') ? 54 : 82,
           valueScore: 86,
           foodConfidenceScore: 88,
           priceIntelligence: PriceIntelligenceModel(
@@ -361,8 +375,15 @@ class MockAiRepository implements AiRepository {
       DishAnalysisModel(
         dishName: 'Tonkotsu Ramen',
         localName: 'Pork Bone Ramen',
-        description: 'Rich pork broth with noodles, egg, scallion, and sliced chashu.',
-        ingredients: ['Pork broth', 'Wheat noodles', 'Egg', 'Scallion', 'Chashu'],
+        description:
+            'Rich pork broth with noodles, egg, scallion, and sliced chashu.',
+        ingredients: [
+          'Pork broth',
+          'Wheat noodles',
+          'Egg',
+          'Scallion',
+          'Chashu'
+        ],
         allergens: ['Wheat', 'Egg'],
         tasteScore: tasteSummary.toLowerCase().contains('umami') ? 96 : 88,
         safetyScore: allergySummary.toLowerCase().contains('egg') ? 74 : 86,
@@ -417,7 +438,11 @@ class MockAiRepository implements AiRepository {
         ),
         foodConfidenceScore: 80,
         dietaryFlags: ['Pork'],
-        hiddenIngredients: ['Fryer cross-contact', 'Wheat in panko', 'Egg wash'],
+        hiddenIngredients: [
+          'Fryer cross-contact',
+          'Wheat in panko',
+          'Egg wash'
+        ],
         imageSeed: 'skewer',
       ),
     ];
@@ -428,7 +453,8 @@ class MockAiRepository implements AiRepository {
     required num localPrice,
     required String localCurrency,
   }) {
-    final exchangeRate = _exchangeRateFor(homeCurrency, localCurrency: localCurrency);
+    final exchangeRate =
+        _exchangeRateFor(homeCurrency, localCurrency: localCurrency);
     final homePrice = localPrice * exchangeRate;
     return num.parse(homePrice.toStringAsFixed(2));
   }
@@ -484,7 +510,8 @@ class MockPriceRepository implements PriceRepository {
     required String homeCurrency,
   }) {
     const exchangeRate = 0.00675;
-    final homePrice = localCurrency == homeCurrency ? localPrice : localPrice * exchangeRate;
+    final homePrice =
+        localCurrency == homeCurrency ? localPrice : localPrice * exchangeRate;
     final assessment = switch (homePrice) {
       < 8 => PriceAssessment.cheap,
       > 15 => PriceAssessment.expensive,

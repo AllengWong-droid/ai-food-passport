@@ -51,7 +51,8 @@ class _ScanScreenState extends ConsumerState<ScanScreen> {
               builder: (context, constraints) {
                 final height = constraints.maxHeight;
                 final frameTop = (height * 0.24).clamp(145.0, 205.0).toDouble();
-                final frameHeight = (height * 0.38).clamp(260.0, 380.0).toDouble();
+                final frameHeight =
+                    (height * 0.38).clamp(260.0, 380.0).toDouble();
 
                 return Stack(
                   fit: StackFit.expand,
@@ -75,7 +76,8 @@ class _ScanScreenState extends ConsumerState<ScanScreen> {
                             child: Center(
                               child: SizedBox(
                                 width: 250,
-                                child: ScanLanguageChip(label: 'AUTO-DETECT JAPANESE'),
+                                child: ScanLanguageChip(
+                                    label: 'AUTO-DETECT JAPANESE'),
                               ),
                             ),
                           ),
@@ -94,7 +96,9 @@ class _ScanScreenState extends ConsumerState<ScanScreen> {
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 Text(
-                                  _hasSelectedImage ? 'IMAGE READY' : 'FRAME THE MENU',
+                                  _hasSelectedImage
+                                      ? 'IMAGE READY'
+                                      : 'FRAME THE MENU',
                                   style: const TextStyle(
                                     color: Colors.white,
                                     fontSize: 18,
@@ -102,9 +106,11 @@ class _ScanScreenState extends ConsumerState<ScanScreen> {
                                     letterSpacing: 1.2,
                                   ),
                                 ),
-                                if (_hasSelectedImage && _selectedImagePath != null) ...[
+                                if (_hasSelectedImage &&
+                                    _selectedImagePath != null) ...[
                                   const SizedBox(height: 10),
-                                  SelectedImageLabel(imagePath: _selectedImagePath!),
+                                  SelectedImageLabel(
+                                      imagePath: _selectedImagePath!),
                                 ],
                                 const SizedBox(height: 28),
                                 Row(
@@ -223,6 +229,10 @@ class _ScanScreenState extends ConsumerState<ScanScreen> {
         ? BackendMockMenuAnalysisRepository(
             enabled: true,
             debugScenario: backendDebugScenario,
+            onRoutingMetadata: (metadata) {
+              ref.read(latestBackendRoutingMetadataProvider.notifier).state =
+                  metadata;
+            },
           )
         : ref.read(aiRepositoryProvider);
     final tastePassport = ref.read(tastePassportProvider);
@@ -230,6 +240,7 @@ class _ScanScreenState extends ConsumerState<ScanScreen> {
     ref.read(latestAiProviderLabelProvider.notifier).state =
         useBackendMock ? 'backend_mock' : 'mock_ai';
     ref.read(latestBackendErrorCodeProvider.notifier).state = null;
+    ref.read(latestBackendRoutingMetadataProvider.notifier).state = null;
 
     try {
       await _showProcessingStage('Reading menu image');
@@ -246,7 +257,8 @@ class _ScanScreenState extends ConsumerState<ScanScreen> {
       }
       ref.read(latestOcrResultProvider.notifier).state = ocrResult;
 
-      await _showProcessingStage('Checking taste and allergy fit', pause: Duration.zero);
+      await _showProcessingStage('Checking taste and allergy fit',
+          pause: Duration.zero);
       final analysisRequest = AiAnalysisRequest(
         ocrResult: ocrResult,
         tastePassport: tastePassport,
@@ -259,17 +271,21 @@ class _ScanScreenState extends ConsumerState<ScanScreen> {
         outputLanguage: travelerSettings.outputLanguage,
         providerMode: travelerSettings.providerMode,
       );
-      ref.read(latestAiAnalysisRequestProvider.notifier).state = analysisRequest;
+      ref.read(latestAiAnalysisRequestProvider.notifier).state =
+          analysisRequest;
       try {
         ref.read(dishAnalysesProvider.notifier).state =
             await aiRepository.analyzeMenu(analysisRequest);
       } on BackendApiException catch (error) {
-        ref.read(latestBackendErrorCodeProvider.notifier).state = error.code.name;
+        ref.read(latestBackendErrorCodeProvider.notifier).state =
+            error.code.name;
         _showRecoveryState(_ScanRecoveryKind.fromBackendError(error.code));
         return;
       } catch (_) {
         _showRecoveryState(
-          useBackendMock ? _ScanRecoveryKind.providerUnavailable : _ScanRecoveryKind.aiAnalysisFailed,
+          useBackendMock
+              ? _ScanRecoveryKind.providerUnavailable
+              : _ScanRecoveryKind.aiAnalysisFailed,
         );
         return;
       }

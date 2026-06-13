@@ -25,6 +25,8 @@ class ResultsScreen extends ConsumerWidget {
     final backendMockEnabled = ref.watch(backendMockModeProvider);
     final backendDebugScenario = ref.watch(backendDebugScenarioProvider);
     final backendErrorCode = ref.watch(latestBackendErrorCodeProvider);
+    final backendRoutingMetadata =
+        ref.watch(latestBackendRoutingMetadataProvider);
     final copy = LocalizedResultCopy(aiRequest?.outputLanguage ?? 'English');
 
     return Scaffold(
@@ -43,7 +45,8 @@ class ResultsScreen extends ConsumerWidget {
                       color: Color(0xFFEDEBE8),
                       shape: BoxShape.circle,
                     ),
-                    child: const Icon(Icons.chevron_left, color: AppColors.ink, size: 30),
+                    child: const Icon(Icons.chevron_left,
+                        color: AppColors.ink, size: 30),
                   ),
                 ),
                 const Expanded(
@@ -98,7 +101,8 @@ class ResultsScreen extends ConsumerWidget {
                   ocrLanguage: aiRequest.ocrResult.detectedLanguage,
                   tastePreferences: aiRequest.tastePassport.tastePreferences,
                   allergies: aiRequest.tastePassport.allergies,
-                  dietaryPreferences: aiRequest.tastePassport.dietaryPreferences,
+                  dietaryPreferences:
+                      aiRequest.tastePassport.dietaryPreferences,
                   homeCountry: aiRequest.userHomeCountry,
                   homeCurrency: aiRequest.userHomeCurrency,
                   outputLanguage: aiRequest.outputLanguage,
@@ -107,6 +111,20 @@ class ResultsScreen extends ConsumerWidget {
                   backendMockEnabled: backendMockEnabled,
                   backendDebugScenario: backendDebugScenario,
                   backendErrorCode: backendErrorCode,
+                  requestedProviderMode:
+                      backendRoutingMetadata?.requestedProviderMode ??
+                          aiRequest.providerMode.name,
+                  resolvedProviderMode:
+                      backendRoutingMetadata?.resolvedProviderMode ??
+                          'local_mock',
+                  routingFallbackUsed:
+                      backendRoutingMetadata?.fallbackUsed ?? false,
+                  routingReason: backendRoutingMetadata?.routingReason ??
+                      'Local mock flow is active.',
+                  realProvidersEnabled:
+                      backendRoutingMetadata?.realProvidersEnabled ?? false,
+                  providerRoutingReady:
+                      backendRoutingMetadata?.providerRoutingReady ?? false,
                   dishCount: dishes.length,
                 ),
               const SizedBox(height: 18),
@@ -149,7 +167,8 @@ class _TravelerContextSummary extends StatelessWidget {
               color: AppColors.accent,
               shape: BoxShape.circle,
             ),
-            child: const Icon(Icons.payments_outlined, color: Colors.white, size: 20),
+            child: const Icon(Icons.payments_outlined,
+                color: Colors.white, size: 20),
           ),
           const SizedBox(width: 13),
           Expanded(
@@ -202,6 +221,12 @@ class _AiDebugSection extends StatelessWidget {
     required this.backendMockEnabled,
     required this.backendDebugScenario,
     required this.backendErrorCode,
+    required this.requestedProviderMode,
+    required this.resolvedProviderMode,
+    required this.routingFallbackUsed,
+    required this.routingReason,
+    required this.realProvidersEnabled,
+    required this.providerRoutingReady,
     required this.dishCount,
   });
 
@@ -217,6 +242,12 @@ class _AiDebugSection extends StatelessWidget {
   final bool backendMockEnabled;
   final String backendDebugScenario;
   final String? backendErrorCode;
+  final String requestedProviderMode;
+  final String resolvedProviderMode;
+  final bool routingFallbackUsed;
+  final String routingReason;
+  final bool realProvidersEnabled;
+  final bool providerRoutingReady;
   final int dishCount;
 
   @override
@@ -228,22 +259,46 @@ class _AiDebugSection extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _DebugLine(label: 'OCR language', value: ocrLanguage),
-          _DebugLine(label: 'Taste preferences', value: _joinValues(tastePreferences)),
+          _DebugLine(
+              label: 'Taste preferences', value: _joinValues(tastePreferences)),
           _DebugLine(label: 'Allergies', value: _joinValues(allergies)),
-          _DebugLine(label: 'Dietary preferences', value: _joinValues(dietaryPreferences)),
+          _DebugLine(
+              label: 'Dietary preferences',
+              value: _joinValues(dietaryPreferences)),
           _DebugLine(label: 'Home country', value: homeCountry),
           _DebugLine(label: 'Home currency', value: homeCurrency),
           _DebugLine(label: 'Output language', value: outputLanguage),
           _DebugLine(label: 'Active provider', value: activeProvider),
-          const _DebugLine(label: 'Backend mock adapter available', value: 'true'),
+          const _DebugLine(
+              label: 'Backend mock adapter available', value: 'true'),
           _DebugLine(
             label: 'Backend mock enabled',
             value: backendMockEnabled ? 'true' : 'false',
           ),
-          _DebugLine(label: 'Backend debug scenario', value: backendDebugScenario),
-          _DebugLine(label: 'Backend error code', value: backendErrorCode ?? 'None'),
-          const _DebugLine(label: 'Backend base URL', value: BackendAiConfig.baseUrl),
+          _DebugLine(
+              label: 'Backend debug scenario', value: backendDebugScenario),
+          _DebugLine(
+              label: 'Backend error code', value: backendErrorCode ?? 'None'),
+          const _DebugLine(
+              label: 'Backend base URL', value: BackendAiConfig.baseUrl),
           _DebugLine(label: 'Provider mode', value: providerMode),
+          _DebugLine(
+              label: 'Requested provider mode', value: requestedProviderMode),
+          _DebugLine(
+              label: 'Resolved provider mode', value: resolvedProviderMode),
+          _DebugLine(
+            label: 'Routing fallback used',
+            value: routingFallbackUsed ? 'true' : 'false',
+          ),
+          _DebugLine(
+            label: 'Real providers enabled',
+            value: realProvidersEnabled ? 'true' : 'false',
+          ),
+          _DebugLine(
+            label: 'Provider routing ready',
+            value: providerRoutingReady ? 'true' : 'false',
+          ),
+          _DebugLine(label: 'Routing reason', value: routingReason),
           const _DebugLine(label: 'Backend routing planned', value: 'true'),
           const _DebugLine(label: 'OCR-first pipeline planned', value: 'true'),
           const _DebugLine(label: 'Qwen enabled', value: 'false'),
