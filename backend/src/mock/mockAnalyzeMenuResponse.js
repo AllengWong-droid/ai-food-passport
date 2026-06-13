@@ -4,6 +4,10 @@ const { analyzeMenuText } = require('../providers/analysis/mockMenuAnalysisProvi
 async function buildMockAnalyzeMenuResponse(requestBody = {}, latencyMs = 0) {
   const ocr = await extractMenuText(requestBody);
   const analysis = await analyzeMenuText({ requestBody, ocrResult: ocr });
+  const warnings = [
+    ...(ocr.warnings || []),
+    ...(analysis.warnings || [])
+  ];
 
   return {
     routing: {
@@ -11,8 +15,10 @@ async function buildMockAnalyzeMenuResponse(requestBody = {}, latencyMs = 0) {
       ocrProvider: ocr.provider,
       ocrMode: ocr.mode,
       ocrConfidence: ocr.confidence,
+      ocrWarnings: ocr.warnings || [],
       analysisProvider: analysis.provider,
       analysisMode: analysis.mode,
+      warnings,
       fallbackUsed: false,
       latencyMs
     },

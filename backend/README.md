@@ -15,14 +15,9 @@ Flutter uses local `MockAiRepository` by default. Developer Backend Mock Mode ca
   - mock OCR provider
   - mock menu analysis provider
   - standardized API envelope
+- Mock OCR debug scenarios for success, low confidence, empty text, and OCR failure.
 - Deterministic mock response shaped like the future backend response.
 - Standardized `ok`, `data`, and `error` API envelope.
-- Mock routing metadata:
-  - `mode: mock`
-  - `ocrProvider: mock_ocr`
-  - `analysisProvider: mock_ai`
-  - `fallbackUsed: false`
-  - `latencyMs`
 - Mock dish results with `priceIntelligence`.
 - CORS headers for local Flutter Web development origins.
 
@@ -37,7 +32,7 @@ Flutter uses local `MockAiRepository` by default. Developer Backend Mock Mode ca
 - No Firebase.
 - No production authentication.
 - No provider health checks.
-- No fallback routing.
+- No production fallback routing.
 - No API keys or secrets.
 
 ## Install Dependencies
@@ -48,8 +43,6 @@ No runtime dependencies are required beyond Node.js 18 or newer.
 cd backend
 npm install
 ```
-
-`npm install` is optional today because the mock server has no package dependencies, but it is safe to run and prepares the folder for future backend packages.
 
 ## Run Local Server
 
@@ -112,33 +105,7 @@ Invoke-RestMethod `
   -Body "{}"
 ```
 
-## Example Curl Request
-
-```bash
-curl -X POST http://localhost:8787/api/analyze-menu \
-  -H "Content-Type: application/json" \
-  -d '{
-    "ocrResult": {
-      "rawText": "Tonkotsu ramen 980 JPY",
-      "detectedLanguage": "Japanese"
-    },
-    "tastePassport": {
-      "travelStyle": "standard",
-      "dietaryPreferences": ["Mild spice"],
-      "allergies": ["Egg"],
-      "tastePreferences": ["Umami"]
-    },
-    "scan": {
-      "restaurantCountry": "Japan",
-      "restaurantCity": "Tokyo",
-      "localCurrency": "JPY"
-    },
-    "userHomeCountry": "Germany",
-    "userHomeCurrency": "EUR"
-  }'
-```
-
-## Example Response Shape
+## Example Success Response Shape
 
 ```json
 {
@@ -149,15 +116,17 @@ curl -X POST http://localhost:8787/api/analyze-menu \
       "ocrProvider": "mock_ocr",
       "ocrMode": "mock",
       "ocrConfidence": 0.98,
+      "ocrWarnings": [],
       "analysisProvider": "mock_ai",
       "analysisMode": "mock",
+      "warnings": [],
       "fallbackUsed": false,
       "latencyMs": 2
     },
     "ocr": {
       "provider": "mock_ocr",
       "mode": "mock",
-      "text": "Tonkotsu Ramen ¥980\nMiso Katsu Skewers ¥800",
+      "text": "Tonkotsu Ramen JPY 980\nMiso Katsu Skewers JPY 800",
       "languageHints": ["ja"],
       "confidence": 0.98,
       "warnings": []
@@ -171,7 +140,7 @@ curl -X POST http://localhost:8787/api/analyze-menu \
         "tasteScore": 96,
         "safetyScore": 84,
         "valueScore": 86,
-        "recommendationReason": "Mock backend selected this because it fits a savory, umami-forward traveler profile.",
+        "recommendationReason": "Mock backend selected this because OCR-first text matched a savory, umami-forward menu item.",
         "priceIntelligence": {
           "localPrice": 980,
           "localCurrency": "JPY",
@@ -189,8 +158,10 @@ curl -X POST http://localhost:8787/api/analyze-menu \
     "ocrProvider": "mock_ocr",
     "ocrMode": "mock",
     "ocrConfidence": 0.98,
+    "ocrWarnings": [],
     "analysisProvider": "mock_ai",
     "analysisMode": "mock",
+    "warnings": [],
     "fallbackUsed": false,
     "latencyMs": 2
   },
@@ -202,7 +173,7 @@ curl -X POST http://localhost:8787/api/analyze-menu \
 }
 ```
 
-The top-level `routing` and `dishes` fields mirror `data.routing` and `data.dishes` temporarily for Flutter adapter backwards compatibility. The shortened top-level dish above represents the same dish object from `data.dishes`.
+The top-level `routing` and `dishes` fields mirror `data.routing` and `data.dishes` temporarily for Flutter adapter backwards compatibility.
 
 ## OCR-First Provider Skeleton
 
@@ -223,6 +194,104 @@ Current provider files:
 - `src/providers/analysis/analysisProviderTypes.js`
 
 The OCR provider returns deterministic local text and metadata. It does not read real images or call any external OCR service. The analysis provider uses that mock OCR result to create deterministic dish recommendations and price intelligence.
+
+## Mock OCR Debug Scenarios
+
+`POST /api/analyze-menu` accepts an optional `debugScenario` field for local testing:
+
+- `ocr_success`: default successful mock OCR flow.
+- `ocr_low_confidence`: returns OCR text with confidence `0.42`, keeps `ok: true`, and includes `LOW_OCR_CONFIDENCE`.
+- `ocr_empty_text`: returns a clean `OCR_EMPTY_TEXT` error envelope.
+- `ocr_failure`: simulates an OCR provider failure and returns a clean `OCR_FAILED` error envelope.
+
+Default success:
+
+```powershell
+Invoke-RestMethod `
+  -Method Post `
+  -Uri "http://127.0.0.1:8787/api/analyze-menu" `
+  -ContentType "application/json" `
+  -Body "{}"
+```
+
+Low confidence:
+
+```powershell
+Invoke-RestMethod `
+  -Method Post `
+  -Uri "http://127.0.0.1:8787/api/analyze-menu" `
+  -ContentType "application/json" `
+  -Body '{"debugScenario":"ocr_low_confidence"}'
+```
+
+Empty OCR text:
+
+```powershell
+Invoke-RestMethod `
+  -Method Post `
+  -Uri "http://127.0.0.1:8787/api/analyze-menu" `
+  -ContentType "application/json" `
+  -Body '{"debugScenario":"ocr_empty_text"}'
+```
+
+OCR failure:
+
+```powershell
+Invoke-RestMethod `
+  -Method Post `
+  -Uri "http://127.0.0.1:8787/api/analyze-menu" `
+  -ContentType "application/json" `
+  -Body '{"debugScenario":"ocr_failure"}'
+```
+
+Low-confidence success shape:
+
+```json
+{
+  "ok": true,
+  "data": {
+    "routing": {
+      "ocrConfidence": 0.42,
+      "ocrWarnings": ["LOW_OCR_CONFIDENCE"],
+      "warnings": ["LOW_OCR_CONFIDENCE"]
+    },
+    "ocr": {
+      "confidence": 0.42,
+      "warnings": ["LOW_OCR_CONFIDENCE"]
+    },
+    "dishes": []
+  },
+  "error": null
+}
+```
+
+Empty text response shape:
+
+```json
+{
+  "ok": false,
+  "data": null,
+  "error": {
+    "code": "OCR_EMPTY_TEXT",
+    "message": "Could not find readable menu text.",
+    "details": null
+  }
+}
+```
+
+OCR failure response shape:
+
+```json
+{
+  "ok": false,
+  "data": null,
+  "error": {
+    "code": "OCR_FAILED",
+    "message": "Could not read the menu image.",
+    "details": null
+  }
+}
+```
 
 ## Error Response Shape
 

@@ -21,18 +21,32 @@ async function handleAnalyzeMenu(request, response, body, startedAt) {
 
   try {
     const ocr = await extractMenuText(parsedBody.value);
+    if (!ocr.text || !ocr.text.trim()) {
+      sendJson(request, response, 422, errorPayload(
+        'OCR_EMPTY_TEXT',
+        'Could not find readable menu text.'
+      ));
+      return;
+    }
+
     const analysis = await analyzeMenuText({
       requestBody: parsedBody.value,
       ocrResult: ocr
     });
     const latencyMs = Date.now() - startedAt;
+    const warnings = [
+      ...(ocr.warnings || []),
+      ...(analysis.warnings || [])
+    ];
     const routing = {
       mode: 'mock',
       ocrProvider: ocr.provider,
       ocrMode: ocr.mode,
       ocrConfidence: ocr.confidence,
+      ocrWarnings: ocr.warnings || [],
       analysisProvider: analysis.provider,
       analysisMode: analysis.mode,
+      warnings,
       fallbackUsed: false,
       latencyMs
     };
@@ -50,7 +64,15 @@ async function handleAnalyzeMenu(request, response, body, startedAt) {
       routing: data.routing,
       dishes: data.dishes
     });
-  } catch (_) {
+  } catch (error) {
+    if (error.code === 'OCR_FAILED') {
+      sendJson(request, response, 502, errorPayload(
+        'OCR_FAILED',
+        'Could not read the menu image.'
+      ));
+      return;
+    }
+
     sendJson(request, response, 502, errorPayload(
       'PROVIDER_FAILURE',
       'Menu analysis is temporarily unavailable.'
