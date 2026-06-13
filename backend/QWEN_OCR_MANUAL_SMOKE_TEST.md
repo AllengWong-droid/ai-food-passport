@@ -1,3 +1,9 @@
+> **Status (2026-06-13): PREFLIGHT COMPLETE — REAL SMOKE TEST BLOCKED**
+> Phase 12D preflight complete. Placeholder/missing key → controlled OCR_PROVIDER_NOT_CONFIGURED.
+> No secrets, stack traces, or raw provider data leaked. mock_ocr default unchanged.
+> All 250 offline tests pass. Real test blocked until backend-only QWEN_API_KEY obtained.
+> No real Qwen API call was made during preflight.
+
 # Qwen OCR — Manual Smoke Test Guide
 
 This document explains how to manually test the real Qwen OCR transport path.  

@@ -353,6 +353,29 @@ Invoke-RestMethod `
 - [ ] Confirm no real Qwen API calls, API keys, secrets, or Firebase are added.
 - [ ] Confirm no Flutter files were changed.
 
+## Phase 12D: Qwen OCR Smoke Test Preflight QA
+
+- [ ] Confirm `backend/.env` is in `.gitignore` and not tracked.
+- [ ] Confirm `git status` is clean before and after preflight.
+- [ ] Confirm placeholder key (`sk-placeholder`) returns controlled `OCR_PROVIDER_NOT_CONFIGURED`.
+- [ ] Confirm missing key returns controlled `OCR_PROVIDER_NOT_CONFIGURED`.
+- [ ] Confirm no stack trace in any error response.
+- [ ] Confirm no raw provider response in any error response.
+- [ ] Confirm no API key or secret leakage in any response.
+- [ ] Confirm default env `/health` shows `activeOcrProvider: mock_ocr`, `realOcrEnabled: false`.
+- [ ] Confirm default env `/health` shows `configWarnings` with `OCR_PROVIDER not set`.
+- [ ] Confirm default env `POST /api/analyze-menu` with `{}` returns `ok: true` with mock dishes.
+- [ ] Confirm `mock_ocr` remains the default active OCR provider.
+- [ ] Confirm `npm run test:contract` passes (102 tests).
+- [ ] Confirm `node --test tests/unit/ocrProviderContract.test.js` passes (80 tests).
+- [ ] Confirm `node --test tests/unit/qwenOcrProvider.test.js` passes (34 tests).
+- [ ] Confirm `node --test tests/unit/qwenOcrTransport.test.js` passes (34 tests).
+- [ ] Confirm no real Qwen API call was made during preflight.
+- [ ] Confirm no API key, secret, or Firebase was added.
+- [ ] Confirm real Qwen OCR smoke test is blocked until a real backend-only QWEN_API_KEY is available.
+- [ ] Confirm `backend/QWEN_OCR_MANUAL_SMOKE_TEST.md` documents preflight status.
+- [ ] Confirm no Flutter files were changed.
+
 ## Known Environment Issues
 
 - On some local Codex/Windows shells, Flutter and Dart commands may hang due to cache/permission restrictions.
