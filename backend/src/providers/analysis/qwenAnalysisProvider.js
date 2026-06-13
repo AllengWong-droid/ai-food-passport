@@ -35,7 +35,8 @@
  *
  * Status:
  *   - realAnalysisEnabled: config-driven
- *   - Real transport: NOT implemented yet (future phase)
+ *   - Real transport: implemented via qwenAnalysisTransport.js (Phase 12G)
+ *   - Real transport requires ALL env gates + ANALYSIS_PROVIDER=qwen_analysis
  *   - Fake transport tests: supported (offline)
  *   - All invariants: mock_ai remains default, Qwen analysis disabled by default
  *
@@ -64,6 +65,10 @@ const {
 const {
   createDisabledAnalysisProviderError
 } = require('./disabledAnalysisProviderError');
+
+const {
+  createRealQwenAnalysisTransport
+} = require('./qwenAnalysisTransport');
 
 // ---------------------------------------------------------------------------
 // Config validation
@@ -451,40 +456,38 @@ async function analyzeMenuText(params, options) {
   var requestBody = (params && params.requestBody) || {};
   var ocrResult = (params && params.ocrResult) || {};
 
+  // Build the Qwen analysis API request body once — used by both
+  // fake transport (test seam) and real transport (production) paths.
+  var menuText = ocrResult.text || '';
+  var userHomeCurrency = requestBody.userHomeCurrency || 'EUR';
+  var localCurrency = (requestBody.scan && requestBody.scan.localCurrency) || 'JPY';
+
+  var analysisRequestBody = {
+    model: (process.env.QWEN_ANALYSIS_MODEL || 'qwen-max').trim(),
+    input: {
+      messages: [
+        {
+          role: 'system',
+          content: 'You are a restaurant menu analysis expert. Analyze the given menu text and return a JSON object with dish recommendations, confidence scores, and warnings.'
+        },
+        {
+          role: 'user',
+          content: [
+            {
+              type: 'text',
+              text: 'Analyze this menu text: ' + menuText + ' User currency: ' + userHomeCurrency + ' Local currency: ' + localCurrency
+            }
+          ]
+        }
+      ]
+    }
+  };
+
   // If a transport is provided (test seam), use it regardless of config.
   // This allows unit tests to exercise the full normalization path
   // without any external network calls or real API keys.
   if (transport) {
     try {
-      // Build a Qwen analysis API-like request body.
-      // In the real implementation, this would be the actual request to
-      // the Qwen analysis API. For now, the transport receives a representative
-      // request body so that the test seam mimics the real interface.
-      var menuText = ocrResult.text || '';
-      var userHomeCurrency = requestBody.userHomeCurrency || 'EUR';
-      var localCurrency = (requestBody.scan && requestBody.scan.localCurrency) || 'JPY';
-
-      var analysisRequestBody = {
-        model: (process.env.QWEN_ANALYSIS_MODEL || 'qwen-max').trim(),
-        input: {
-          messages: [
-            {
-              role: 'system',
-              content: 'You are a restaurant menu analysis expert. Analyze the given menu text and return a JSON object with dish recommendations, confidence scores, and warnings.'
-            },
-            {
-              role: 'user',
-              content: [
-                {
-                  type: 'text',
-                  text: 'Analyze this menu text: ' + menuText + ' User currency: ' + userHomeCurrency + ' Local currency: ' + localCurrency
-                }
-              ]
-            }
-          ]
-        }
-      };
-
       var rawResponse = await transport(analysisRequestBody);
       return normalizeQwenAnalysisResponse(rawResponse);
     } catch (error) {
@@ -500,9 +503,18 @@ async function analyzeMenuText(params, options) {
     throw createDisabledAnalysisProviderError(AnalysisProviderName.QWEN_ANALYSIS);
   }
 
-  // Config is valid — real transport is NOT implemented yet (future phase).
-  // Return controlled error to indicate this.
-  throw createDisabledAnalysisProviderError(AnalysisProviderName.QWEN_ANALYSIS);
+  // Config is valid — try to create and use the real transport.
+  var transportResult = createRealQwenAnalysisTransport();
+  if (transportResult.error) {
+    throw transportResult.error;
+  }
+
+  try {
+    var realRawResponse = await transportResult.transport(analysisRequestBody);
+    return normalizeQwenAnalysisResponse(realRawResponse);
+  } catch (error) {
+    throw normalizeAnalysisError(error, 'ANALYSIS_FAILED');
+  }
 }
 
 // ---------------------------------------------------------------------------
@@ -541,5 +553,6 @@ module.exports = {
   analyzeMenuText,
   validateQwenAnalysisConfig,
   createFakeQwenAnalysisTransport,
-  normalizeQwenAnalysisResponse
+  normalizeQwenAnalysisResponse,
+  createRealQwenAnalysisTransport
 };

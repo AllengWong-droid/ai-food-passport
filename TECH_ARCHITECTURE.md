@@ -358,6 +358,28 @@ Phase 11C implements CORS enforcement and request body limit enforcement:
 - `realAnalysisEnabled` is config-driven (`false` without all env gates). Qwen analysis stays disabled by default.
 - All existing tests pass (contract: 102, OCR contract: 80, Qwen OCR adapter: 34, Qwen OCR transport: 34, analysis contract: 101, Qwen analysis adapter: 58 = 409 total).
 
+## Phase 12G: Qwen Analysis Real Transport Behind Explicit Safety Gates
+
+- `backend/src/providers/analysis/qwenAnalysisTransport.js` — Real Qwen analysis HTTPS transport behind env gates.
+  - `createRealQwenAnalysisTransport({ httpsRequest })` — factory that validates all env gates and returns `{ transport, error }`. Accepts `httpsRequest` injection for offline testing.
+  - `validateAnalysisTransportGates()` — checks `ANALYSIS_PROVIDER=qwen_analysis` + `QWEN_ANALYSIS_PROVIDER_ENABLED=true` + valid `QWEN_API_KEY`. Returns `{ ok, error, config }`.
+  - Timeout via `withProviderTimeout()` from provider safety guards. Respects `PROVIDER_TIMEOUT_MS`.
+  - Error mapping: network error → `ANALYSIS_FAILED`, non-2xx → `ANALYSIS_FAILED`, malformed JSON → `ANALYSIS_FAILED`, timeout → `ANALYSIS_FAILED`, missing config → `ANALYSIS_PROVIDER_NOT_CONFIGURED`.
+  - API keys NEVER logged or included in error messages. Stack traces always deleted.
+  - Raw provider responses, headers, body content, and raw prompt text NEVER leak into errors.
+  - Safe defaults: `DEFAULT_QWEN_ANALYSIS_MODEL='qwen-max'`, `DEFAULT_QWEN_ANALYSIS_BASE_URL='https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions'`, `DEFAULT_TIMEOUT_MS=15000`.
+- `backend/src/providers/analysis/qwenAnalysisProvider.js` — Updated for Phase 12G.
+  - Production path now calls `createRealQwenAnalysisTransport()` when gates are satisfied.
+  - Request body building extracted and shared between fake transport (test seam) and real transport paths.
+  - Test seam (`transport` option) still takes precedence — all unit tests remain offline.
+  - Exports `createRealQwenAnalysisTransport` re-export for convenience.
+- `backend/tests/unit/qwenAnalysisTransport.test.js` — 35 offline tests: env gate validation (8), transport creation (5), fake success transport call (4), non-2xx error (4), malformed JSON (1), network error (2), timeout (2), leaktight (4), no real network calls (1), mock_ai default (2).
+- `backend/QWEN_ANALYSIS_MANUAL_SMOKE_TEST.md` — Manual smoke test guide with setup instructions, env gate checklist, verification steps, and safety guide.
+- `backend/README.md`, `backend/ANALYSIS_PROVIDER_SELECTION.md`, `backend/SECURITY_AND_SECRETS.md`, `AI_ENGINE_SPEC.md`, `TECH_ARCHITECTURE.md`, `ROADMAP.md`, `TESTING_CHECKLIST.md`, `REAL_PROVIDER_READINESS_CHECKLIST.md` — updated for Phase 12G.
+- Flutter files unchanged. No real provider calls, API keys, secrets, or Firebase added.
+- `realAnalysisEnabled` remains config-driven. Qwen analysis stays disabled by default.
+- All existing tests remain passing. New transport tests are 100% offline.
+
 ## Phase 12C: Qwen OCR Real Transport Behind Explicit Safety Gates
 
 - `backend/src/providers/ocr/qwenOcrTransport.js` — Real Qwen OCR HTTPS transport behind env gates.

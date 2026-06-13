@@ -39,6 +39,12 @@ Use this checklist before enabling any real OCR, Qwen, DeepSeek, OpenAI, Google 
 - [ ] First real analysis provider candidate identified (Qwen recommended for china-friendly deployment).
 - [ ] `AnalysisProviderMode.ANALYSIS` added to types for future real providers.
 - [ ] Qwen analysis provider adapter scaffold exists (`qwenAnalysisProvider.js`) — conforms to contract, fake transport seam, 58 unit tests, disabled by default.
+- [ ] Qwen analysis real transport implemented (`qwenAnalysisTransport.js`) behind explicit env gates:
+  - Requires `ANALYSIS_PROVIDER=qwen_analysis` + `QWEN_ANALYSIS_PROVIDER_ENABLED=true` + valid `QWEN_API_KEY`.
+  - Timeout via `PROVIDER_TIMEOUT_MS`.
+  - Safe error mapping: network errors, non-2xx, malformed response → `ANALYSIS_FAILED`.
+  - 35 offline transport unit tests.
+- [ ] Manual smoke test guide available (`backend/QWEN_ANALYSIS_MANUAL_SMOKE_TEST.md`).
 - [ ] `AnalysisProviderName.QWEN_ANALYSIS` ('qwen_analysis') registered in analysis provider registry.
 - [ ] `mock_ai` remains the only active default analysis provider.
 

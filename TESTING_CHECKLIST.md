@@ -98,6 +98,21 @@ Invoke-RestMethod `
 - [ ] Confirm invalid safety values do not crash the backend.
 - [ ] Confirm mock `POST /api/analyze-menu` still succeeds with valid safety defaults.
 
+## Backend Qwen Analysis Transport QA (Phase 12G)
+
+- [ ] Confirm `qwenAnalysisTransport.test.js` all pass (offline, stubbed https.request).
+- [ ] Confirm `qwen_analysis` remains disabled without all env gates.
+- [ ] Confirm setting only `QWEN_API_KEY` does NOT activate Qwen analysis.
+- [ ] Confirm setting only `ANALYSIS_PROVIDER=qwen_analysis` does NOT activate Qwen analysis without `QWEN_ANALYSIS_PROVIDER_ENABLED=true`.
+- [ ] Confirm placeholder `QWEN_API_KEY` (e.g. `sk-placeholder`) does NOT activate transport.
+- [ ] Confirm error code `ANALYSIS_PROVIDER_NOT_CONFIGURED` is returned when gates are not met.
+- [ ] Confirm error code `ANALYSIS_FAILED` is returned for non-2xx / malformed / network errors.
+- [ ] Confirm no stack traces leak in transport error responses.
+- [ ] Confirm no API keys leak in transport error messages.
+- [ ] Confirm no raw provider body leaks in transport error messages.
+- [ ] Confirm existing contracts, adapter tests, and transport tests all pass together.
+- [ ] Confirm `mock_ai` remains default active analysis provider.
+
 ## Flutter Backend Mock Mode
 
 - [ ] Start the backend mock server.

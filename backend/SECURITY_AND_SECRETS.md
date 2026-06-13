@@ -13,6 +13,13 @@ The backend is primarily mock-mode. It does not call real DeepSeek, OpenAI, Goog
 
 No real Qwen API calls occur in automated tests — tests use stubbed `https.request`.
 
+**Qwen analysis real transport** (`qwenAnalysisTransport.js`) is implemented but disabled behind explicit env gates. It will ONLY activate when ALL of the following are set:
+- `ANALYSIS_PROVIDER=qwen_analysis`
+- `QWEN_ANALYSIS_PROVIDER_ENABLED=true`
+- `QWEN_API_KEY` present and non-placeholder
+
+No real Qwen analysis API calls occur in automated tests — tests use stubbed `https.request`.
+
 ## Secret Rules
 
 - Flutter must never contain provider API keys.

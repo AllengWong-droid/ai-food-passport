@@ -48,6 +48,9 @@ Flutter uses local `MockAiRepository` by default. Developer Backend Mock Mode ca
 - Analysis provider selection documentation (`backend/ANALYSIS_PROVIDER_SELECTION.md`).
 - Qwen analysis provider adapter scaffold (`src/providers/analysis/qwenAnalysisProvider.js`) — disabled by default, fake transport test seam, 58 unit tests.
 - Qwen analysis test fixture data (`tests/fixtures/analysis/qwen/`).
+- Qwen analysis real transport behind env gates (`src/providers/analysis/qwenAnalysisTransport.js`).
+- Qwen analysis transport unit tests (`tests/unit/qwenAnalysisTransport.test.js`, all offline).
+- Qwen analysis manual smoke test guide (`backend/QWEN_ANALYSIS_MANUAL_SMOKE_TEST.md`).
 - `AnalysisProviderMode.ANALYSIS` added to types for future real providers.
 - `AnalysisProviderName.QWEN_ANALYSIS` ('qwen_analysis') added as real provider name (distinct from skeleton).
 

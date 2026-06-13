@@ -47,6 +47,7 @@
 - Phase 12D: Qwen OCR Manual Smoke Test Preflight — Blocked Until Real Key
 - Phase 12E: Real Analysis Provider Contract Prep
 - Phase 12F: Qwen Analysis Provider Disabled Adapter Scaffold
+- Phase 12G: Qwen Analysis Real Transport Behind Explicit Safety Gates
 
 ## Current MVP Alpha
 

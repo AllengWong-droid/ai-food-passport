@@ -1,11 +1,13 @@
 # Analysis Provider Selection
 
-> **Status (2026-06-13): QWEN ANALYSIS ADAPTER SCAFFOLD EXISTS — DISABLED BY DEFAULT**
+> **Status (2026-06-13): QWEN ANALYSIS REAL TRANSPORT IMPLEMENTED — DISABLED BY DEFAULT**
 >
-> Phase 12F Qwen analysis provider adapter scaffold is in place. It conforms to the
-> analysis provider contract, supports fake transport offline testing (58 unit tests),
-> and remains disabled by default. No real Qwen analysis API calls yet.
-> `mock_ai` remains the only active default.
+> Phase 12G Qwen analysis real transport (`qwenAnalysisTransport.js`) is implemented behind explicit
+> backend-only env gates. It requires `ANALYSIS_PROVIDER=qwen_analysis`,
+> `QWEN_ANALYSIS_PROVIDER_ENABLED=true`, and a valid `QWEN_API_KEY`. Without all gates,
+> transport creation returns `ANALYSIS_PROVIDER_NOT_CONFIGURED`. Automated tests are
+> 100% offline via stubbed `https.request`. A manual smoke test guide is available at
+> `backend/QWEN_ANALYSIS_MANUAL_SMOKE_TEST.md`. `mock_ai` remains the only active default.
 
 This document evaluates candidate AI menu analysis providers for the AI Food Passport backend.
 It covers tradeoffs and recommends the first real analysis provider to implement.
