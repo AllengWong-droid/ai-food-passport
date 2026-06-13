@@ -1,4 +1,9 @@
-const { AnalysisProviderMode, AnalysisProviderName } = require('./analysisProviderTypes');
+const {
+  AnalysisDebugScenario,
+  AnalysisProviderMode,
+  AnalysisProviderName,
+  AnalysisWarningCode
+} = require('./analysisProviderTypes');
 
 const exchangeRates = {
   JPY: { EUR: 0.00622, USD: 0.00675, TWD: 0.216, SGD: 0.0091, JPY: 1 },
@@ -13,18 +18,56 @@ async function analyzeMenuText({ requestBody = {}, ocrResult }) {
   const homeCurrency = requestBody.userHomeCurrency || 'EUR';
   const localCurrency = scan.localCurrency || 'JPY';
   const exchangeRate = exchangeRateFor(localCurrency, homeCurrency);
+  const debugScenario = normalizeDebugScenario(requestBody.debugScenario);
 
-  return {
-    provider: AnalysisProviderName.MOCK_AI,
-    mode: AnalysisProviderMode.MOCK,
+  if (debugScenario === AnalysisDebugScenario.FAILURE) {
+    const error = new Error('Mock analysis failure scenario requested.');
+    error.code = 'ANALYSIS_FAILED';
+    throw error;
+  }
+
+  if (debugScenario === AnalysisDebugScenario.EMPTY_RESULT) {
+    return buildAnalysisResult({
+      dishes: [],
+      confidence: 0,
+      warnings: [AnalysisWarningCode.EMPTY_RESULT]
+    });
+  }
+
+  const isLowQuality = debugScenario === AnalysisDebugScenario.LOW_QUALITY;
+
+  return buildAnalysisResult({
     dishes: dishesForOcrText({
       text: ocrResult?.text || '',
       localCurrency,
       homeCurrency,
       exchangeRate
     }),
-    warnings: []
+    confidence: isLowQuality ? 0.55 : 0.96,
+    warnings: isLowQuality
+      ? [AnalysisWarningCode.LOW_CONFIDENCE, AnalysisWarningCode.NEEDS_REVIEW]
+      : []
+  });
+}
+
+function buildAnalysisResult({ dishes, confidence, warnings }) {
+  return {
+    provider: AnalysisProviderName.MOCK_AI,
+    mode: AnalysisProviderMode.MOCK,
+    confidence,
+    dishes,
+    warnings
   };
+}
+
+function normalizeDebugScenario(value) {
+  if (!value) {
+    return AnalysisDebugScenario.SUCCESS;
+  }
+
+  return Object.values(AnalysisDebugScenario).includes(value)
+    ? value
+    : AnalysisDebugScenario.SUCCESS;
 }
 
 function dishesForOcrText({ text, localCurrency, homeCurrency, exchangeRate }) {

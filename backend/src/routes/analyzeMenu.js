@@ -46,6 +46,8 @@ async function handleAnalyzeMenu(request, response, body, startedAt) {
       ocrWarnings: ocr.warnings || [],
       analysisProvider: analysis.provider,
       analysisMode: analysis.mode,
+      analysisConfidence: analysis.confidence,
+      analysisWarnings: analysis.warnings || [],
       warnings,
       fallbackUsed: false,
       latencyMs
@@ -69,6 +71,14 @@ async function handleAnalyzeMenu(request, response, body, startedAt) {
       sendJson(request, response, 502, errorPayload(
         'OCR_FAILED',
         'Could not read the menu image.'
+      ));
+      return;
+    }
+
+    if (error.code === 'ANALYSIS_FAILED') {
+      sendJson(request, response, 502, errorPayload(
+        'ANALYSIS_FAILED',
+        'Could not analyze the menu.'
       ));
       return;
     }

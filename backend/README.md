@@ -16,6 +16,7 @@ Flutter uses local `MockAiRepository` by default. Developer Backend Mock Mode ca
   - mock menu analysis provider
   - standardized API envelope
 - Mock OCR debug scenarios for success, low confidence, empty text, and OCR failure.
+- Mock analysis debug scenarios for success, low quality, empty result, and analysis failure.
 - Deterministic mock response shaped like the future backend response.
 - Standardized `ok`, `data`, and `error` API envelope.
 - Mock dish results with `priceIntelligence`.
@@ -119,6 +120,8 @@ Invoke-RestMethod `
       "ocrWarnings": [],
       "analysisProvider": "mock_ai",
       "analysisMode": "mock",
+      "analysisConfidence": 0.96,
+      "analysisWarnings": [],
       "warnings": [],
       "fallbackUsed": false,
       "latencyMs": 2
@@ -161,6 +164,8 @@ Invoke-RestMethod `
     "ocrWarnings": [],
     "analysisProvider": "mock_ai",
     "analysisMode": "mock",
+    "analysisConfidence": 0.96,
+    "analysisWarnings": [],
     "warnings": [],
     "fallbackUsed": false,
     "latencyMs": 2
@@ -288,6 +293,94 @@ OCR failure response shape:
   "error": {
     "code": "OCR_FAILED",
     "message": "Could not read the menu image.",
+    "details": null
+  }
+}
+```
+
+## Mock Analysis Debug Scenarios
+
+The same `debugScenario` field also supports analysis-layer simulations:
+
+- `analysis_success`: default successful mock analysis flow.
+- `analysis_low_quality`: returns dishes with analysis confidence `0.55` and warnings.
+- `analysis_empty_result`: returns `ok: true`, `dishes: []`, and `ANALYSIS_EMPTY_RESULT` warning metadata.
+- `analysis_failure`: simulates an analysis provider failure and returns a clean `ANALYSIS_FAILED` error envelope.
+
+Low quality:
+
+```powershell
+Invoke-RestMethod `
+  -Method Post `
+  -Uri "http://127.0.0.1:8787/api/analyze-menu" `
+  -ContentType "application/json" `
+  -Body '{"debugScenario":"analysis_low_quality"}'
+```
+
+Empty analysis result:
+
+```powershell
+Invoke-RestMethod `
+  -Method Post `
+  -Uri "http://127.0.0.1:8787/api/analyze-menu" `
+  -ContentType "application/json" `
+  -Body '{"debugScenario":"analysis_empty_result"}'
+```
+
+Analysis failure:
+
+```powershell
+Invoke-RestMethod `
+  -Method Post `
+  -Uri "http://127.0.0.1:8787/api/analyze-menu" `
+  -ContentType "application/json" `
+  -Body '{"debugScenario":"analysis_failure"}'
+```
+
+Low-quality success shape:
+
+```json
+{
+  "ok": true,
+  "data": {
+    "routing": {
+      "analysisConfidence": 0.55,
+      "analysisWarnings": ["LOW_ANALYSIS_CONFIDENCE", "NEEDS_REVIEW"],
+      "warnings": ["LOW_ANALYSIS_CONFIDENCE", "NEEDS_REVIEW"]
+    },
+    "dishes": []
+  },
+  "error": null
+}
+```
+
+Empty analysis result shape:
+
+```json
+{
+  "ok": true,
+  "data": {
+    "routing": {
+      "analysisConfidence": 0,
+      "analysisWarnings": ["ANALYSIS_EMPTY_RESULT"],
+      "warnings": ["ANALYSIS_EMPTY_RESULT"]
+    },
+    "dishes": []
+  },
+  "error": null,
+  "dishes": []
+}
+```
+
+Analysis failure shape:
+
+```json
+{
+  "ok": false,
+  "data": null,
+  "error": {
+    "code": "ANALYSIS_FAILED",
+    "message": "Could not analyze the menu.",
     "details": null
   }
 }

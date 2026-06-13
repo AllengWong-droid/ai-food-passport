@@ -18,6 +18,8 @@ async function buildMockAnalyzeMenuResponse(requestBody = {}, latencyMs = 0) {
       ocrWarnings: ocr.warnings || [],
       analysisProvider: analysis.provider,
       analysisMode: analysis.mode,
+      analysisConfidence: analysis.confidence,
+      analysisWarnings: analysis.warnings || [],
       warnings,
       fallbackUsed: false,
       latencyMs
