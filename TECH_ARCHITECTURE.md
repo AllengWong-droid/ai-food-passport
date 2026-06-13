@@ -50,6 +50,7 @@ Flutter Scan
 -> POST /api/analyze-menu
 -> backend OCR provider registry
 -> backend mock OCR provider
+-> backend analysis provider registry
 -> backend mock analysis provider
 -> standardized response envelope
 -> Flutter Results / Recovery UX
@@ -77,6 +78,12 @@ OCR provider registry:
 - available skeletons: `qwen_ocr_skeleton`, `google_vision_skeleton`, `openai_vision_skeleton`
 - real OCR enabled: `false`
 
+Analysis provider registry:
+
+- active default: `mock_ai`
+- available skeletons: `qwen_analysis_skeleton`, `deepseek_analysis_skeleton`, `openai_analysis_skeleton`
+- real analysis enabled: `false`
+
 The backend route is OCR-first:
 
 ```text
@@ -84,6 +91,7 @@ request validation
 -> OCR provider registry
 -> mock OCR provider
 -> empty/failed OCR handling
+-> analysis provider registry
 -> mock analysis provider
 -> analysis quality/empty/failure handling
 -> standardized response envelope
@@ -149,6 +157,7 @@ Implemented Flutter repository interfaces:
 - `MultiProviderMenuAnalysisRepository`
 - OCR-first multi-provider routing contract
 - Disabled real OCR provider skeletons
+- Disabled real analysis provider skeletons
 
 These skeletons do not call real providers and are not active defaults.
 

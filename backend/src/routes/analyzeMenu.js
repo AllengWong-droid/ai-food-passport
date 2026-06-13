@@ -2,7 +2,10 @@ const {
   getActiveOcrProvider,
   isRealOcrEnabled
 } = require('../providers/ocr/ocrProviderRegistry');
-const { analyzeMenuText } = require('../providers/analysis/mockMenuAnalysisProvider');
+const {
+  getActiveAnalysisProvider,
+  isRealAnalysisEnabled
+} = require('../providers/analysis/analysisProviderRegistry');
 
 async function handleAnalyzeMenu(request, response, body, startedAt) {
   if (request.method !== 'POST') {
@@ -33,7 +36,8 @@ async function handleAnalyzeMenu(request, response, body, startedAt) {
       return;
     }
 
-    const analysis = await analyzeMenuText({
+    const analysisProvider = getActiveAnalysisProvider();
+    const analysis = await analysisProvider.analyzeMenuText({
       requestBody: parsedBody.value,
       ocrResult: ocr
     });
@@ -54,6 +58,7 @@ async function handleAnalyzeMenu(request, response, body, startedAt) {
       analysisMode: analysis.mode,
       analysisConfidence: analysis.confidence,
       analysisWarnings: analysis.warnings || [],
+      realAnalysisEnabled: isRealAnalysisEnabled(),
       warnings,
       fallbackUsed: false,
       latencyMs
@@ -101,6 +106,22 @@ async function handleAnalyzeMenu(request, response, body, startedAt) {
       sendJson(request, response, 502, errorPayload(
         'ANALYSIS_FAILED',
         'Could not analyze the menu.'
+      ));
+      return;
+    }
+
+    if (error.code === 'ANALYSIS_PROVIDER_NOT_CONFIGURED') {
+      sendJson(request, response, 503, errorPayload(
+        'ANALYSIS_PROVIDER_NOT_CONFIGURED',
+        'Analysis provider is not configured.'
+      ));
+      return;
+    }
+
+    if (error.code === 'ANALYSIS_PROVIDER_INVALID') {
+      sendJson(request, response, 500, errorPayload(
+        'ANALYSIS_PROVIDER_INVALID',
+        'Analysis provider setting is invalid.'
       ));
       return;
     }

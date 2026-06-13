@@ -15,6 +15,7 @@ Flutter uses local `MockAiRepository` by default. Developer Backend Mock Mode ca
   - mock OCR provider
   - OCR provider registry
   - mock menu analysis provider
+  - analysis provider registry
   - standardized API envelope
 - Mock OCR debug scenarios for success, low confidence, empty text, and OCR failure.
 - Mock analysis debug scenarios for success, low quality, empty result, and analysis failure.
@@ -37,6 +38,7 @@ Flutter uses local `MockAiRepository` by default. Developer Backend Mock Mode ca
 - No production fallback routing.
 - No API keys or secrets.
 - Non-mock OCR providers are skeleton-only and disabled.
+- Non-mock analysis providers are skeleton-only and disabled.
 
 ## Install Dependencies
 
@@ -95,6 +97,28 @@ Safety behavior:
 - Unknown values make `POST /api/analyze-menu` return `OCR_PROVIDER_INVALID`.
 - Skeleton provider values return `OCR_PROVIDER_NOT_CONFIGURED`.
 
+## Analysis Provider Configuration
+
+`ANALYSIS_PROVIDER` defaults to `mock_ai`.
+
+Supported values:
+
+- `mock_ai`
+- `qwen_analysis_skeleton`
+- `deepseek_analysis_skeleton`
+- `openai_analysis_skeleton`
+
+Only `mock_ai` is active and usable today. Skeleton providers do not call the network. If selected, they return the standardized error code `ANALYSIS_PROVIDER_NOT_CONFIGURED`.
+
+Safety behavior:
+
+- Missing or empty `ANALYSIS_PROVIDER` uses `mock_ai`.
+- For missing or empty `ANALYSIS_PROVIDER`, `/health` reports `configuredAnalysisProvider: null` and `activeAnalysisProvider: mock_ai`.
+- Unknown `ANALYSIS_PROVIDER` values do not crash the server.
+- Unknown values make `/health` return `analysisConfigValid: false`.
+- Unknown values make `POST /api/analyze-menu` return `ANALYSIS_PROVIDER_INVALID`.
+- Skeleton provider values return `ANALYSIS_PROVIDER_NOT_CONFIGURED`.
+
 ## Health Check
 
 ```powershell
@@ -122,6 +146,17 @@ Response shape:
   "configValid": true,
   "configWarnings": [],
   "analysisProvider": "mock_ai",
+  "configuredAnalysisProvider": "mock_ai",
+  "activeAnalysisProvider": "mock_ai",
+  "availableAnalysisProviders": [
+    "mock_ai",
+    "qwen_analysis_skeleton",
+    "deepseek_analysis_skeleton",
+    "openai_analysis_skeleton"
+  ],
+  "realAnalysisEnabled": false,
+  "analysisConfigValid": true,
+  "analysisConfigWarnings": [],
   "timestamp": "2026-06-13T00:00:00.000Z"
 }
 ```
@@ -160,6 +195,7 @@ Invoke-RestMethod `
       "analysisMode": "mock",
       "analysisConfidence": 0.96,
       "analysisWarnings": [],
+      "realAnalysisEnabled": false,
       "warnings": [],
       "fallbackUsed": false,
       "latencyMs": 2
@@ -206,6 +242,7 @@ Invoke-RestMethod `
     "analysisMode": "mock",
     "analysisConfidence": 0.96,
     "analysisWarnings": [],
+    "realAnalysisEnabled": false,
     "warnings": [],
     "fallbackUsed": false,
     "latencyMs": 2
@@ -241,6 +278,10 @@ Current provider files:
 - `src/providers/ocr/openAiVisionOcrProviderSkeleton.js`
 - `src/providers/analysis/mockMenuAnalysisProvider.js`
 - `src/providers/analysis/analysisProviderTypes.js`
+- `src/providers/analysis/analysisProviderRegistry.js`
+- `src/providers/analysis/qwenAnalysisProviderSkeleton.js`
+- `src/providers/analysis/deepSeekAnalysisProviderSkeleton.js`
+- `src/providers/analysis/openAiAnalysisProviderSkeleton.js`
 
 The OCR provider returns deterministic local text and metadata. It does not read real images or call any external OCR service. The analysis provider uses that mock OCR result to create deterministic dish recommendations and price intelligence.
 
@@ -471,6 +512,34 @@ Disabled OCR provider skeletons return:
   "error": {
     "code": "OCR_PROVIDER_NOT_CONFIGURED",
     "message": "OCR provider is not configured.",
+    "details": null
+  }
+}
+```
+
+Invalid analysis provider configuration returns:
+
+```json
+{
+  "ok": false,
+  "data": null,
+  "error": {
+    "code": "ANALYSIS_PROVIDER_INVALID",
+    "message": "Analysis provider setting is invalid.",
+    "details": null
+  }
+}
+```
+
+Disabled analysis provider skeletons return:
+
+```json
+{
+  "ok": false,
+  "data": null,
+  "error": {
+    "code": "ANALYSIS_PROVIDER_NOT_CONFIGURED",
+    "message": "Analysis provider is not configured.",
     "details": null
   }
 }

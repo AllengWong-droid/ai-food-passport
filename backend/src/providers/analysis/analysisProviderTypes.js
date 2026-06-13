@@ -3,7 +3,10 @@ const AnalysisProviderMode = Object.freeze({
 });
 
 const AnalysisProviderName = Object.freeze({
-  MOCK_AI: 'mock_ai'
+  MOCK_AI: 'mock_ai',
+  QWEN_ANALYSIS_SKELETON: 'qwen_analysis_skeleton',
+  DEEPSEEK_ANALYSIS_SKELETON: 'deepseek_analysis_skeleton',
+  OPENAI_ANALYSIS_SKELETON: 'openai_analysis_skeleton'
 });
 
 const AnalysisDebugScenario = Object.freeze({

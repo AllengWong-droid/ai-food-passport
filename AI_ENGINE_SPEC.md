@@ -28,6 +28,7 @@ Scan screen
 -> POST /api/analyze-menu
 -> backend OCR provider registry
 -> backend mock OCR provider
+-> backend analysis provider registry
 -> backend mock analysis provider
 -> standardized backend envelope
 -> Flutter parses dishes or maps backend errors to recovery UX
@@ -50,6 +51,22 @@ Disabled skeletons:
 - `openai_vision_skeleton`
 
 Selecting a disabled skeleton returns `OCR_PROVIDER_NOT_CONFIGURED`. No skeleton provider calls the network or requires a key today.
+
+## Analysis Provider Registry
+
+The backend has a provider registry prepared for future analysis providers.
+
+Current default:
+
+- `mock_ai`
+
+Disabled skeletons:
+
+- `qwen_analysis_skeleton`
+- `deepseek_analysis_skeleton`
+- `openai_analysis_skeleton`
+
+Selecting a disabled skeleton returns `ANALYSIS_PROVIDER_NOT_CONFIGURED`. Invalid provider config returns `ANALYSIS_PROVIDER_INVALID`. No skeleton provider calls the network or requires a key today.
 
 ## Input Model
 
