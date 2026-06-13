@@ -1,0 +1,27 @@
+{
+  "provider": "mock_ai",
+  "mode": "mock",
+  "confidence": 0.90,
+  "dishes": [
+    {
+      "dishName": "Beef Noodle Soup",
+      "description": "Braised beef noodle soup with rich broth.",
+      "ingredients": ["Beef", "Wheat noodles", "Soy-braised broth", "Scallion"],
+      "allergens": ["Wheat", "Soy"],
+      "tasteScore": 94,
+      "safetyScore": 88,
+      "valueScore": 93,
+      "recommendationReason": "Strong savory value pick from OCR-first menu text.",
+      "priceIntelligence": {
+        "localPrice": 180,
+        "localCurrency": "TWD",
+        "homePrice": 5.65,
+        "homeCurrency": "EUR",
+        "exchangeRate": 0.0314,
+        "assessment": "Good Value"
+      }
+    }
+  ],
+  "warnings": [],
+  "rawMetadata": null
+}

@@ -1,0 +1,8 @@
+{
+  "provider": "mock_ai",
+  "mode": "mock",
+  "confidence": 0,
+  "dishes": [],
+  "warnings": ["ANALYSIS_EMPTY_RESULT"],
+  "rawMetadata": null
+}

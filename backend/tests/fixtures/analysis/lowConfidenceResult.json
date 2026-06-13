@@ -1,0 +1,30 @@
+{
+  "provider": "mock_ai",
+  "mode": "mock",
+  "confidence": 0.55,
+  "dishes": [
+    {
+      "dishName": "Fish and Chips",
+      "description": "Crisp battered fish with fries and tartar sauce.",
+      "ingredients": ["White fish", "Wheat batter", "Potato", "Tartar sauce"],
+      "allergens": ["Fish", "Wheat", "Egg"],
+      "tasteScore": 87,
+      "safetyScore": 84,
+      "valueScore": 80,
+      "recommendationReason": "Mock backend selected this familiar seafood option.",
+      "priceIntelligence": {
+        "localPrice": 14.90,
+        "localCurrency": "SGD",
+        "homePrice": 10.98,
+        "homeCurrency": "EUR",
+        "exchangeRate": 0.74,
+        "assessment": "Fair"
+      }
+    }
+  ],
+  "warnings": ["LOW_ANALYSIS_CONFIDENCE", "NEEDS_REVIEW"],
+  "rawMetadata": {
+    "processingTimeMs": 30,
+    "modelVersion": "mock-v1"
+  }
+}

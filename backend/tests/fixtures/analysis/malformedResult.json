@@ -1,0 +1,8 @@
+{
+  "provider": 123,
+  "mode": null,
+  "confidence": "not-a-number",
+  "dishes": "not-an-array",
+  "warnings": "not-an-array",
+  "rawMetadata": true
+}

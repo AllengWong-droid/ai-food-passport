@@ -1,0 +1,7 @@
+{
+  "error": {
+    "code": "CUSTOM_ERROR_CODE",
+    "message": "Something unexpected happened: connection lost to sk-abc123def456ghijklmnopqrstuvwxyz",
+    "provider": "unknown_provider"
+  }
+}

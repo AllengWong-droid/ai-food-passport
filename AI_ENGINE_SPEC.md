@@ -96,7 +96,35 @@ The Qwen OCR adapter scaffold (`backend/src/providers/ocr/qwenOcrProvider.js`) i
 
 The Qwen OCR real transport (`backend/src/providers/ocr/qwenOcrTransport.js`) is implemented behind explicit env gates: `OCR_PROVIDER=qwen_ocr`, `QWEN_OCR_PROVIDER_ENABLED=true`, and a valid `QWEN_API_KEY`. Without all gates, the transport creation returns a controlled `OCR_PROVIDER_NOT_CONFIGURED` error. Automated tests are 100% offline via stubbed `https.request`. A manual smoke test guide is available at `backend/QWEN_OCR_MANUAL_SMOKE_TEST.md`.
 
-No real provider is active yet.
+No real OCR provider is active by default. `mock_ocr` remains the default.
+
+## Analysis Provider Contract
+
+A stable analysis provider contract (`analysisProviderContract.js`) normalizes all analysis results before they reach the API response envelope.
+
+Contract shape:
+
+```text
+{
+  provider: string,        // Known AnalysisProviderName value
+  mode: string,            // 'mock' | 'analysis'
+  confidence: number,      // 0–1, clamped
+  dishes: Dish[],          // Normalized dishes (compatible with mock shape)
+  warnings: string[],      // Known AnalysisWarningCode values
+  rawMetadata: object|null // Safe, redacted metadata only
+}
+```
+
+Each normalized dish includes BOTH new standardized fields (`id`, `name`, `recommendationScore`, `matchReasons`, `estimatedPrice`, `currency`, `valueRating`, `confidence`) AND backward-compatible mock fields (`dishName`, `tasteScore`, `safetyScore`, `valueScore`, `recommendationReason`, `priceIntelligence`) so that existing Flutter parsers continue to work.
+
+Normalization guarantees:
+- No stack traces, raw provider responses, API headers, raw prompts, or raw OCR payloads leak through
+- Confidence clamped to [0, 1]; dish scores clamped to [0, 100]
+- Warnings filtered to known `AnalysisWarningCode` values and de-duplicated
+- `rawMetadata` stripped to a whitelist of safe keys only
+- API keys, JWTs, base64 blobs, and other secrets are redacted from error messages
+
+101 fixture-based contract tests pass (all offline).
 
 ## Analysis Provider Registry
 

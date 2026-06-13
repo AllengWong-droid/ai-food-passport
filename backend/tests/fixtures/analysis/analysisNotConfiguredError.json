@@ -1,0 +1,7 @@
+{
+  "error": {
+    "code": "ANALYSIS_PROVIDER_NOT_CONFIGURED",
+    "message": "Analysis provider is not configured.",
+    "provider": "qwen_analysis_skeleton"
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "provider": "mock_ai",
+  "mode": "mock",
+  "confidence": 0.96,
+  "dishes": [
+    {
+      "dishName": "Tonkotsu Ramen",
+      "description": "Rich pork broth with noodles, egg, scallion, and sliced chashu.",
+      "ingredients": ["Pork broth", "Wheat noodles", "Egg", "Scallion", "Chashu"],
+      "allergens": ["Wheat", "Egg"],
+      "tasteScore": 96,
+      "safetyScore": 84,
+      "valueScore": 86,
+      "recommendationReason": "Mock backend selected this because OCR-first text matched a savory, umami-forward menu item.",
+      "priceIntelligence": {
+        "localPrice": 980,
+        "localCurrency": "JPY",
+        "homePrice": 6.62,
+        "homeCurrency": "EUR",
+        "exchangeRate": 0.00675,
+        "assessment": "Fair"
+      }
+    },
+    {
+      "dishName": "Miso Katsu Skewers",
+      "description": "Panko-fried pork skewers with hatcho miso glaze.",
+      "ingredients": ["Pork", "Panko", "Miso", "Egg", "Wheat"],
+      "allergens": ["Soy", "Wheat", "Egg"],
+      "tasteScore": 82,
+      "safetyScore": 70,
+      "valueScore": 89,
+      "recommendationReason": "Mock backend ranked this as a good value while preserving allergen warnings.",
+      "priceIntelligence": {
+        "localPrice": 800,
+        "localCurrency": "JPY",
+        "homePrice": 5.40,
+        "homeCurrency": "EUR",
+        "exchangeRate": 0.00675,
+        "assessment": "Good Value"
+      }
+    }
+  ],
+  "warnings": [],
+  "rawMetadata": {
+    "processingTimeMs": 45,
+    "modelVersion": "mock-v1",
+    "analysisEngine": "mock-rule-engine",
+    "totalTokens": 0
+  }
+}

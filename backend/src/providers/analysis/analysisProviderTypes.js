@@ -1,5 +1,6 @@
 const AnalysisProviderMode = Object.freeze({
-  MOCK: 'mock'
+  MOCK: 'mock',
+  ANALYSIS: 'analysis'
 });
 
 const AnalysisProviderName = Object.freeze({

@@ -42,6 +42,11 @@ Flutter uses local `MockAiRepository` by default. Developer Backend Mock Mode ca
 - Qwen OCR manual smoke test guide (`backend/QWEN_OCR_MANUAL_SMOKE_TEST.md`).
 - Deployment readiness documentation (`backend/DEPLOYMENT_READINESS.md`).
 - Environment variable exemplar (`backend/.env.example`) with placeholder-only values.
+- Analysis provider contract and normalization helpers (`src/providers/analysis/analysisProviderContract.js`).
+- Analysis provider contract unit tests (`tests/unit/analysisProviderContract.test.js`, 101 tests).
+- Analysis test fixture data (`tests/fixtures/analysis/`).
+- Analysis provider selection documentation (`backend/ANALYSIS_PROVIDER_SELECTION.md`).
+- `AnalysisProviderMode.ANALYSIS` added to types for future real providers.
 
 ## What Is Not Implemented
 
@@ -60,6 +65,7 @@ Flutter uses local `MockAiRepository` by default. Developer Backend Mock Mode ca
 - No API keys or secrets committed.
 - Non-mock OCR providers other than Qwen are skeleton-only and disabled.
 - Non-mock analysis providers are skeleton-only and disabled.
+- Analysis provider contract is defined; real providers must normalize through it.
 
 ## Install Dependencies
 

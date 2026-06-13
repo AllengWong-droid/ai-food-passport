@@ -23,6 +23,23 @@ Use this checklist before enabling any real OCR, Qwen, DeepSeek, OpenAI, Google 
 - [ ] Qwen adapter conforms to OCR provider contract (normalizeOcrResult/normalizeOcrError).
 - [ ] No real provider calls, API keys, or secrets have been added.
 
+## Analysis Provider Contract
+
+- [ ] `analysisProviderContract.js` defines the standardized analysis result shape.
+- [ ] `normalizeAnalysisResult()` sanitises raw provider output before it reaches any API response.
+- [ ] `normalizeAnalysisError()` maps errors to safe codes without leaking stack traces or secrets.
+- [ ] 101 unit tests pass for contract normalization, leakage prevention, and edge cases.
+- [ ] Dish normalization produces BOTH new standardized fields AND backward-compatible mock fields.
+- [ ] Scores clamped to [0, 100]; confidence clamped to [0, 1]; prices clamped to [0, PRICE_MAX].
+- [ ] Warnings filtered to known `AnalysisWarningCode` values and de-duplicated.
+- [ ] `rawMetadata` stripped to a whitelist of safe keys only.
+- [ ] `stripForbiddenFields()` removes stack, apiKey, bearer, token, secret, rawPrompt, rawOcrText, requestHeaders, responseHeaders, completionPayload, image, base64.
+- [ ] `sanitizeMessage()` redacts API keys (sk-...), JWTs, base64 blobs, Bearer tokens from error messages.
+- [ ] Provider selection documented (`backend/ANALYSIS_PROVIDER_SELECTION.md`) with Qwen/DeepSeek/OpenAI tradeoff analysis.
+- [ ] First real analysis provider candidate identified (Qwen recommended for china-friendly deployment).
+- [ ] `AnalysisProviderMode.ANALYSIS` added to types for future real providers.
+- [ ] `mock_ai` remains the only active default analysis provider.
+
 ## Secret Storage
 
 - [ ] No provider API keys are stored in Flutter code.

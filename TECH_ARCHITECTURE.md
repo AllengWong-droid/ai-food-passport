@@ -85,6 +85,7 @@ Analysis provider registry:
 
 - active default: `mock_ai`
 - available skeletons: `qwen_analysis_skeleton`, `deepseek_analysis_skeleton`, `openai_analysis_skeleton`
+- analysis provider contract defined (`analysisProviderContract.js`)
 - real analysis enabled: `false`
 
 Provider routing decision skeleton:

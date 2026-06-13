@@ -1,0 +1,7 @@
+{
+  "error": {
+    "code": "ANALYSIS_FAILED",
+    "message": "Mock analysis failure scenario requested.",
+    "provider": "mock_ai"
+  }
+}

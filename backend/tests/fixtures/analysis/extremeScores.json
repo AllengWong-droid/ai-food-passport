@@ -1,0 +1,20 @@
+{
+  "provider": "mock_ai",
+  "mode": "mock",
+  "confidence": 1.5,
+  "dishes": [
+    {
+      "dishName": "Extreme Dish",
+      "tasteScore": 150,
+      "safetyScore": -20,
+      "valueScore": 999,
+      "confidence": 2.5,
+      "priceIntelligence": {
+        "localPrice": -50,
+        "localCurrency": "USD"
+      }
+    }
+  ],
+  "warnings": ["LOW_ANALYSIS_CONFIDENCE", "LOW_ANALYSIS_CONFIDENCE", "LOW_ANALYSIS_CONFIDENCE"],
+  "rawMetadata": null
+}

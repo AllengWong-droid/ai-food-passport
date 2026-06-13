@@ -376,6 +376,30 @@ Invoke-RestMethod `
 - [ ] Confirm `backend/QWEN_OCR_MANUAL_SMOKE_TEST.md` documents preflight status.
 - [ ] Confirm no Flutter files were changed.
 
+## Phase 12E: Analysis Provider Contract Prep QA
+
+- [ ] Confirm `analysisProviderContract.js` exists and exports `normalizeAnalysisResult`, `normalizeAnalysisError`, and sub-normalizers.
+- [ ] Confirm `AnalysisProviderMode.ANALYSIS` is added to `analysisProviderTypes.js`.
+- [ ] Confirm `npm run test:contract` passes (102 tests).
+- [ ] Confirm `node --test tests/unit/ocrProviderContract.test.js` passes (80 tests).
+- [ ] Confirm `node --test tests/unit/qwenOcrProvider.test.js` passes (34 tests).
+- [ ] Confirm `node --test tests/unit/qwenOcrTransport.test.js` passes (34 tests).
+- [ ] Confirm `node --test tests/unit/analysisProviderContract.test.js` passes (101 tests).
+- [ ] Confirm all 251 tests pass.
+- [ ] Confirm `GET /health` works with default env.
+- [ ] Confirm `POST /api/analyze-menu` with `{}` returns mock dishes.
+- [ ] Confirm normalized dish has BOTH new fields (`id`, `name`, `recommendationScore`, `matchReasons`, `estimatedPrice`, `currency`, `valueRating`, `confidence`) AND old mock fields (`dishName`, `tasteScore`, `recommendationReason`, `priceIntelligence`).
+- [ ] Confirm no stack trace leakage in any normalized result or error.
+- [ ] Confirm no API key / secret leakage in any normalized result or error.
+- [ ] Confirm no raw prompt / raw OCR text / raw provider response leakage.
+- [ ] Confirm confidence clamped to [0, 1]; scores clamped to [0, 100].
+- [ ] Confirm warnings de-duplicated and filtered to known codes.
+- [ ] Confirm `mock_ai` remains the default active analysis provider.
+- [ ] Confirm `ANALYSIS_PROVIDER_SELECTION.md` exists with Qwen/DeepSeek/OpenAI tradeoff analysis.
+- [ ] Confirm no real analysis provider calls are added.
+- [ ] Confirm no API keys or secrets are added.
+- [ ] Confirm no Flutter files were changed.
+
 ## Known Environment Issues
 
 - On some local Codex/Windows shells, Flutter and Dart commands may hang due to cache/permission restrictions.
