@@ -51,6 +51,9 @@ Implemented:
 - OCR-first multi-provider routing skeleton for future China/global support
 - Local backend mock proxy for developer testing, disabled by default
 - Backend OCR-first mock pipeline with standardized response envelopes
+- Backend OCR and analysis provider registries with safe config validation
+- Provider routing decision skeleton where china/global/auto safely fall back to mock
+- Flutter collapsed AI Debug showing backend requested/resolved provider mode metadata
 - Backend and Flutter debug scenarios for OCR/analysis success, low quality, empty result, and failure recovery
 - Disabled OpenAI/multi-provider skeletons
 

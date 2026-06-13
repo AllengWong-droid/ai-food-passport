@@ -35,6 +35,7 @@
 - Phase 9B: OCR Provider Selection Safety and Config Validation
 - Phase 9C: Real Analysis Provider Skeleton
 - Phase 9D: Backend Provider Routing Decision Skeleton
+- Phase 9E: Flutter Provider Mode Routing Visibility
 
 ## Current MVP Alpha
 
@@ -50,12 +51,13 @@ Developer backend testing is optional:
 Scan -> local mock OCR -> Backend Mock Mode -> backend OCR-first mock pipeline -> Results or Recovery UX
 ```
 
-Backend Mock Mode is disabled by default. Provider mode remains informational only.
+Backend Mock Mode is disabled by default. Provider mode remains informational only. In Backend Mock Mode, Flutter sends the selected provider mode to the backend, and collapsed AI Debug shows requested mode, resolved mode, fallback metadata, and the routing reason.
 
 ## Next
 
 - Backend mock scenario QA automation
 - Backend provider contract tests
+- Provider routing contract tests for mock/china/global/auto metadata
 - Real OCR adapter implementation behind disabled backend skeletons
 - Real provider gateway implementation behind backend only
 - Qwen/DeepSeek/OpenAI adapter skeletons on backend

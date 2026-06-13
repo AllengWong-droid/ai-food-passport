@@ -47,6 +47,27 @@ Suggested narration:
 
 "For developer testing, Flutter can optionally call a local backend mock server. The backend route is OCR-first: request, mock OCR provider, mock analysis provider, standardized response envelope, then Flutter Results."
 
+## Provider Routing Visibility Demo
+
+Use Profile -> Provider mode while Backend Mock Mode is enabled:
+
+- `mock`
+- `china`
+- `global`
+- `auto`
+
+For each mode:
+
+1. Select the provider mode.
+2. Keep Backend Scenario on `normal`.
+3. Run Scan.
+4. Expand AI Debug.
+5. Show requested provider mode, resolved provider mode, fallback used, real providers enabled, and routing reason.
+
+Suggested narration:
+
+"Provider mode is visible as routing metadata only. Mock resolves directly to mock. China, global, and auto record future routing intent, but because real providers are disabled in this MVP Alpha, they safely resolve to mock and show fallback metadata."
+
 ## Failure And Recovery Demo
 
 Use Profile -> Backend Scenario:

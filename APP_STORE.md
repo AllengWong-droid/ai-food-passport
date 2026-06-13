@@ -16,6 +16,7 @@ Current app behavior uses:
 - Debug OCR and AI panels
 - Optional developer backend mock mode, disabled by default
 - OCR-first backend mock pipeline for local testing only
+- Provider registry/routing skeleton where non-mock modes safely fall back to mock
 
 ## Not Yet Ready For Store Submission
 
@@ -25,6 +26,7 @@ Current app behavior uses:
 - No real DeepSeek integration
 - No real OpenAI integration
 - No real provider routing
+- China/global/auto provider modes do not call external providers
 - No real exchange-rate API
 - No Firebase persistence
 - No production authentication

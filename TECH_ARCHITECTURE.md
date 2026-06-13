@@ -44,7 +44,8 @@ Backend Mock Mode is disabled by default.
 When Backend Mock Mode is enabled in Profile during debug builds:
 
 ```text
-Flutter Scan
+Flutter Profile provider mode
+-> Flutter Scan
 -> local Mock OCR
 -> BackendMockMenuAnalysisRepository
 -> POST /api/analyze-menu
@@ -55,9 +56,10 @@ Flutter Scan
 -> backend mock analysis provider
 -> standardized response envelope
 -> Flutter Results / Recovery UX
+-> collapsed Flutter AI Debug routing metadata
 ```
 
-The Backend Scenario selector can send a `debugScenario` value for controlled local testing. It is ignored when Backend Mock Mode is off.
+The Backend Scenario selector can send a `debugScenario` value for controlled local testing. The selected Profile provider mode is sent as `providerMode`. Both values are ignored by the default local mock flow when Backend Mock Mode is off.
 
 ## Backend Architecture
 
@@ -91,6 +93,7 @@ Provider routing decision skeleton:
 - default mode: `mock`
 - real providers enabled: `false`
 - china/global/auto safely resolve to mock metadata in this build
+- routing metadata includes requested mode, resolved mode, fallback status, real provider status, readiness, and reason
 
 The backend route is OCR-first:
 
@@ -179,7 +182,7 @@ Persisted locally:
 - Output language
 - Provider mode
 
-These settings flow into `AiAnalysisRequest`. Home currency affects deterministic mock price conversion. Output language affects local mock helper copy. Provider mode is informational only.
+These settings flow into `AiAnalysisRequest`. Home currency affects deterministic mock price conversion. Output language affects local mock helper copy. Provider mode is informational only. In Backend Mock Mode, provider mode is sent to the backend as routing intent and displayed only in collapsed AI Debug.
 
 ## Not Yet Implemented
 

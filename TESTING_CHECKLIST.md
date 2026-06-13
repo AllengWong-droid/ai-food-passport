@@ -75,16 +75,42 @@ Invoke-RestMethod `
   -Body "{}"
 ```
 
+## Backend Provider Config QA
+
+- [ ] Confirm missing/empty `OCR_PROVIDER` safely defaults to `mock_ocr`.
+- [ ] Confirm invalid `OCR_PROVIDER` returns `OCR_PROVIDER_INVALID`.
+- [ ] Confirm skeleton OCR provider values return `OCR_PROVIDER_NOT_CONFIGURED`.
+- [ ] Confirm missing/empty `ANALYSIS_PROVIDER` safely defaults to `mock_ai`.
+- [ ] Confirm invalid `ANALYSIS_PROVIDER` returns `ANALYSIS_PROVIDER_INVALID`.
+- [ ] Confirm skeleton analysis provider values return `ANALYSIS_PROVIDER_NOT_CONFIGURED`.
+- [ ] Confirm `/health` reports active OCR provider, active analysis provider, available providers, config validity, and real provider flags.
+- [ ] Confirm no stack traces appear in provider config error responses.
+
 ## Flutter Backend Mock Mode
 
 - [ ] Start the backend mock server.
 - [ ] Open Profile in Flutter debug mode.
 - [ ] Enable Backend Mock Mode.
 - [ ] Set Backend Scenario to `normal`.
+- [ ] Set Provider mode to `mock`.
 - [ ] Run Scan.
 - [ ] Confirm Results opens.
 - [ ] Confirm collapsed AI Debug shows Active provider `backend_mock`.
+- [ ] Confirm collapsed AI Debug shows requested provider mode `mock` and resolved provider mode `mock`.
 - [ ] Confirm Backend Mock Mode can be turned off and local mock still works without backend.
+
+## Provider Mode Routing Visibility
+
+- [ ] With Backend Mock Mode enabled, set Provider mode to `mock`.
+- [ ] Run Scan and confirm AI Debug shows requested `mock`, resolved `mock`, fallback `false`.
+- [ ] Set Provider mode to `china`.
+- [ ] Run Scan and confirm AI Debug shows requested `china`, resolved `mock`, fallback `true`, and real providers enabled `false`.
+- [ ] Set Provider mode to `global`.
+- [ ] Run Scan and confirm AI Debug shows requested `global`, resolved `mock`, fallback `true`, and real providers enabled `false`.
+- [ ] Set Provider mode to `auto`.
+- [ ] Run Scan and confirm AI Debug shows requested `auto`, resolved `mock`, fallback metadata, and real providers enabled `false`.
+- [ ] Confirm provider mode is only shown as debug/routing metadata, not as a production provider feature.
+- [ ] Confirm Backend Scenario still works when a provider mode is selected.
 
 ## Backend Scenario QA
 

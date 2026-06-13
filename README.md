@@ -8,6 +8,8 @@ The Flutter app still runs on local mock OCR and local `MockAiRepository` by def
 
 A local backend mock proxy now exists for developer testing. Backend Mock Mode is disabled by default and can be enabled manually in Profile during debug builds. The backend uses an OCR-first mock pipeline and exposes controlled debug scenarios for success, low confidence, empty text, analysis quality, and failure recovery.
 
+The backend also has OCR and analysis provider registries plus a provider routing decision skeleton. `mock_ocr` and `mock_ai` remain the only active providers. Provider modes `china`, `global`, and `auto` are future routing hints only; they safely resolve to mock providers and return routing metadata for debug visibility.
+
 No real OCR, Qwen, DeepSeek, OpenAI, Firebase, subscriptions, production authentication, real exchange rates, API keys, or secrets are implemented.
 
 ## MVP Alpha Capabilities
@@ -107,10 +109,14 @@ Implemented:
 - Backend health endpoint
 - Backend API envelopes
 - OCR-first backend mock provider skeleton
+- OCR provider registry and safe config validation
+- Analysis provider registry and safe config validation
+- Provider routing decision skeleton
 - Backend OCR/analysis failure simulations
 - Flutter Backend Mock Mode toggle
 - Flutter Backend Scenario selector
 - Flutter backend error-to-recovery mapping
+- Flutter AI Debug display for backend requested/resolved provider mode
 
 Not implemented:
 
@@ -171,3 +177,4 @@ git diff --check
 - Phase 9B: OCR Provider Selection Safety and Config Validation
 - Phase 9C: Real Analysis Provider Skeleton
 - Phase 9D: Backend Provider Routing Decision Skeleton
+- Phase 9E: Flutter Provider Mode Routing Visibility

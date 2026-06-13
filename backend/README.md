@@ -338,6 +338,79 @@ Real provider routing is disabled:
 
 `OCR_PROVIDER` and `ANALYSIS_PROVIDER` environment validation still takes precedence. Explicit invalid or skeleton provider settings return controlled errors.
 
+Provider mode PowerShell examples:
+
+```powershell
+Invoke-RestMethod `
+  -Method Post `
+  -Uri "http://127.0.0.1:8787/api/analyze-menu" `
+  -ContentType "application/json" `
+  -Body '{"providerMode":"mock"}'
+```
+
+```powershell
+Invoke-RestMethod `
+  -Method Post `
+  -Uri "http://127.0.0.1:8787/api/analyze-menu" `
+  -ContentType "application/json" `
+  -Body '{"providerMode":"china"}'
+```
+
+```powershell
+Invoke-RestMethod `
+  -Method Post `
+  -Uri "http://127.0.0.1:8787/api/analyze-menu" `
+  -ContentType "application/json" `
+  -Body '{"providerMode":"global"}'
+```
+
+```powershell
+Invoke-RestMethod `
+  -Method Post `
+  -Uri "http://127.0.0.1:8787/api/analyze-menu" `
+  -ContentType "application/json" `
+  -Body '{"providerMode":"auto"}'
+```
+
+Flutter Backend Mock Mode sends the selected Profile provider mode as `providerMode`. Flutter Results displays the returned requested/resolved mode, fallback status, real provider status, and routing reason only in collapsed AI Debug.
+
+Provider configuration test examples:
+
+```powershell
+$env:OCR_PROVIDER = "not_real_provider"
+npm run dev
+```
+
+Expected `POST /api/analyze-menu` error code: `OCR_PROVIDER_INVALID`.
+
+```powershell
+$env:OCR_PROVIDER = "qwen_ocr_skeleton"
+npm run dev
+```
+
+Expected `POST /api/analyze-menu` error code: `OCR_PROVIDER_NOT_CONFIGURED`.
+
+```powershell
+$env:ANALYSIS_PROVIDER = "not_real_provider"
+npm run dev
+```
+
+Expected `POST /api/analyze-menu` error code: `ANALYSIS_PROVIDER_INVALID`.
+
+```powershell
+$env:ANALYSIS_PROVIDER = "qwen_analysis_skeleton"
+npm run dev
+```
+
+Expected `POST /api/analyze-menu` error code: `ANALYSIS_PROVIDER_NOT_CONFIGURED`.
+
+Clear local test environment variables after config tests:
+
+```powershell
+Remove-Item Env:OCR_PROVIDER -ErrorAction SilentlyContinue
+Remove-Item Env:ANALYSIS_PROVIDER -ErrorAction SilentlyContinue
+```
+
 ## Mock OCR Debug Scenarios
 
 `POST /api/analyze-menu` accepts an optional `debugScenario` field for local testing. Omitting it is equivalent to Flutter's `normal` scenario.

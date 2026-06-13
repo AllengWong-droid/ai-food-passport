@@ -53,6 +53,8 @@ Current behavior:
 - `mock` resolves to mock OCR and mock analysis.
 - `china`, `global`, and `auto` record future routing intent but resolve safely to mock.
 - `realProvidersEnabled` remains `false`.
+- Backend responses include requested provider mode, resolved provider mode, fallback status, provider routing readiness, real provider status, and routing reason.
+- Flutter Backend Mock Mode displays that metadata in collapsed AI Debug.
 
 This skeleton is metadata-only. It does not activate real Qwen, DeepSeek, OpenAI, Google Vision, or any external provider.
 
@@ -72,6 +74,8 @@ Disabled skeletons:
 
 Selecting a disabled skeleton returns `OCR_PROVIDER_NOT_CONFIGURED`. No skeleton provider calls the network or requires a key today.
 
+Missing or empty `OCR_PROVIDER` defaults to `mock_ocr`. Invalid values return `OCR_PROVIDER_INVALID` through the standardized backend error envelope.
+
 ## Analysis Provider Registry
 
 The backend has a provider registry prepared for future analysis providers.
@@ -87,6 +91,8 @@ Disabled skeletons:
 - `openai_analysis_skeleton`
 
 Selecting a disabled skeleton returns `ANALYSIS_PROVIDER_NOT_CONFIGURED`. Invalid provider config returns `ANALYSIS_PROVIDER_INVALID`. No skeleton provider calls the network or requires a key today.
+
+Missing or empty `ANALYSIS_PROVIDER` defaults to `mock_ai`.
 
 ## Input Model
 
