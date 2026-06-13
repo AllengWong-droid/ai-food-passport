@@ -13,6 +13,7 @@ Flutter uses local `MockAiRepository` by default. Developer Backend Mock Mode ca
 - `POST /api/analyze-menu`.
 - OCR-first mock pipeline:
   - mock OCR provider
+  - OCR provider registry
   - mock menu analysis provider
   - standardized API envelope
 - Mock OCR debug scenarios for success, low confidence, empty text, and OCR failure.
@@ -35,6 +36,7 @@ Flutter uses local `MockAiRepository` by default. Developer Backend Mock Mode ca
 - No provider health checks.
 - No production fallback routing.
 - No API keys or secrets.
+- Non-mock OCR providers are skeleton-only and disabled.
 
 ## Install Dependencies
 
@@ -71,6 +73,19 @@ You can override the port:
 PORT=8790 npm start
 ```
 
+## OCR Provider Configuration
+
+`OCR_PROVIDER` defaults to `mock_ocr`.
+
+Supported values:
+
+- `mock_ocr`
+- `qwen_ocr_skeleton`
+- `google_vision_skeleton`
+- `openai_vision_skeleton`
+
+Only `mock_ocr` is active and usable today. Skeleton providers do not call the network. If selected, they return the standardized error code `OCR_PROVIDER_NOT_CONFIGURED`.
+
 ## Health Check
 
 ```powershell
@@ -85,6 +100,15 @@ Response shape:
   "service": "ai-food-passport-backend",
   "mode": "mock",
   "ocrProvider": "mock_ocr",
+  "activeOcrProvider": "mock_ocr",
+  "availableOcrProviders": [
+    "mock_ocr",
+    "qwen_ocr_skeleton",
+    "google_vision_skeleton",
+    "openai_vision_skeleton"
+  ],
+  "realOcrEnabled": false,
+  "providerRoutingReady": true,
   "analysisProvider": "mock_ai",
   "timestamp": "2026-06-13T00:00:00.000Z"
 }
@@ -118,6 +142,8 @@ Invoke-RestMethod `
       "ocrMode": "mock",
       "ocrConfidence": 0.98,
       "ocrWarnings": [],
+      "realOcrEnabled": false,
+      "providerRoutingReady": true,
       "analysisProvider": "mock_ai",
       "analysisMode": "mock",
       "analysisConfidence": 0.96,
@@ -162,6 +188,8 @@ Invoke-RestMethod `
     "ocrMode": "mock",
     "ocrConfidence": 0.98,
     "ocrWarnings": [],
+    "realOcrEnabled": false,
+    "providerRoutingReady": true,
     "analysisProvider": "mock_ai",
     "analysisMode": "mock",
     "analysisConfidence": 0.96,
@@ -195,10 +223,16 @@ Current provider files:
 
 - `src/providers/ocr/mockOcrProvider.js`
 - `src/providers/ocr/ocrProviderTypes.js`
+- `src/providers/ocr/ocrProviderRegistry.js`
+- `src/providers/ocr/qwenOcrProviderSkeleton.js`
+- `src/providers/ocr/googleVisionOcrProviderSkeleton.js`
+- `src/providers/ocr/openAiVisionOcrProviderSkeleton.js`
 - `src/providers/analysis/mockMenuAnalysisProvider.js`
 - `src/providers/analysis/analysisProviderTypes.js`
 
 The OCR provider returns deterministic local text and metadata. It does not read real images or call any external OCR service. The analysis provider uses that mock OCR result to create deterministic dish recommendations and price intelligence.
+
+The registry is future-ready only. It keeps real provider selection behind the backend, but no real OCR provider is configured or enabled yet.
 
 ## Mock OCR Debug Scenarios
 

@@ -26,6 +26,7 @@ Scan screen
 -> MockOcrRepository returns OcrResult
 -> AiAnalysisRequest is sent by BackendMockMenuAnalysisRepository
 -> POST /api/analyze-menu
+-> backend OCR provider registry
 -> backend mock OCR provider
 -> backend mock analysis provider
 -> standardized backend envelope
@@ -33,6 +34,22 @@ Scan screen
 ```
 
 This is mock-only and local-development-only.
+
+## OCR Provider Registry
+
+The backend has a provider registry prepared for future OCR providers.
+
+Current default:
+
+- `mock_ocr`
+
+Disabled skeletons:
+
+- `qwen_ocr_skeleton`
+- `google_vision_skeleton`
+- `openai_vision_skeleton`
+
+Selecting a disabled skeleton returns `OCR_PROVIDER_NOT_CONFIGURED`. No skeleton provider calls the network or requires a key today.
 
 ## Input Model
 

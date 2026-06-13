@@ -5,6 +5,9 @@ This folder is a skeleton for backend OCR adapters.
 Current status:
 
 - `mockOcrProvider` is deterministic and local-only.
+- `ocrProviderRegistry` selects the active OCR provider.
+- `OCR_PROVIDER` defaults to `mock_ocr`.
+- `qwen_ocr_skeleton`, `google_vision_skeleton`, and `openai_vision_skeleton` are disabled placeholders.
 - It does not call Qwen OCR, Google Vision, Azure OCR, Tesseract, OpenAI Vision, or any external OCR service.
 - It requires no API keys or secrets.
 

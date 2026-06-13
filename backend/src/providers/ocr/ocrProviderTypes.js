@@ -3,7 +3,10 @@ const OcrProviderMode = Object.freeze({
 });
 
 const OcrProviderName = Object.freeze({
-  MOCK_OCR: 'mock_ocr'
+  MOCK_OCR: 'mock_ocr',
+  QWEN_OCR_SKELETON: 'qwen_ocr_skeleton',
+  GOOGLE_VISION_SKELETON: 'google_vision_skeleton',
+  OPENAI_VISION_SKELETON: 'openai_vision_skeleton'
 });
 
 const OcrDebugScenario = Object.freeze({

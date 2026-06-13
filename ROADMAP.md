@@ -31,6 +31,7 @@
 - Phase 8C: Backend Analysis Failure, Empty Result, and Low Quality Simulation
 - Phase 8D: Flutter Backend Error Response Mapping
 - Phase 8E: Flutter Developer Backend Scenario Tester
+- Phase 9A: Real OCR Provider Skeleton
 
 ## Current MVP Alpha
 
@@ -52,7 +53,7 @@ Backend Mock Mode is disabled by default. Provider mode remains informational on
 
 - Backend mock scenario QA automation
 - Backend provider contract tests
-- Real OCR adapter plan
+- Real OCR adapter implementation behind disabled backend skeletons
 - Real provider gateway implementation behind backend only
 - Qwen/DeepSeek/OpenAI adapter skeletons on backend
 - Provider health checks and fallback routing policy

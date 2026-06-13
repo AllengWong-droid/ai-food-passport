@@ -1,4 +1,7 @@
-const { extractMenuText } = require('../providers/ocr/mockOcrProvider');
+const {
+  getActiveOcrProvider,
+  isRealOcrEnabled
+} = require('../providers/ocr/ocrProviderRegistry');
 const { analyzeMenuText } = require('../providers/analysis/mockMenuAnalysisProvider');
 
 async function handleAnalyzeMenu(request, response, body, startedAt) {
@@ -20,7 +23,8 @@ async function handleAnalyzeMenu(request, response, body, startedAt) {
   }
 
   try {
-    const ocr = await extractMenuText(parsedBody.value);
+    const ocrProvider = getActiveOcrProvider();
+    const ocr = await ocrProvider.extractMenuText(parsedBody.value);
     if (!ocr.text || !ocr.text.trim()) {
       sendJson(request, response, 422, errorPayload(
         'OCR_EMPTY_TEXT',
@@ -44,6 +48,8 @@ async function handleAnalyzeMenu(request, response, body, startedAt) {
       ocrMode: ocr.mode,
       ocrConfidence: ocr.confidence,
       ocrWarnings: ocr.warnings || [],
+      realOcrEnabled: isRealOcrEnabled(),
+      providerRoutingReady: true,
       analysisProvider: analysis.provider,
       analysisMode: analysis.mode,
       analysisConfidence: analysis.confidence,
@@ -71,6 +77,14 @@ async function handleAnalyzeMenu(request, response, body, startedAt) {
       sendJson(request, response, 502, errorPayload(
         'OCR_FAILED',
         'Could not read the menu image.'
+      ));
+      return;
+    }
+
+    if (error.code === 'OCR_PROVIDER_NOT_CONFIGURED') {
+      sendJson(request, response, 503, errorPayload(
+        'OCR_PROVIDER_NOT_CONFIGURED',
+        'OCR provider is not configured.'
       ));
       return;
     }

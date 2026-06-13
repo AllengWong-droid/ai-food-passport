@@ -1,8 +1,11 @@
-const { extractMenuText } = require('../providers/ocr/mockOcrProvider');
+const {
+  getActiveOcrProvider,
+  isRealOcrEnabled
+} = require('../providers/ocr/ocrProviderRegistry');
 const { analyzeMenuText } = require('../providers/analysis/mockMenuAnalysisProvider');
 
 async function buildMockAnalyzeMenuResponse(requestBody = {}, latencyMs = 0) {
-  const ocr = await extractMenuText(requestBody);
+  const ocr = await getActiveOcrProvider().extractMenuText(requestBody);
   const analysis = await analyzeMenuText({ requestBody, ocrResult: ocr });
   const warnings = [
     ...(ocr.warnings || []),
@@ -16,6 +19,8 @@ async function buildMockAnalyzeMenuResponse(requestBody = {}, latencyMs = 0) {
       ocrMode: ocr.mode,
       ocrConfidence: ocr.confidence,
       ocrWarnings: ocr.warnings || [],
+      realOcrEnabled: isRealOcrEnabled(),
+      providerRoutingReady: true,
       analysisProvider: analysis.provider,
       analysisMode: analysis.mode,
       analysisConfidence: analysis.confidence,

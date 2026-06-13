@@ -167,3 +167,4 @@ git diff --check
 - Phase 8C: Analysis Failure Simulation
 - Phase 8D: Flutter Backend Error Mapping
 - Phase 8E: Flutter Developer Backend Scenario Tester
+- Phase 9A: Real OCR Provider Skeleton
