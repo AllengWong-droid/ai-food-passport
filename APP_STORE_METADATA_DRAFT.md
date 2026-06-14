@@ -332,8 +332,8 @@ Thank you!
 
 | Asset | Status | Priority |
 |---|---|---|
-| **App icon** (custom, not Flutter default) | ❌ Missing | High (before TestFlight) |
-| **Launch screen** (branded) | ❌ Missing | Medium (before TestFlight) |
+| **App icon** (custom, not Flutter default) | ❌ Missing — Design spec exists in `APP_ICON_LAUNCH_SCREEN_SPEC.md` | High (before TestFlight) |
+| **Launch screen** (branded) | ❌ Missing — Design spec exists in `APP_ICON_LAUNCH_SCREEN_SPEC.md` | Medium (before TestFlight) |
 | **Screenshots** (3-10, real device frames) | ❌ Missing | High (before App Store) |
 | **Privacy policy page** (live URL) | ✅ Ready (`https://allengwong-droid.github.io/ai-food-passport/privacy-policy.html`) | High (before TestFlight) |
 | **Support page** (live URL) | ⚠️ Placeholder (GitHub Issues) | Medium |

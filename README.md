@@ -284,6 +284,7 @@ Demo & QA:
 - `APP_STORE_METADATA_DRAFT.md` — App Store metadata draft (name, subtitle, keywords, description, category, review notes, TestFlight tester instructions, what NOT to claim)
 - `PRIVACY_POLICY_HOSTING_PLAN.md` — GitHub Pages hosting plan for privacy policy (12 sections, step-by-step setup, 16-item validation checklist)
 - `docs/privacy-policy.html` — Static privacy policy page (✅ live at `https://allengwong-droid.github.io/ai-food-passport/privacy-policy.html`)
+- `APP_ICON_LAUNCH_SCREEN_SPEC.md` — App icon, launch screen, and screenshot visual identity design spec (Phase 21I)
 
 ## Run Locally
 

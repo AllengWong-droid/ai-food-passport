@@ -78,6 +78,7 @@
 - Phase 21F: Privacy Policy GitHub Pages Hosting Plan (PRIVACY_POLICY_HOSTING_PLAN.md — 12 sections, why needed, URL options, file structure, 6 required disclaimers, step-by-step setup, 16-item validation checklist, future update process)
 - Phase 21G: Create Privacy Policy GitHub Pages Page (docs/privacy-policy.html — static HTML page, 10 sections, 6 disclaimers, accurate two-mode wording, mobile-responsive, zero external dependencies)
 - Phase 21H: Privacy Policy Public URL Verification & Metadata Alignment (verified live URL, aligned APP_STORE_METADATA_DRAFT.md and PRIVACY_POLICY_HOSTING_PLAN.md with actual URL, validated 16/16 checklist items pass)
+- Phase 21I: App Icon & Launch Screen Design Spec (APP_ICON_LAUNCH_SCREEN_SPEC.md — 13-section visual identity spec, icon concept, launch screen layout, screenshot captions, forbidden claims, future implementation steps; no code/config/assets changed)
 
 ## Current MVP Alpha
 
