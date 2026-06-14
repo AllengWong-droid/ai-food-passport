@@ -20,6 +20,8 @@ No real OCR, Qwen, DeepSeek, OpenAI, Firebase, subscriptions, production authent
 
 The MVP Alpha is ready to demo against the live Render mock backend. No real API keys, providers, or Firebase are required.
 
+> **Frozen Alpha baseline**: see [MVP_ALPHA_RELEASE_SNAPSHOT.md](MVP_ALPHA_RELEASE_SNAPSHOT.md) for the complete release snapshot (commit `d097239`, tag `phase-17a-mvp-alpha-demo-packaging`).
+
 ### Quick Start
 
 ```bash
@@ -263,6 +265,7 @@ Demo & QA:
 - `REAL_PROVIDER_PREFLIGHT_PLAN.md` — real provider safety gates and enablement plan
 - `PHASE_16B0_DRY_RUN_REPORT.md` — real provider gate dry-run verification
 - `MVP_ALPHA_STATUS.md` — one-page MVP Alpha status overview
+- `MVP_ALPHA_RELEASE_SNAPSHOT.md` — frozen Alpha baseline snapshot (commit `d097239`)
 
 ## Run Locally
 
