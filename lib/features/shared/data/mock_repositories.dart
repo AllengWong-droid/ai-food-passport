@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../domain/models/models.dart';
 import '../domain/repositories/repositories.dart';
+import 'ai/backend_endpoint_config.dart';
 import 'ai/backend_routing_metadata.dart';
 import 'mock_data.dart';
 import 'traveler_settings_controller.dart';
@@ -31,7 +32,7 @@ final aiRepositoryProvider = Provider<AiRepository>((ref) {
 });
 
 final backendMockModeProvider = StateProvider<bool>((ref) {
-  return false;
+  return BackendEndpointConfig.isCustomDefined;
 });
 
 final backendDebugScenarioProvider = StateProvider<String>((ref) {
@@ -145,10 +146,10 @@ class MockScanRepository implements ScanRepository {
     final normalizedPath = imagePath.toLowerCase();
     final isChineseMenu = normalizedPath.contains('china') ||
         normalizedPath.contains('chinese') ||
-        normalizedPath.contains('zh');
+        _hasLangCodeToken(normalizedPath, 'zh');
     final isEnglishMenu = normalizedPath.contains('english') ||
         normalizedPath.contains('harbor') ||
-        normalizedPath.contains('en');
+        _hasLangCodeToken(normalizedPath, 'en');
 
     return ScanModel(
       scanId: 'scan-${DateTime.now().millisecondsSinceEpoch}',
@@ -181,7 +182,7 @@ class MockOcrRepository implements OcrRepository {
     final normalizedPath = imagePath.toLowerCase();
     if (normalizedPath.contains('china') ||
         normalizedPath.contains('chinese') ||
-        normalizedPath.contains('zh')) {
+        _hasLangCodeToken(normalizedPath, 'zh')) {
       return OcrResult(
         rawText: mockChineseMenuText,
         detectedLanguage: 'Chinese',
@@ -192,7 +193,7 @@ class MockOcrRepository implements OcrRepository {
     }
     if (normalizedPath.contains('english') ||
         normalizedPath.contains('harbor') ||
-        normalizedPath.contains('en')) {
+        _hasLangCodeToken(normalizedPath, 'en')) {
       return OcrResult(
         rawText: mockEnglishMenuText,
         detectedLanguage: 'English',
@@ -527,4 +528,19 @@ class MockPriceRepository implements PriceRepository {
       assessment: assessment,
     );
   }
+}
+
+/// Checks whether [path] contains [code] as a language-code token.
+///
+/// A token is delimited by `/`, `-`, `_`, `.`, or string boundaries.
+/// This prevents `contains('en')` from matching the `en` inside `menu`
+/// or `contains('zh')` from matching accidental substrings.
+///
+/// Examples:
+/// - `_hasLangCodeToken('harbor-en.png', 'en')` → `true`
+/// - `_hasLangCodeToken('mock-menu-image', 'en')` → `false`
+/// - `_hasLangCodeToken('zh-cn/menu', 'zh')` → `true`
+bool _hasLangCodeToken(String path, String code) {
+  final pattern = RegExp('(?:^|[/\\\\_.-])$code(?:[/\\\\_.-]|\$)');
+  return pattern.hasMatch(path);
 }
