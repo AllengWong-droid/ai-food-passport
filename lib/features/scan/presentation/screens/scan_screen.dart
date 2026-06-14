@@ -77,7 +77,7 @@ class _ScanScreenState extends ConsumerState<ScanScreen> {
                               child: SizedBox(
                                 width: 250,
                                 child: ScanLanguageChip(
-                                    label: 'AUTO-DETECT JAPANESE'),
+                                    label: 'AUTO-DETECT'),
                               ),
                             ),
                           ),

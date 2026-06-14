@@ -577,6 +577,7 @@ Invoke-RestMethod `
 - [ ] Confirm `backend/.env` is untracked and in `.gitignore`.
 - [x] Phase 14A MVP Alpha freeze readiness audit complete; all 6 audit areas pass; 42/42 Flutter tests pass; git status/check clean.
 - [x] Phase 14B MVP Alpha demo script & manual QA runbook created (`MVP_ALPHA_DEMO_RUNBOOK.md`); demo setup, walkthrough, QA checklist, caveats documented.
+- [x] Phase 15B MVP Alpha demo polish: removed all "Mock AI"/"mock OCR" from user-visible copy; changed "TRY DEMO SCAN" to "QUICK PREVIEW"; changed "Demo passport active" to "Guest passport active"; simplified backend mode subtitles; fixed hardcoded result labels. All 42 tests pass.
 - [x] Flutter widget test overflow fix (Phase 13D verification): wrapped OnboardingScreen `Column` in `SingleChildScrollView`, removed `Spacer()`, all 42 tests pass.
 
 ## Known Environment Issues

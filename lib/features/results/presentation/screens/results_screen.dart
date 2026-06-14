@@ -49,14 +49,18 @@ class ResultsScreen extends ConsumerWidget {
                         color: AppColors.ink, size: 30),
                   ),
                 ),
-                const Expanded(
-                  child: Center(child: SectionHeader('8 of 14 Match')),
+                Expanded(
+                  child: Center(
+                    child: SectionHeader(
+                      '${dishes.length} ${dishes.length == 1 ? "dish" : "dishes"} found',
+                    ),
+                  ),
                 ),
                 const SizedBox(width: 54),
               ],
             ),
             const SizedBox(height: 34),
-            const SectionHeader('Tokyo - Izakaya Gonpachi'),
+            const SectionHeader('Last scanned menu'),
             const SizedBox(height: 14),
             Text(
               copy.resultsTitle,

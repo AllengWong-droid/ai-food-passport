@@ -257,7 +257,7 @@ class MockAiRepository implements AiRepository {
             assessment: PriceAssessment.goodValue,
           ),
           recommendationReason:
-              'Mock AI matched the savory broth profile against $tasteSummary and flagged wheat noodles for $allergySummary.',
+              'Matched the savory broth profile against $tasteSummary and flagged wheat noodles for $allergySummary.',
           ingredients: [
             'Beef',
             'Wheat noodles',
@@ -293,7 +293,7 @@ class MockAiRepository implements AiRepository {
             assessment: PriceAssessment.cheap,
           ),
           recommendationReason:
-              'A lighter option aligned with $dietarySummary, with fewer allergen flags in the mock OCR text.',
+              'A lighter option aligned with $dietarySummary, with fewer allergen flags detected.',
           ingredients: ['Seasonal vegetables', 'Garlic', 'Cooking oil'],
           allergens: [],
           dietaryFlags: ['Vegetable-forward'],
@@ -330,7 +330,7 @@ class MockAiRepository implements AiRepository {
             assessment: PriceAssessment.fair,
           ),
           recommendationReason:
-              'Mock AI selected this familiar seafood option for $tasteSummary while checking wheat and fish risks.',
+              'Selected this familiar seafood option for $tasteSummary while checking wheat and fish risks.',
           ingredients: ['White fish', 'Wheat batter', 'Potato', 'Tartar sauce'],
           allergens: ['Fish', 'Wheat', 'Egg'],
           dietaryFlags: ['Seafood', dietarySummary],
@@ -361,7 +361,7 @@ class MockAiRepository implements AiRepository {
             assessment: PriceAssessment.cheap,
           ),
           recommendationReason:
-              'Flagged by mock AI because the OCR text includes peanut and sesame allergen notes.',
+              'Flagged because peanut and sesame allergen notes were detected in the menu.',
           ingredients: ['Cabbage', 'Carrot', 'Peanut', 'Sesame'],
           allergens: ['Peanut', 'Sesame'],
           dietaryFlags: ['Vegetarian-friendly'],
@@ -389,7 +389,7 @@ class MockAiRepository implements AiRepository {
         safetyScore: allergySummary.toLowerCase().contains('egg') ? 74 : 86,
         valueScore: 84,
         recommendationReason:
-            'Mock AI found a strong umami match for $tasteSummary and checked $allergySummary before ranking this first.',
+            'Strong umami match for $tasteSummary. Checked $allergySummary before ranking this first.',
         priceIntelligence: PriceIntelligenceModel(
           localPrice: 980,
           localCurrency: request.localCurrency,
@@ -420,7 +420,7 @@ class MockAiRepository implements AiRepository {
         safetyScore: 70,
         valueScore: 89,
         recommendationReason:
-            'Good local value, but mock AI flags soy, wheat, and egg for your allergy profile.',
+            'Good local value, but soy, wheat, and egg require attention for your allergy profile.',
         priceIntelligence: PriceIntelligenceModel(
           localPrice: 800,
           localCurrency: request.localCurrency,

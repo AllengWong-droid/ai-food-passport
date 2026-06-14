@@ -239,7 +239,7 @@ class _HomeCurrencyCard extends StatelessWidget {
           const SizedBox(width: 10),
           Expanded(
             child: Text(
-              'Demo passport active - home currency $homeCurrency',
+              'Guest passport active - home currency $homeCurrency',
               style: const TextStyle(
                 color: AppColors.mutedInk,
                 fontSize: 13,

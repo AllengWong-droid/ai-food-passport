@@ -97,7 +97,7 @@ class ProfileScreen extends ConsumerWidget {
               const SizedBox(height: 8),
               const _SettingsHelperText(
                 text:
-                    'Provider mode is for future routing. Mock remains active in this MVP.',
+                    'Provider routing is planned for a future release. All scans currently use preview data.',
               ),
             ],
             if (DeveloperControlsConfig.areVisible) ...[
@@ -105,8 +105,8 @@ class ProfileScreen extends ConsumerWidget {
               _DeveloperToggleTile(
                 title: 'Backend Mock Mode',
                 subtitle: backendMockEnabled
-                    ? 'Developer test mode. Backend: ${BackendEndpointConfig.currentBaseUrl}'
-                    : 'Local mock AI is active. Backend server is not required. Backend URL: ${BackendEndpointConfig.currentBaseUrl}',
+                    ? 'Connected to: ${BackendEndpointConfig.currentBaseUrl}'
+                    : 'Using offline preview data. No server required. Backend URL: ${BackendEndpointConfig.currentBaseUrl}',
                 value: backendMockEnabled,
                 onChanged: (value) {
                   ref.read(backendMockModeProvider.notifier).state = value;

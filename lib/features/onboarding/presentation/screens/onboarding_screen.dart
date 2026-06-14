@@ -63,7 +63,7 @@ class OnboardingScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 12),
                 AppButton(
-                  label: 'TRY DEMO SCAN',
+                  label: 'QUICK PREVIEW',
                   icon: Icons.center_focus_strong,
                   isPrimary: false,
                   onPressed: () => context.goNamed(RouteNames.home),
