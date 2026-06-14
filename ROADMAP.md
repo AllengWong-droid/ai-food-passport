@@ -68,6 +68,7 @@
 - Phase 18C: MVP Alpha Portfolio Demo Showcase (MVP_ALPHA_DEMO_SHOWCASE.md, polished portfolio showcase)
 - Phase 18D: Public Repo Final QA and Portfolio Handoff Audit (2 misleading items fixed, 0 secrets found, all 8 checklist items pass)
 - Phase 19A: Portfolio Handoff Packet (PORTFOLIO_HANDOFF.md — pitch, talking points, claim boundaries, next engineering steps)
+- Phase 19B: Demo Walkthrough Script & Recording Checklist (DEMO_WALKTHROUGH_SCRIPT.md — 30s/90s/3min scripts, narration, recording checklist, video title)
 
 ## Current MVP Alpha
 

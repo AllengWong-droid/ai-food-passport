@@ -273,6 +273,8 @@ Demo & QA:
 - `MVP_ALPHA_RELEASE_SNAPSHOT.md` — frozen Alpha baseline snapshot (commit `d097239`)
 - `MVP_ALPHA_SCREENSHOT_PLAN.md` — screenshot capture plan and portfolio description (7 screens)
 - `PHASE_18B0_REPORT.md` — screenshot data source alignment report
+- `PORTFOLIO_HANDOFF.md` — portfolio pitch, talking points, claim boundaries, next steps
+- `DEMO_WALKTHROUGH_SCRIPT.md` — recording scripts (30s/90s/3min), narration, recording checklist
 
 ## Run Locally
 
