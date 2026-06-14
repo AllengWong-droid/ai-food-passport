@@ -578,6 +578,7 @@ Invoke-RestMethod `
 - [x] Phase 14A MVP Alpha freeze readiness audit complete; all 6 audit areas pass; 42/42 Flutter tests pass; git status/check clean.
 - [x] Phase 14B MVP Alpha demo script & manual QA runbook created (`MVP_ALPHA_DEMO_RUNBOOK.md`); demo setup, walkthrough, QA checklist, caveats documented.
 - [x] Phase 15B MVP Alpha demo polish: removed all "Mock AI"/"mock OCR" from user-visible copy; changed "TRY DEMO SCAN" to "QUICK PREVIEW"; changed "Demo passport active" to "Guest passport active"; simplified backend mode subtitles; fixed hardcoded result labels. All 42 tests pass.
+- [ ] Phase 15C post-polish manual demo smoke test: run `flutter run -d web-server --web-hostname=127.0.0.1 --web-port=8081 --dart-define=BACKEND_BASE_URL=https://ai-food-passport.onrender.com`; verify all polished copy appears correctly; confirm Render backend reachable; confirm mock dishes (Tonkotsu Ramen, Miso Katsu Skewers) appear; confirm no API keys or real provider calls. Checklist in `PHASE_15C_MANUAL_SMOKE_TEST.md`.
 - [x] Flutter widget test overflow fix (Phase 13D verification): wrapped OnboardingScreen `Column` in `SingleChildScrollView`, removed `Spacer()`, all 42 tests pass.
 
 ## Known Environment Issues

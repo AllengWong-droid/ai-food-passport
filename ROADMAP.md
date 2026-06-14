@@ -55,9 +55,9 @@
 - Phase 13D: Flutter Internal Build Points to Deployed Render Backend (Flutter widget test overflow fixed)
 - Phase 13E: Flutter Web Debug Smoke Test Against Render Backend (manual verified)
 - Phase 14A: MVP Alpha Freeze Readiness Audit (audit/documentation complete)
-- Phase 14B: MVP Alpha Demo Script and Manual QA Runbook
-- Phase 15B: MVP Alpha Demo Polish (copy/UI polish, no backend changes)
 - Phase 14B: MVP Alpha Demo Script & Manual QA Runbook (documentation complete)
+- Phase 15B: MVP Alpha Demo Polish (copy/UI polish, no backend changes)
+- Phase 15C: Post-polish Manual Demo Smoke Test (manual verification checklist ready)
 
 ## Current MVP Alpha
 
