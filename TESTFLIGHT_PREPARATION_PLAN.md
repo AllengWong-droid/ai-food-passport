@@ -393,6 +393,7 @@ The project has a clear path to TestFlight, but the hard prerequisite — enabli
 
 | Document | Relevance |
 |---|---|
+| [TESTFLIGHT_GAP_CLOSURE_PLAN.md](TESTFLIGHT_GAP_CLOSURE_PLAN.md) | **Updated gap analysis and action plan (Phase 21K)** — supersedes the item status in this document. Includes what's been completed in Phases 21D-21J, remaining blockers, milestone checklists, and decision matrix. |
 | [APP_STORE_READINESS_AUDIT.md](APP_STORE_READINESS_AUDIT.md) | Full audit of TestFlight and App Store readiness (Phase 21A) |
 | [MVP_ALPHA_STATUS.md](MVP_ALPHA_STATUS.md) | Current system status and limitations |
 | [REAL_PROVIDER_PREFLIGHT_PLAN.md](REAL_PROVIDER_PREFLIGHT_PLAN.md) | Real provider safety gate enablement plan |

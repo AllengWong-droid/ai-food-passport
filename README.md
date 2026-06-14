@@ -286,6 +286,7 @@ Demo & QA:
 - `docs/privacy-policy.html` — Static privacy policy page (✅ live at `https://allengwong-droid.github.io/ai-food-passport/privacy-policy.html`)
 - `APP_ICON_LAUNCH_SCREEN_SPEC.md` — App icon, launch screen, and screenshot visual identity design spec (Phase 21I)
 - `APP_ICON_PROMPT_PACK.md` — AI image generation prompt pack for app icon, launch screen, and visual assets (Phase 21J)
+- `TESTFLIGHT_GAP_CLOSURE_PLAN.md` — Comprehensive gap analysis and action plan from portfolio-ready to TestFlight-ready (Phase 21K)
 
 ## Run Locally
 

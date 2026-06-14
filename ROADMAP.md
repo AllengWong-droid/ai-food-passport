@@ -80,6 +80,7 @@
 - Phase 21H: Privacy Policy Public URL Verification & Metadata Alignment (verified live URL, aligned APP_STORE_METADATA_DRAFT.md and PRIVACY_POLICY_HOSTING_PLAN.md with actual URL, validated 16/16 checklist items pass)
 - Phase 21I: App Icon & Launch Screen Design Spec (APP_ICON_LAUNCH_SCREEN_SPEC.md — 13-section visual identity spec, icon concept, launch screen layout, screenshot captions, forbidden claims, future implementation steps; no code/config/assets changed)
 - Phase 21J: App Icon Prompt Pack & Asset Generation Plan (APP_ICON_PROMPT_PACK.md — English + Chinese icon prompts, 5 concept variants, 18-category negative prompt, launch screen prompt, 16-item acceptance checklist, 12-item rejection checklist, export plan, prompt usage guide; no images generated, no code/config changed)
+- Phase 21K: TestFlight Readiness Gap Closure Plan (TESTFLIGHT_GAP_CLOSURE_PLAN.md — 18 blocking gaps identified, 14 technical gaps, 42-item milestone checklist, 8-item "do not do yet" list, order of operations by resource type, decision matrix, 3-gate framework, 3 recommended next phases; no code/config changed)
 
 ## Current MVP Alpha
 
