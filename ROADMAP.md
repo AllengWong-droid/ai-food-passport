@@ -92,23 +92,14 @@ Backend Mock Mode is disabled by default. Provider mode remains informational on
 
 ## Next
 
-- Render mock backend deployed and verified (`ai-food-passport.onrender.com`, Phase 13C)
-- Deployment documentation completed (Phases 13A, 13B, 13C)
-- Backend deployment readiness documentation and .env.example completed
-- Backend mock scenario QA automation completed (102 contract + unit tests)
-- Provider routing contract tests for mock/china/global/auto metadata completed
-- Provider timeout, rate-limit, budget, and redaction policy enforcement
-- OCR provider contract defined with normalization helpers and 80 unit tests
-- OCR provider selection documented (Qwen OCR/VL recommended first candidate)
-- Qwen OCR adapter scaffold created with fake transport test seam and 34 unit tests
-- Real OCR adapter implementation behind disabled backend skeletons
-- Real provider gateway implementation behind backend only
-- Qwen/DeepSeek/OpenAI adapter skeletons on backend
-- Provider health checks and fallback routing policy
-- Real exchange-rate service
-- Secret management setup in deployment environment variables
-- Production authentication and persistence
-- Saved scan history
+- **Phase 16B**: Qwen OCR real smoke test — requires a real test API key (backend-only). Blocked until key exists.
+- **Phase 16C**: Qwen Analysis real smoke test — requires Phase 16B completed.
+- **Phase 16D**: Combined OCR + Analysis real smoke test — requires 16B and 16C completed.
+- **Firebase integration**: Authentication, cloud sync, persistence.
+- **Real exchange-rate API**: Replace mock currency conversion.
+- **Production deployment**: Real production backend with provider keys, security hardening.
+- **App Store preparation**: Screenshots, metadata, compliance review.
+- **Saved scan history**: Persistent scan records.
 
 ## Later Product Expansion
 
@@ -123,7 +114,7 @@ Backend Mock Mode is disabled by default. Provider mode remains informational on
 - Real OCR
 - Real Qwen, DeepSeek, OpenAI, Claude, Gemini, or other provider calls
 - Real production backend provider routing
-- Mock backend deployed to Render (Phase 13C); real production deployment pending
+- Real production deployment
 - Firebase
 - Subscriptions
 - Real exchange-rate API
