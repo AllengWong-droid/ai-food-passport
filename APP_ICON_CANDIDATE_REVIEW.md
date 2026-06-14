@@ -280,7 +280,7 @@ When the PNG master is exported:
 
 | Step | Action | Phase | Prerequisites |
 |---|---|---|---|
-| **1. Export PNG master** | Export the selected candidate as 1024x1024 px, PNG, sRGB, opaque, square corners | Phase 22B (future) | External image file available |
+| **1. Export PNG master** | Export the selected candidate as 1024x1024 px, PNG, sRGB, opaque, square corners | ✅ Done (Phase 22B) — Master ingested at `design/app-icon/source/ai-food-passport-selected-icon-master.png` (1254x1254 px, 2.24 MB). See `APP_ICON_MASTER_ASSET_INTAKE.md` for full intake record. Next: crop/resize to 1024x1024 for production export. |
 | **2. Vector cleanup** | Trace and clean up the generated image into clean vector shapes (Figma/Illustrator). Adjust fork/spoon spacing if needed. Ensure the glow is subtle and consistent. | Phase 22B (future) | PNG master exported |
 | **3. Silhouette test** | Scale to 29x29, 40x40, 60x60, 120x120, 180x180. Verify legibility at each size. | Phase 22B (future) | Cleaned vector |
 | **4. Acceptance sign-off** | Run through the full 16-item acceptance checklist again with the actual exported image. | Phase 22C (future) | Silhouette test passed |
@@ -334,6 +334,7 @@ When the PNG master is exported:
 | 6 | 15/16 acceptance criteria passed; 1 deferred (opacity check) | Deferred item is export-time verification — not a real failure. No rejection criteria hit. | Phase 22A |
 | 7 | No binary image assets committed | This is a review/selection record. The actual image file will be committed in a future export phase (Phase 22B+). | Phase 22A |
 | 8 | No Flutter code or iOS config changed | This phase is documentation-only. Candidate selection is recorded; asset application happens in future phases. | Phase 22A |
+| 9 | **Master asset ingested into repository** (Phase 22B) | Candidate image file copied to `design/app-icon/source/ai-food-passport-selected-icon-master.png`. Binary asset present in repo but NOT applied to Flutter/iOS. Design-source only. See `APP_ICON_MASTER_ASSET_INTAKE.md`. | Phase 22B |
 
 ---
 

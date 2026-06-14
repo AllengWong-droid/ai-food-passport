@@ -288,6 +288,8 @@ Demo & QA:
 - `APP_ICON_PROMPT_PACK.md` — AI image generation prompt pack for app icon, launch screen, and visual assets (Phase 21J)
 - `TESTFLIGHT_GAP_CLOSURE_PLAN.md` — Comprehensive gap analysis and action plan from portfolio-ready to TestFlight-ready (Phase 21K)
 - `APP_ICON_CANDIDATE_REVIEW.md` — Selected app icon candidate review, selection rationale, safety audit, and acceptance checklist (Phase 22A)
+- `APP_ICON_MASTER_ASSET_INTAKE.md` — App icon master asset intake record: metadata, scope, safety review, future use plan (Phase 22B)
+- `design/app-icon/` — Design-source app icon directory: selected master PNG + README (Phase 22B)
 
 ## Run Locally
 
