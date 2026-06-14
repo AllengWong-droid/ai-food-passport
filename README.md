@@ -76,6 +76,8 @@ Home currency conversion works for all supported currencies (USD, EUR, GBP, JPY,
 | [PHASE_16B0_DRY_RUN_REPORT.md](PHASE_16B0_DRY_RUN_REPORT.md) | Real provider gate dry-run verification report |
 | [PHASE_22E_REPORT.md](PHASE_22E_REPORT.md) | Phase 22E report: clean square master intake & QA |
 | [PHASE_22F_REPORT.md](PHASE_22F_REPORT.md) | Phase 22F report: design-only app icon export set |
+| [APP_ICON_DESIGN_HANDOFF.md](APP_ICON_DESIGN_HANDOFF.md) | Phase 22G handoff: app icon design line closure |
+| [PHASE_22G_REPORT.md](PHASE_22G_REPORT.md) | Phase 22G report: design line closure / handoff |
 | [ROADMAP.md](ROADMAP.md) | Full phase history and future plans |
 
 ## MVP Alpha Capabilities

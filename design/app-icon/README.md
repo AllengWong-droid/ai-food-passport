@@ -132,7 +132,9 @@ Steps 6-9 require macOS with Xcode.
 | `APP_ICON_CLEAN_SQUARE_REGENERATION_PLAN.md` | Phase 22D plan: why regeneration needed, 9-item criteria, AI prompt + negative prompt, 20-item acceptance + 12-item rejection checklist |
 | `APP_ICON_CLEAN_SQUARE_MASTER_INTAKE.md` | Phase 22E intake & QA: 21/21 validation pass (square opaque, no baked-in corners), accepted as preferred export source |
 | `APP_ICON_DESIGN_ONLY_EXPORT_SET.md` | Phase 22F export set: 14 iOS sizes from clean square master, design-only review assets, not applied to app |
+| `APP_ICON_DESIGN_HANDOFF.md` | Phase 22G handoff: design line closure, visual direction, preferred source, export set, QA, safety review, implementation gap, future checklist |
 | `PHASE_22F_REPORT.md` | Phase 22F report: export set generation, verification, scope confirmation |
+| `PHASE_22G_REPORT.md` | Phase 22G report: handoff document creation, verification, scope confirmation |
 
 ---
 

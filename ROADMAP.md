@@ -87,6 +87,7 @@
 - Phase 22D: Clean Square App Icon Master Regeneration Plan (APP_ICON_CLEAN_SQUARE_REGENERATION_PLAN.md — 8-section plan: why regeneration needed, current design summary, problem statement, 9-item clean square criteria, AI generation prompt + negative prompt, 20-item acceptance checklist, 12-item rejection checklist, next step workflow; planning-only, no binary assets created, no code/config/secrets changed)
 - Phase 22E: Clean Square App Icon Master Intake & QA (APP_ICON_CLEAN_SQUARE_MASTER_INTAKE.md — full intake & QA report, 21/21 validation pass (square 1254x1254 RGB opaque, no alpha, no baked-in corners), 7 preview PNGs + comparison sheet under design/app-icon/preview/, accepted as preferred future export source, Phase 22C rounded-corner issue RESOLVED, previous source archived as design reference; no code/config/secrets changed)
 - Phase 22F: Design-Only App Icon Export Set (APP_ICON_DESIGN_ONLY_EXPORT_SET.md — 14 iOS icon sizes exported from clean square master under design/app-icon/export/design-only/, contact sheet generated, design-only review assets, NOT applied to Flutter/iOS, no code/config/secrets changed)
+- Phase 22G: App Icon Design Line Closure / Handoff (APP_ICON_DESIGN_HANDOFF.md — design line closed for portfolio/MVP documentation, handoff document with visual direction, preferred source asset, export set path, QA summary, safety review, implementation gap, future checklist; PHASE_22G_REPORT.md; no code/config/secrets changed)
 
 ## Current MVP Alpha
 
