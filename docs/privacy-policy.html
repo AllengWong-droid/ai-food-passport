@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Food Passport — Privacy Policy</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 2rem 1rem;
+      line-height: 1.7;
+      color: #1a1a1a;
+      background: #fafafa;
+    }
+    h1 {
+      font-size: 1.8rem;
+      border-bottom: 2px solid #1a365d;
+      padding-bottom: 0.5rem;
+      color: #1a365d;
+      margin-top: 0;
+    }
+    h2 {
+      font-size: 1.3rem;
+      color: #1a365d;
+      margin-top: 2rem;
+      margin-bottom: 0.75rem;
+    }
+    h3 {
+      font-size: 1.1rem;
+      color: #2d3748;
+      margin-top: 1.5rem;
+    }
+    p { margin: 0.75rem 0; }
+    a { color: #2b6cb0; text-decoration: underline; }
+    a:hover { color: #1a365d; }
+    code {
+      background: #edf2f7;
+      padding: 0.15rem 0.4rem;
+      border-radius: 3px;
+      font-size: 0.9em;
+      word-break: break-all;
+    }
+    pre {
+      background: #edf2f7;
+      padding: 1rem;
+      border-radius: 6px;
+      overflow-x: auto;
+      font-size: 0.9em;
+    }
+
+    /* Disclaimer box */
+    .disclaimer-box {
+      background: #fff8e1;
+      border: 1px solid #f9a825;
+      border-left: 4px solid #f9a825;
+      border-radius: 6px;
+      padding: 1.25rem;
+      margin-bottom: 2rem;
+    }
+    .disclaimer-box h3 {
+      margin-top: 0;
+      color: #6d4c00;
+      font-size: 1rem;
+    }
+    .disclaimer-box ul {
+      margin: 0.5rem 0 0 0;
+      padding-left: 1.25rem;
+    }
+    .disclaimer-box li { margin-bottom: 0.35rem; font-size: 0.95rem; }
+
+    /* Status banner */
+    .status-banner {
+      background: #1a365d;
+      color: #fff;
+      border-radius: 6px;
+      padding: 0.75rem 1rem;
+      margin-bottom: 2rem;
+      font-size: 0.9rem;
+      text-align: center;
+    }
+    .status-banner strong { color: #f9a825; }
+
+    /* Tables */
+    .table-wrap {
+      overflow-x: auto;
+      margin: 1rem 0;
+    }
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      font-size: 0.95rem;
+    }
+    th, td {
+      border: 1px solid #e2e8f0;
+      padding: 0.6rem 0.75rem;
+      text-align: left;
+      vertical-align: top;
+    }
+    th {
+      background: #edf2f7;
+      font-weight: 600;
+      color: #2d3748;
+    }
+    tr:nth-child(even) td { background: #f7fafc; }
+
+    /* Sections */
+    .section { margin-bottom: 2rem; }
+
+    /* Footer */
+    .last-updated {
+      margin-top: 3rem;
+      padding-top: 1rem;
+      border-top: 1px solid #e2e8f0;
+      color: #718096;
+      font-size: 0.85rem;
+    }
+
+    /* Responsive */
+    @media (max-width: 600px) {
+      body { padding: 1rem 0.75rem; }
+      h1 { font-size: 1.4rem; }
+      h2 { font-size: 1.15rem; }
+      table { font-size: 0.85rem; }
+      th, td { padding: 0.4rem 0.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="status-banner">
+  <strong>MVP Alpha — Mock-Only</strong> &bull;
+  No real OCR/AI provider enabled &bull;
+  <code>productionReady: false</code>
+</div>
+
+<h1>Privacy Policy for AI Food Passport</h1>
+
+<div class="disclaimer-box">
+  <h3>Important Disclaimers</h3>
+  <ul>
+    <li><strong>Draft only — not legal advice.</strong> This privacy policy is a draft template. It has not been reviewed by a qualified professional. Privacy laws vary by jurisdiction (GDPR in Europe, CCPA in California, etc.). Before using this privacy policy for any public App Store or TestFlight submission, have it reviewed by a qualified person familiar with app privacy requirements in your target markets.</li>
+    <li><strong>MVP Alpha — mock-only.</strong> No real OCR/AI provider is enabled. All scan results are deterministic mock data.</li>
+    <li><strong>Render mock backend may receive requests when configured.</strong> When <code>BACKEND_BASE_URL</code> is set to the Render-hosted mock backend, requests are sent to <code>https://ai-food-passport.onrender.com</code>. No real OCR/AI provider is enabled and no API keys are stored in Flutter.</li>
+    <li><strong><code>productionReady</code> is <code>false</code>.</strong> This app is not production-ready. Do not rely on it for food safety or allergen decisions.</li>
+    <li><strong>No API keys in Flutter.</strong> All provider credentials are server-side only.</li>
+    <li><strong>Contact placeholder.</strong> Support contact information is a placeholder. Update before App Store or TestFlight submission.</li>
+  </ul>
+</div>
+
+<div class="section">
+  <h2>1. App Identity</h2>
+  <div class="table-wrap">
+    <table>
+      <tr><th>App name</th><td>AI Food Passport</td></tr>
+      <tr><th>Version covered</th><td>MVP Alpha (mock-only)</td></tr>
+      <tr><th>Current status</th><td>No real OCR or AI providers enabled. All scan results are deterministic mock data.</td></tr>
+      <tr><th>Backend</th><td>Render free-tier mock backend (<code>https://ai-food-passport.onrender.com</code>). No real provider calls.</td></tr>
+      <tr><th><code>productionReady</code></th><td><code>false</code></td></tr>
+    </table>
+  </div>
+</div>
+
+<div class="section">
+  <h2>2. Data Currently Collected in MVP Alpha</h2>
+
+  <p>The MVP Alpha app does not use accounts, login, payments, analytics, Firebase, or real AI provider calls. In local/offline preview mode, demo data is deterministic mock data. When configured to use the Render demo backend, requests may be sent to the Render-hosted mock backend, but no real OCR/AI provider is enabled and no API keys are stored in Flutter.</p>
+
+  <div class="table-wrap">
+    <table>
+      <tr><th>Data Type</th><th>Collected?</th><th>How?</th></tr>
+      <tr><td>Account information</td><td>No</td><td>No account system exists</td></tr>
+      <tr><td>Login credentials</td><td>No</td><td>No login flow</td></tr>
+      <tr><td>Firebase data</td><td>No</td><td>No Firebase integration</td></tr>
+      <tr><td>Payment information</td><td>No</td><td>No payments or subscriptions</td></tr>
+      <tr><td>Analytics / crash reports</td><td>No</td><td>No analytics SDKs integrated</td></tr>
+      <tr><td>Real AI provider calls</td><td>No</td><td>All providers disabled; mock-only</td></tr>
+      <tr><td>Persistent personal cloud storage</td><td>No</td><td>All data is local on-device</td></tr>
+      <tr>
+        <td>Menu images</td>
+        <td>Depends on mode</td>
+        <td>In local/offline preview mode: images are used for local mock flow only. When <code>BACKEND_BASE_URL</code> is configured to point to the Render mock backend: menu images are transmitted to the Render-hosted mock backend for processing. No real OCR/AI provider is enabled and no API keys are stored in Flutter.</td>
+      </tr>
+      <tr><td>Traveler settings</td><td>Local only</td><td>Home country, currency, allergies stored locally via <code>shared_preferences</code>; not transmitted</td></tr>
+    </table>
+  </div>
+
+  <p><strong>Summary:</strong> Current MVP Alpha does not use accounts, login, payments, analytics, Firebase, or real AI provider calls. In local/offline preview mode, demo data is deterministic mock data. When configured to use the Render demo backend, requests may be sent to the Render-hosted mock backend, but no real OCR/AI provider is enabled and no API keys are stored in Flutter.</p>
+</div>
+
+<div class="section">
+  <h2>3. Data the Future Production App May Process</h2>
+  <p>When real OCR and AI providers are enabled in a future production release, the app may process:</p>
+  <div class="table-wrap">
+    <table>
+      <tr><th>Data Type</th><th>How It's Used</th><th>Stored?</th></tr>
+      <tr><td>Menu images</td><td>Sent to backend for OCR processing</td><td>Not stored permanently; processed in memory</td></tr>
+      <tr><td>OCR text (extracted from images)</td><td>Sent to AI analysis provider</td><td>Not stored permanently</td></tr>
+      <tr><td>Dietary preferences (allergies, spice tolerance)</td><td>Included in AI analysis prompt</td><td>Local only (on-device)</td></tr>
+      <tr><td>Allergen preferences</td><td>Included in AI analysis prompt</td><td>Local only (on-device)</td></tr>
+      <tr><td>App diagnostics (crash logs, performance)</td><td>Used to improve app stability</td><td>Optional; user can opt out</td></tr>
+    </table>
+  </div>
+  <p><strong>Important:</strong> Even in the future production app, API keys never live in the Flutter app. All provider calls go through the backend proxy, which keeps keys server-side.</p>
+</div>
+
+<div class="section">
+  <h2>4. How Data Is Handled (Design Principles)</h2>
+  <p>These are the intended data-handling principles for the production app. They are <strong>not yet fully implemented</strong> in MVP Alpha.</p>
+  <div class="table-wrap">
+    <table>
+      <tr><th>Principle</th><th>Status</th><th>Detail</th></tr>
+      <tr><td>API keys server-side only</td><td>Designed</td><td>Keys live in backend env vars; Flutter never sees them</td></tr>
+      <tr><td>Provider calls through backend proxy</td><td>Designed</td><td>Flutter sends images to backend; backend calls providers</td></tr>
+      <tr><td>No API keys in Flutter</td><td>Enforced</td><td>Checked by 41 config unit tests</td></tr>
+      <tr><td>No unnecessary data retention</td><td>Planned</td><td>Backend should not store menu images after processing</td></tr>
+      <tr><td>User control over data</td><td>Planned</td><td>Future: delete scan history, export data</td></tr>
+      <tr><td>HTTPS only</td><td>Enforced</td><td>Backend URL validation rejects non-HTTPS in production config</td></tr>
+    </table>
+  </div>
+</div>
+
+<div class="section">
+  <h2>5. Third-Party Services</h2>
+  <div class="table-wrap">
+    <table>
+      <tr><th>Service</th><th>Purpose</th><th>Data Shared</th><th>Privacy Policy</th></tr>
+      <tr><td>Render (backend hosting)</td><td>Hosts the backend mock server</td><td>No personal data (mock-only)</td><td><a href="https://render.com/privacy">render.com/privacy</a></td></tr>
+      <tr><td>Future OCR/AI provider (e.g., Qwen)</td><td>Menu image analysis</td><td>Menu images + dietary preferences (when enabled)</td><td>TBD — link to provider's privacy policy</td></tr>
+      <tr><td>GitHub Pages (privacy policy hosting)</td><td>Hosts this privacy policy page</td><td>No data</td><td><a href="https://docs.github.com/en/pages">docs.github.com/en/pages</a></td></tr>
+    </table>
+  </div>
+  <p><strong>Note:</strong> When real AI providers are enabled, their privacy policies must be linked here, and users must be informed that menu images are sent to those providers for processing.</p>
+</div>
+
+<div class="section">
+  <h2>6. User Choices</h2>
+  <div class="table-wrap">
+    <table>
+      <tr><th>Choice</th><th>How</th></tr>
+      <tr><td>Avoid uploading sensitive images</td><td>Only scan menu images; avoid personal documents</td></tr>
+      <tr><td>Use mock-only mode</td><td>Current default; no real providers are called</td></tr>
+      <tr><td>Delete local data</td><td>Uninstall the app (clears <code>shared_preferences</code>)</td></tr>
+      <tr><td>Contact support</td><td>Via GitHub Issues (see Section 7)</td></tr>
+    </table>
+  </div>
+</div>
+
+<div class="section">
+  <h2>7. Contact / Support</h2>
+  <p>For questions about this privacy policy or the App, contact us through:</p>
+  <p><strong>Support:</strong> <a href="https://github.com/allengwong-droid/AI-Food-Passport/issues">https://github.com/allengwong-droid/AI-Food-Passport/issues</a></p>
+  <p><em>During MVP Alpha, GitHub Issues serves as the primary support channel. This is a placeholder; update before final App Store submission.</em></p>
+</div>
+
+<div class="section">
+  <h2>8. Future Privacy Policy URL Plan</h2>
+  <div class="table-wrap">
+    <table>
+      <tr><th>Phase</th><th>URL</th><th>Status</th></tr>
+      <tr><td>Now (MVP Alpha / TestFlight draft)</td><td><code>https://allengwong-droid.github.io/ai-food-passport/privacy-policy.html</code></td><td>Page created; GitHub Pages not yet enabled</td></tr>
+      <tr><td>Future (custom domain)</td><td><code>https://aifoodpassport.com/privacy</code></td><td>Planned (after domain purchase)</td></tr>
+    </table>
+  </div>
+</div>
+
+<div class="section">
+  <h2>9. App Store Privacy Label Preparation Notes</h2>
+  <p>Apple requires a privacy label for App Store Connect. This section tracks what will need to be declared.</p>
+
+  <h3>9.1 Current MVP Alpha / Mock-Only</h3>
+  <div class="table-wrap">
+    <table>
+      <tr><th>Label Category</th><th>Answer</th><th>Notes</th></tr>
+      <tr><td>Data used to track you</td><td>None</td><td>No tracking</td></tr>
+      <tr><td>Data linked to you</td><td>None</td><td>No login, no account</td></tr>
+      <tr><td>Data not linked to you</td><td>None</td><td>No data collected at all</td></tr>
+    </table>
+  </div>
+
+  <h3>9.2 Future Production (When Real Providers Enabled)</h3>
+  <p><strong>Action required before production submission:</strong> Complete Apple's privacy label questionnaire in App Store Connect and update this policy accordingly. Menu images sent to backend and allergen preferences may need to be declared under "Photos or Videos" and "Health &amp; Fitness" respectively.</p>
+</div>
+
+<div class="section">
+  <h2>10. Changes to This Privacy Policy</h2>
+  <p>When this policy is updated, the new version will be posted at the same URL. For significant changes (new data collection, new third-party providers), a notice will be added to the app or the GitHub repository.</p>
+
+  <p><strong>Future update required:</strong> This privacy policy must be updated before:</p>
+  <ul>
+    <li>Enabling any real OCR or AI provider</li>
+    <li>Adding account/login systems</li>
+    <li>Adding Firebase or any analytics SDK</li>
+    <li>Enabling payments or subscriptions</li>
+    <li>Submitting to App Store Connect (for TestFlight or App Store review)</li>
+  </ul>
+</div>
+
+<div class="last-updated">
+  <p><strong>Last updated:</strong> June 14, 2026</p>
+  <p><strong>Effective date:</strong> June 14, 2026</p>
+  <p><em>This privacy policy draft is provided as a template. It must be reviewed by a qualified professional before use in any public App Store or TestFlight submission.</em></p>
+</div>
+
+</body>
+</html>

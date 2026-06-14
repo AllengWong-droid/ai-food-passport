@@ -76,6 +76,7 @@
 - Phase 21D: App Identity Decision (APP_IDENTITY_DECISION.md — name options, Bundle ID, category, subtitle, icon/launch screen direction, final decision table)
 - Phase 21E: Privacy Policy & App Metadata Draft (PRIVACY_POLICY_DRAFT.md — 11 sections, current MVP Alpha data collection: none; APP_STORE_METADATA_DRAFT.md — 14 sections, name, subtitle, keywords, description, category, review notes, TestFlight tester instructions, what NOT to claim)
 - Phase 21F: Privacy Policy GitHub Pages Hosting Plan (PRIVACY_POLICY_HOSTING_PLAN.md — 12 sections, why needed, URL options, file structure, 6 required disclaimers, step-by-step setup, 16-item validation checklist, future update process)
+- Phase 21G: Create Privacy Policy GitHub Pages Page (docs/privacy-policy.html — static HTML page, 10 sections, 6 disclaimers, accurate two-mode wording, mobile-responsive, zero external dependencies)
 
 ## Current MVP Alpha
 
