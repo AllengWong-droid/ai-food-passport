@@ -580,6 +580,27 @@ Invoke-RestMethod `
 - [x] Phase 15B MVP Alpha demo polish: removed all "Mock AI"/"mock OCR" from user-visible copy; changed "TRY DEMO SCAN" to "QUICK PREVIEW"; changed "Demo passport active" to "Guest passport active"; simplified backend mode subtitles; fixed hardcoded result labels. All 42 tests pass.
 - [ ] Phase 15C post-polish manual demo smoke test: run `flutter run -d web-server --web-hostname=127.0.0.1 --web-port=8081 --dart-define=BACKEND_BASE_URL=https://ai-food-passport.onrender.com`; verify all polished copy appears correctly; confirm Render backend reachable; confirm mock dishes (Tonkotsu Ramen, Miso Katsu Skewers) appear; confirm no API keys or real provider calls. Checklist in `PHASE_15C_MANUAL_SMOKE_TEST.md`.
 - [x] Phase 16A real provider preflight plan created (`REAL_PROVIDER_PREFLIGHT_PLAN.md`): 9 sections covering prerequisites, OCR gates, analysis gates, forbidden actions, rollback plan, test matrix (8 scenarios), decision points (16B/16C/16D), and verification commands. No real providers enabled.
+- [x] Phase 16B0 real provider preflight dry run: 226 gate-specific backend tests pass (68 contract + 158 unit); deployed Render `/health` and `/api/analyze-menu` verified mock-only; no API keys, no real providers enabled, productionReady remains false; all Flutter tests pass (42/42); git clean.
+
+## Phase 16B0: Real Provider Preflight Dry Run QA
+
+- [x] Review existing provider gate tests for missing QWEN_API_KEY, placeholder QWEN_API_KEY, disabled gates, and default-disabled real providers.
+- [x] Run `node --test tests/contract/realProviderGate.test.js` — confirm all 68 tests pass.
+- [x] Run `node --test tests/unit/qwenOcrProvider.test.js tests/unit/qwenAnalysisProvider.test.js tests/unit/qwenOcrTransport.test.js tests/unit/qwenAnalysisTransport.test.js` — confirm all 158 unit tests pass.
+- [x] Verify deployed Render `GET /health` returns `activeOcrProvider: mock_ocr`, `activeAnalysisProvider: mock_ai`, `realOcrEnabled: false`, `realAnalysisEnabled: false`, `realProvidersEnabled: false`, `productionReady: false`.
+- [x] Verify deployed Render `POST /api/analyze-menu` with `{}` returns `ok: true`, 2 mock dishes (Tonkotsu Ramen, Miso Katsu Skewers).
+- [x] Confirm `realProvidersEnabled` remains `false` on deployed Render.
+- [x] Confirm `productionReady` remains `false` on deployed Render.
+- [x] Run `flutter test` — confirm all 42 tests pass.
+- [x] Run `git diff --check` — confirm clean (no whitespace errors).
+- [x] Run `git status --short` — confirm clean working tree.
+- [x] Confirm no Flutter code changed.
+- [x] Confirm no backend runtime code changed.
+- [x] Confirm no Render env values changed.
+- [x] Confirm no API keys, secrets, or Firebase added.
+- [x] Confirm no real providers enabled.
+- [x] Confirm `.env` still untracked and in `.gitignore`.
+- [x] Confirm no `QWEN_API_KEY` or real key committed to `render.yaml`.
 - [x] Flutter widget test overflow fix (Phase 13D verification): wrapped OnboardingScreen `Column` in `SingleChildScrollView`, removed `Spacer()`, all 42 tests pass.
 
 ## Known Environment Issues

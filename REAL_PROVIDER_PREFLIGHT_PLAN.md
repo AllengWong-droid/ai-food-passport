@@ -1,8 +1,8 @@
 # Real Provider Preflight Plan
 
-> **Phase**: 16A
+> **Phase**: 16A + 16B0
 > **Date**: 2026-06-14
-> **Status**: Documentation and safety planning only — NO real providers enabled
+> **Status**: Documentation, safety planning, and gate dry-run verified — NO real providers enabled
 > **productionReady**: `false`
 
 ---
@@ -237,11 +237,73 @@ This matrix maps every sensible env var combination through the expected outcome
 
 ## 7. Decision Point — Phase Boundaries
 
-### Phase 16A (THIS PHASE)
+### Phase 16A (COMPLETED)
 - Creates this preflight plan document.
 - Updates related documentation.
 - Runs automated tests to confirm baseline.
 - **Does NOT execute any real provider testing.**
+
+### Phase 16B0 (COMPLETED — 2026-06-14)
+**Goal**: Verify the real provider safety gates WITHOUT using a real API key and WITHOUT enabling real providers.
+
+**Results — All Acceptance Criteria Met:**
+
+| Criteria | Result |
+|---|---|
+| No real provider call occurs | PASS |
+| No API key is added | PASS |
+| Missing/placeholder key behavior documented/tested | PASS — 68 contract + 158 unit gate tests |
+| Render remains mock-only | PASS |
+| Flutter tests still pass | PASS — 42/42 |
+| Backend tests pass | PASS — 226 gate-specific tests (68 contract + 158 unit) |
+| productionReady remains false | PASS |
+
+**Deployed Render Verification:**
+
+| Field | Expected | Actual |
+|---|---|---|
+| `activeOcrProvider` | `mock_ocr` | `mock_ocr` |
+| `activeAnalysisProvider` | `mock_ai` | `mock_ai` |
+| `realOcrEnabled` | `false` | `false` |
+| `realAnalysisEnabled` | `false` | `false` |
+| `realProvidersEnabled` | `false` | `false` |
+| `productionReady` | `false` | `false` |
+| `configValid` | `true` | `true` |
+| `analysisConfigValid` | `true` | `true` |
+| `POST /api/analyze-menu {}` | `ok: true` + 2 mock dishes | `ok: true` + Tonkotsu Ramen & Miso Katsu Skewers |
+
+**Backend Gate Tests Verified:**
+
+| Test File | Tests | Status |
+|---|---|---|
+| `tests/contract/realProviderGate.test.js` | 68 | All pass |
+| `tests/unit/qwenOcrProvider.test.js` | (included in 158) | All pass |
+| `tests/unit/qwenAnalysisProvider.test.js` | (included in 158) | All pass |
+| `tests/unit/qwenOcrTransport.test.js` | (included in 158) | All pass |
+| `tests/unit/qwenAnalysisTransport.test.js` | (included in 158) | All pass |
+| **Total gate-specific** | **226** | **All pass** |
+
+**Gate Coverage Confirmed:**
+
+| Gate Scenario | Tests Covering It |
+|---|---|
+| Missing `QWEN_API_KEY` | realProviderGate (OCR: 9, Analysis: 9), qwenOcrProvider, qwenAnalysisProvider, qwenOcrTransport, qwenAnalysisTransport |
+| Placeholder `QWEN_API_KEY` | realProviderGate (OCR: 4, Analysis: 4, Combined: 11), qwenOcrProvider, qwenAnalysisProvider, qwenOcrTransport, qwenAnalysisTransport |
+| `QWEN_OCR_PROVIDER_ENABLED=false` | qwenOcrProvider, qwenOcrTransport, realProviderGate default pipeline |
+| `QWEN_ANALYSIS_PROVIDER_ENABLED=false` | qwenAnalysisProvider, qwenAnalysisTransport, realProviderGate default pipeline |
+| Real provider gates disabled by default | realProviderGate default pipeline (15 tests), qwenAnalysisProvider, qwenAnalysisTransport |
+| No secrets leak | All 5 files (realProviderGate, qwenOcrProvider, qwenAnalysisProvider, qwenOcrTransport, qwenAnalysisTransport) |
+| No stack traces in errors | All 5 files |
+| Cross-scenario env contamination | realProviderGate (2 tests) |
+
+**Changes Made:**
+- No Flutter code changed
+- No backend runtime code changed
+- No Render env values changed
+- No API keys or secrets added
+- No Firebase added
+- `productionReady` unchanged (`false`)
+- Only documentation updated (ROADMAP.md, REAL_PROVIDER_PREFLIGHT_PLAN.md, TESTING_CHECKLIST.md)
 
 ### Phase 16B — Qwen OCR Real Smoke Test
 **Prerequisites to begin Phase 16B:**
