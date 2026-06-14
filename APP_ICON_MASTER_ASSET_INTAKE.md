@@ -201,6 +201,7 @@ The asset matches the accepted visual direction from `APP_ICON_CANDIDATE_REVIEW.
 | 5 | No `pubspec.yaml` changes | No Flutter assets declaration, no `flutter_launcher_icons` config, no dependency additions. | Phase 22B |
 | 6 | Small-size validation performed in Phase 22C | Generated 7 preview images (1024–40 px + contact sheet), reviewed readability, accepted as design-source asset (19/20), flagged baked-in corners for resolution in Phase 22D. | Phase 22C |
 | 7 | Clean square regeneration plan created (Phase 22D) | Created `APP_ICON_CLEAN_SQUARE_REGENERATION_PLAN.md` (8 sections): why regeneration needed, 9-item criteria, AI prompt + negative prompt, 20-item acceptance + 12-item rejection checklist, next step workflow. Planning-only; no binary assets created. | Phase 22D |
+| 8 | Clean square master intake & QA completed (Phase 22E) | Ingested `ai-food-passport-clean-square-master.png` (1254x1254, RGB opaque, 2.56 MB). Validated: square dimensions, no alpha channel, no baked-in corners — Phase 22C issue RESOLVED. Accepted as preferred export source (21/21). Previous source archived as design reference. 7 preview assets + comparison sheet generated under design/app-icon/preview/. | Phase 22E |
 
 ---
 

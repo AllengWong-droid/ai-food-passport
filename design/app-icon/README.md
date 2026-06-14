@@ -10,15 +10,26 @@
 design/app-icon/
   README.md                                          (this file)
   source/
-    ai-food-passport-selected-icon-master.png        (selected icon — Candidate 1, recolored)
+    ai-food-passport-selected-icon-master.png        (original selected icon — Candidate 1, recolored; ROUNDED CORNERS; archived as design reference)
+    ai-food-passport-clean-square-master.png         (regenerated clean square icon; PREFERRED export source; Phase 22E)
   preview/
+    # Rounded-corner source previews (Phase 22C):
     icon-preview-1024.png                            (1024x1024 — App Store master size)
     icon-preview-512.png                             (512x512 — iTunes/iPad Pro size)
     icon-preview-180.png                             (180x180 — iPhone @3x home screen)
     icon-preview-120.png                             (120x120 — Spotlight/@2x size)
     icon-preview-60.png                              (60x60 — Settings/@2x size)
     icon-preview-40.png                              (40x40 — smallest common iOS size)
-    icon-small-size-contact-sheet.png                (1380x760 — all sizes in grid)
+    icon-small-size-contact-sheet.png                (1380x760 — all rounded sizes in grid)
+    # Clean square master previews (Phase 22E):
+    icon-clean-square-preview-1024.png               (1024x1024 — App Store master size)
+    icon-clean-square-preview-512.png                (512x512 — iTunes/iPad Pro size)
+    icon-clean-square-preview-180.png                (180x180 — iPhone @3x home screen)
+    icon-clean-square-preview-120.png                (120x120 — Spotlight/@2x size)
+    icon-clean-square-preview-60.png                 (60x60 — Settings/@2x size)
+    icon-clean-square-preview-40.png                 (40x40 — smallest common iOS size)
+    icon-clean-square-vs-rounded-comparison.png      (1644x652 — old vs new at all sizes)
+    clean-square-master-contact-sheet.png            (620x520 — clean square master preview grid, Phase 22E)
 ```
 
 ---
@@ -27,13 +38,16 @@ design/app-icon/
 
 | Field | Detail |
 |---|---|
-| **Path** | `design/app-icon/source/ai-food-passport-selected-icon-master.png` |
+| **Preferred source (production)** | `design/app-icon/source/ai-food-passport-clean-square-master.png` |
+| **Archive source (rounded)** | `design/app-icon/source/ai-food-passport-selected-icon-master.png` |
 | **Candidate** | Candidate 1, recolored version |
 | **Visual description** | Royal/cobalt blue passport book, warm metallic gold crossed fork/spoon, globe linework, subtle cyan/blue edge glow |
 | **Dimensions** | 1254 x 1254 px |
-| **Format** | PNG, RGB 8-bit, non-interlaced |
-| **Intake date** | 2026-06-15 |
-| **Intake document** | `APP_ICON_MASTER_ASSET_INTAKE.md` |
+| **Format** | PNG, RGB 8-bit, opaque (no alpha channel) |
+| **Intake date (original)** | 2026-06-15 (Phase 22B) |
+| **Intake date (clean square)** | 2026-06-15 (Phase 22E) |
+| **Intake document (original)** | `APP_ICON_MASTER_ASSET_INTAKE.md` |
+| **Intake document (clean square)** | `APP_ICON_CLEAN_SQUARE_MASTER_INTAKE.md` |
 | **Candidate review** | `APP_ICON_CANDIDATE_REVIEW.md` (Phase 22A) |
 | **Design spec** | `APP_ICON_LAUNCH_SCREEN_SPEC.md` (Phase 21I) |
 | **Prompt pack** | `APP_ICON_PROMPT_PACK.md` (Phase 21J) |
@@ -99,6 +113,7 @@ Steps 6-9 require macOS with Xcode.
 | `APP_ICON_PROMPT_PACK.md` | AI image generation prompts used to create candidates |
 | `APP_ICON_QA_SMALL_SIZE_VALIDATION.md` | Phase 22C QA report: per-size readability review, visual checks, risks, acceptance decision (19/20 score) |
 | `APP_ICON_CLEAN_SQUARE_REGENERATION_PLAN.md` | Phase 22D plan: why regeneration needed, 9-item criteria, AI prompt + negative prompt, 20-item acceptance + 12-item rejection checklist |
+| `APP_ICON_CLEAN_SQUARE_MASTER_INTAKE.md` | Phase 22E intake & QA: 21/21 validation pass (square opaque, no baked-in corners), accepted as preferred export source |
 
 ---
 

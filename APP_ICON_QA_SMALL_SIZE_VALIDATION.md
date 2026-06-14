@@ -343,6 +343,7 @@ All steps in Section 8.1 require **macOS with Xcode installed**. None of those s
 | 4 | Defer final production acceptance until macOS + square re-export | Baked-in rounded corners and non-standard dimensions must be resolved first | 2026-06-15 | 22C |
 | 5 | Flag rounded-corner issue as MEDIUM severity for Phase 22D | Double-masking risk could cause clipping or visual artifacts on iOS | 2026-06-15 | 22C |
 | 6 | Phase 22D Clean Square Regeneration Plan created | Documents why regeneration is needed, 9-item criteria, AI prompt + negative prompt, 20-item acceptance + 12-item rejection checklist; planning-only, no binary assets created | 2026-06-15 | 22D |
+| 7 | Phase 22E Clean Square Master Intake & QA completed | Clean square master ingested (1254x1254 RGB opaque), 21/21 validation pass, 7 preview assets + comparison sheet generated, Phase 22C rounded-corner issue RESOLVED, accepted as preferred future export source, previous source archived as design reference | 2026-06-15 | 22E |
 | 6 | Do NOT apply icon to Flutter/iOS in this phase | Scope is QA + preview generation only; application is Phase 22D | 2026-06-15 | 22C |
 
 ---

@@ -269,6 +269,14 @@ Step 5: Ingest into repo (future phase)
    └─ Update APP_ICON_QA_SMALL_SIZE_VALIDATION.md (re-run QA)
    └─ Commit with tag: phase-22d-clean-square-regenerated
 
+   ✅ COMPLETED in Phase 22E:
+   - Clean square master ingested: `design/app-icon/source/ai-food-passport-clean-square-master.png`
+   - Full QA validation: 21/21 pass (square 1254x1254, RGB opaque, no alpha, no baked-in corners)
+   - Phase 22C rounded-corner issue RESOLVED
+   - Accepted as preferred future export source
+   - 7 preview assets + comparison sheet generated
+   - See `APP_ICON_CLEAN_SQUARE_MASTER_INTAKE.md` for full report
+
 Step 6: Apply to Flutter/iOS (future phase, requires macOS)
    └─ Phase 22E or later
    └─ Generate iOS icon set from clean square master

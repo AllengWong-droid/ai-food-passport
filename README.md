@@ -74,6 +74,7 @@ Home currency conversion works for all supported currencies (USD, EUR, GBP, JPY,
 | [PHASE_15C_MANUAL_SMOKE_TEST.md](PHASE_15C_MANUAL_SMOKE_TEST.md) | Post-polish manual smoke test checklist |
 | [REAL_PROVIDER_PREFLIGHT_PLAN.md](REAL_PROVIDER_PREFLIGHT_PLAN.md) | Real provider safety gates and enablement plan |
 | [PHASE_16B0_DRY_RUN_REPORT.md](PHASE_16B0_DRY_RUN_REPORT.md) | Real provider gate dry-run verification report |
+| [PHASE_22E_REPORT.md](PHASE_22E_REPORT.md) | Phase 22E report: clean square master intake & QA |
 | [ROADMAP.md](ROADMAP.md) | Full phase history and future plans |
 
 ## MVP Alpha Capabilities
@@ -291,7 +292,8 @@ Demo & QA:
 - `APP_ICON_MASTER_ASSET_INTAKE.md` — App icon master asset intake record: metadata, scope, safety review, future use plan (Phase 22B)
 - `APP_ICON_QA_SMALL_SIZE_VALIDATION.md` — App icon QA & small-size validation report: per-size readability review (1024–40px), visual checks, risks (baked-in corners), 19/20 acceptance score as design-source asset (Phase 22C)
 - `APP_ICON_CLEAN_SQUARE_REGENERATION_PLAN.md` — Clean square app icon master regeneration plan: why needed, 9-item criteria, AI generation prompt + negative prompt, 20-item acceptance + 12-item rejection checklist, next step workflow (Phase 22D)
-- `design/app-icon/` — Design-source app icon directory: selected master PNG + 7 preview images (1024–40px + contact sheet) + README (Phases 22B–22D)
+- `APP_ICON_CLEAN_SQUARE_MASTER_INTAKE.md` — Clean square app icon master intake & QA: 21/21 validation pass (square 1254x1254 RGB opaque, Phase 22C rounded-corner issue resolved), 7 preview assets + comparison sheet, accepted as preferred future export source (Phase 22E)
+- `design/app-icon/` — Design-source app icon directory: 2 master PNGs (rounded archive + clean square) + 13 preview images + README (Phases 22B–22E)
 
 ## Run Locally
 
