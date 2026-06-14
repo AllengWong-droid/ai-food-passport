@@ -1,7 +1,9 @@
 # MVP Alpha Status
 
-> **Last updated**: 2026-06-14 (Phase 17A)
+> **Last updated**: 2026-06-14 (Phase 18C)
 > **Status**: Mock-only. All real providers disabled. Ready to demo.
+
+> **Portfolio Showcase**: [MVP_ALPHA_DEMO_SHOWCASE.md](MVP_ALPHA_DEMO_SHOWCASE.md) — polished walkthrough with 7 screenshots.
 
 ## Quick Demo
 
@@ -98,12 +100,14 @@ Scanning any menu image produces **2 deterministic mock dishes**:
 | Document | Purpose |
 |---|---|
 | [README.md](README.md) | Project overview, architecture, and developer guide |
+| [MVP_ALPHA_DEMO_SHOWCASE.md](MVP_ALPHA_DEMO_SHOWCASE.md) | Polished portfolio showcase with 7 screenshots and system status |
 | [MVP_ALPHA_DEMO_RUNBOOK.md](MVP_ALPHA_DEMO_RUNBOOK.md) | Step-by-step demo script and manual QA runbook |
 | [PHASE_15C_MANUAL_SMOKE_TEST.md](PHASE_15C_MANUAL_SMOKE_TEST.md) | Post-polish manual smoke test checklist |
 | [REAL_PROVIDER_PREFLIGHT_PLAN.md](REAL_PROVIDER_PREFLIGHT_PLAN.md) | Real provider safety gates and enablement plan |
 | [PHASE_16B0_DRY_RUN_REPORT.md](PHASE_16B0_DRY_RUN_REPORT.md) | Real provider gate dry-run verification |
 | [MVP_ALPHA_RELEASE_SNAPSHOT.md](MVP_ALPHA_RELEASE_SNAPSHOT.md) | Frozen Alpha baseline snapshot (commit `d097239`) |
 | [MVP_ALPHA_SCREENSHOT_PLAN.md](MVP_ALPHA_SCREENSHOT_PLAN.md) | Screenshot capture plan and portfolio description |
+| [PHASE_18B0_REPORT.md](PHASE_18B0_REPORT.md) | Screenshot data source alignment report |
 | [ROADMAP.md](ROADMAP.md) | Full phase history and future plans |
 | [backend/DEPLOYMENT_READINESS.md](backend/DEPLOYMENT_READINESS.md) | Backend deployment readiness checklist |
 

@@ -63,6 +63,9 @@
 - Phase 17A: MVP Alpha Demo Packaging (README, MVP_ALPHA_STATUS.md, documentation)
 - Phase 17B: MVP Alpha Release Snapshot (MVP_ALPHA_RELEASE_SNAPSHOT.md, frozen baseline)
 - Phase 18A: Demo Screenshot and Portfolio Package Plan (MVP_ALPHA_SCREENSHOT_PLAN.md, documentation plan only)
+- Phase 18B0: Screenshot Data Source Alignment (backendMockModeProvider fix + OCR language fix, 1 Flutter file)
+- Phase 18B: MVP Alpha Screenshot Capture (7 screenshots in docs/screenshots/mvp-alpha/)
+- Phase 18C: MVP Alpha Portfolio Demo Showcase (MVP_ALPHA_DEMO_SHOWCASE.md, polished portfolio showcase)
 
 ## Current MVP Alpha
 

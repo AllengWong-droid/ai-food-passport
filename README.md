@@ -16,11 +16,13 @@ Phase 10C adds logging redaction and safe error response utilities. Phase 11A ad
 
 No real OCR, Qwen, DeepSeek, OpenAI, Firebase, subscriptions, production authentication, real exchange rates, API keys, or secrets are implemented. Production deployment is not yet ready (`productionReady: false`).
 
-## MVP Alpha Demo (Phase 17A)
+## MVP Alpha Demo
 
 The MVP Alpha is ready to demo against the live Render mock backend. No real API keys, providers, or Firebase are required.
 
-> **Frozen Alpha baseline**: see [MVP_ALPHA_RELEASE_SNAPSHOT.md](MVP_ALPHA_RELEASE_SNAPSHOT.md) for the complete release snapshot (commit `d097239`, tag `phase-17a-mvp-alpha-demo-packaging`).
+> **Portfolio Showcase**: [MVP_ALPHA_DEMO_SHOWCASE.md](MVP_ALPHA_DEMO_SHOWCASE.md) — a polished walkthrough with all 7 screenshots, system status, and demo instructions.
+>
+> **Frozen Alpha baseline**: [MVP_ALPHA_RELEASE_SNAPSHOT.md](MVP_ALPHA_RELEASE_SNAPSHOT.md) (commit `d097239`, tag `phase-17a-mvp-alpha-demo-packaging`).
 
 ### Quick Start
 
@@ -260,6 +262,7 @@ Safety docs:
 
 Demo & QA:
 
+- `MVP_ALPHA_DEMO_SHOWCASE.md` — polished portfolio showcase with 7 screenshots and full system status
 - `MVP_ALPHA_DEMO_RUNBOOK.md` — step-by-step demo script and manual QA runbook for MVP Alpha
 - `PHASE_15C_MANUAL_SMOKE_TEST.md` — post-polish manual demo smoke test checklist
 - `REAL_PROVIDER_PREFLIGHT_PLAN.md` — real provider safety gates and enablement plan
@@ -267,6 +270,7 @@ Demo & QA:
 - `MVP_ALPHA_STATUS.md` — one-page MVP Alpha status overview
 - `MVP_ALPHA_RELEASE_SNAPSHOT.md` — frozen Alpha baseline snapshot (commit `d097239`)
 - `MVP_ALPHA_SCREENSHOT_PLAN.md` — screenshot capture plan and portfolio description (7 screens)
+- `PHASE_18B0_REPORT.md` — screenshot data source alignment report
 
 ## Run Locally
 
@@ -327,3 +331,8 @@ git diff --check
 - Phase 15B-15C: MVP Alpha Demo Polish (copy/UI), Post-polish Manual Smoke Test
 - Phase 16A-16B0: Real Provider Preflight Plan, Preflight Dry Run (226 gate tests verified)
 - Phase 17A: MVP Alpha Demo Packaging (README, MVP_ALPHA_STATUS.md, documentation)
+- Phase 17B: MVP Alpha Release Snapshot (MVP_ALPHA_RELEASE_SNAPSHOT.md, frozen baseline)
+- Phase 18A: Demo Screenshot and Portfolio Package Plan (MVP_ALPHA_SCREENSHOT_PLAN.md)
+- Phase 18B: MVP Alpha Screenshot Capture (7 screenshots in docs/screenshots/mvp-alpha/)
+- Phase 18B0: Screenshot Data Source Alignment (backendMockModeProvider + OCR language fix)
+- Phase 18C: MVP Alpha Portfolio Demo Showcase (MVP_ALPHA_DEMO_SHOWCASE.md)
