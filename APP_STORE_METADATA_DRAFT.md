@@ -168,10 +168,10 @@ menu,travel,food,allergen,translator,restaurant,price,currency,dietary,scanner
 
 | Phase | URL | Status |
 |---|---|---|
-| **Now (TestFlight draft)** | `https://<username>.github.io/AI-Food-Passport/privacy` | 🔲 To be created |
+| **Now (TestFlight draft)** | `https://allengwong-droid.github.io/ai-food-passport/privacy-policy.html` | ✅ Live (Phase 21G/21H) |
 | **Future (custom domain)** | `https://aifoodpassport.com/privacy` | 🔲 Planned |
 
-The privacy policy page must be live and accessible before any App Store Connect submission.
+The privacy policy page is live and accessible at the GitHub Pages URL above. It includes all required disclaimers (draft only, MVP Alpha mock-only, productionReady: false, no real providers enabled, no API keys in Flutter). This URL is ready for future TestFlight and App Store Connect submission.
 
 ---
 
@@ -335,7 +335,7 @@ Thank you!
 | **App icon** (custom, not Flutter default) | ❌ Missing | High (before TestFlight) |
 | **Launch screen** (branded) | ❌ Missing | Medium (before TestFlight) |
 | **Screenshots** (3-10, real device frames) | ❌ Missing | High (before App Store) |
-| **Privacy policy page** (live URL) | ❌ Missing | High (before TestFlight) |
+| **Privacy policy page** (live URL) | ✅ Ready (`https://allengwong-droid.github.io/ai-food-passport/privacy-policy.html`) | High (before TestFlight) |
 | **Support page** (live URL) | ⚠️ Placeholder (GitHub Issues) | Medium |
 | **App preview video** (optional) | ❌ Missing | Low |
 | **App Store icon** (1024x1024, no transparency) | ❌ Missing (same as app icon) | High (before TestFlight) |
@@ -346,9 +346,9 @@ Thank you!
 
 | Priority | Phase | Rationale |
 |---|---|---|
+| ~~**3**~~ **Done** | ~~Privacy policy page creation~~ | ✅ Completed in Phase 21G — live at `https://allengwong-droid.github.io/ai-food-passport/privacy-policy.html` |
 | **1** | **Phase 21G: iOS Config Patch Plan** | Apply the identity decisions (Phase 21D) to actual iOS config files. Depends on macOS + Apple Developer membership. |
 | **2** | **Phase 16B: Qwen OCR Real Smoke** | First real provider test. Blocked until real API key exists. Most impactful technical next step. |
-| **3** | **Privacy policy page creation** (GitHub Pages) | Required for TestFlight. This is the actual page, not just the draft. |
 | **4** | **App icon design** | Required for TestFlight. The Flutter default icon is not acceptable. |
 
 ---

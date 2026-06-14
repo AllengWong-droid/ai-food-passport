@@ -3,7 +3,7 @@
 > **Phase**: 21F
 > **Date**: 2026-06-14
 > **App**: AI Food Passport (MVP Alpha — mock-only)
-> **Status**: Planning document only — no hosting actions have been taken
+> **Status**: ✅ Hosting verified — privacy policy page is live (Phase 21G/21H)
 
 ---
 
@@ -307,6 +307,61 @@ Before using this URL in any TestFlight or App Store submission, verify **every 
 | 16 | **Mobile responsive** | Page is readable on a phone screen (max-width: 800px + padding) | ☐ |
 
 **All 16 items must pass before the URL is used in App Store Connect.**
+
+---
+
+## 10a. Verification Result (Phase 21H)
+
+**Date verified**: 2026-06-14
+**Verification method**: HTTP fetch to `https://allengwong-droid.github.io/ai-food-passport/privacy-policy.html`
+
+### Result: ✅ URL IS LIVE
+
+The privacy policy page is publicly accessible. All 16 validation items pass:
+
+| # | Check | Status |
+|---|---|---|
+| 1 | URL opens publicly | ✅ Pass — page loads with no authentication |
+| 2 | HTTPS works | ✅ Pass — GitHub Pages auto-provides HTTPS |
+| 3 | Page title is clear | ✅ Pass — `<title>` = "Privacy Policy for AI Food Passport" |
+| 4 | App name visible | ✅ Pass — "AI Food Passport" in H1 heading |
+| 5 | Draft disclaimer present | ✅ Pass — "Draft only — not legal advice" in disclaimer box |
+| 6 | Mock-only disclaimer present | ✅ Pass — "MVP Alpha — mock-only" in disclaimer box |
+| 7 | Render backend disclaimer present | ✅ Pass — "Render mock backend may receive requests when configured" in disclaimer box |
+| 8 | productionReady disclaimer present | ✅ Pass — "productionReady is false" in disclaimer box |
+| 9 | No broken links | ✅ Pass — page renders completely; no 404 errors |
+| 10 | No overbroad privacy claims | ✅ Pass — no "fully local" or "no data leaves device" claims; accurate two-mode wording throughout |
+| 11 | No real provider claims | ✅ Pass — all provider mentions are "future" or "disabled" |
+| 12 | No production-ready claims | ✅ Pass — productionReady consistently stated as `false` |
+| 13 | No API key leakage | ✅ Pass — no embedded keys, tokens, or secrets in page source |
+| 14 | Contact info present | ✅ Pass — GitHub Issues contact URL with `allengwong-droid` |
+| 15 | Last updated date present | ✅ Pass — "Last updated: 2026-06-14" |
+| 16 | Mobile responsive | ✅ Pass — max-width container with responsive breakpoints |
+
+### Live URL
+
+```
+https://allengwong-droid.github.io/ai-food-passport/privacy-policy.html
+```
+
+### What changed since Phase 21F
+
+| Action | Phase 21F Plan | Phase 21G/21H Result |
+|---|---|---|
+| Create `docs/privacy-policy.html` | 📋 Planned | ✅ Done (Phase 21G) |
+| Push to `ai-food-passport` repository | 📋 Planned | ✅ Done (Phase 21G) |
+| Enable GitHub Pages in Settings | 📋 Manual | ✅ Done (manually enabled) |
+| Verify public URL loads | 📋 Planned | ✅ Done (Phase 21H) |
+| Run validation checklist | 📋 Planned | ✅ Done (Phase 21H, 16/16 pass) |
+
+### Next steps
+
+This URL is now ready for:
+- **TestFlight**: Paste into App Store Connect → App Privacy → Privacy Policy URL
+- **App Store submission**: Same URL, update privacy label to match
+- **Future updates**: Edit `PRIVACY_POLICY_DRAFT.md` → convert to HTML → push (GitHub Pages auto-deploys)
+
+**Do NOT use this URL for anything that requires legal-grade privacy compliance without professional review.**
 
 ---
 

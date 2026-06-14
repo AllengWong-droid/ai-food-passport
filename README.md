@@ -283,7 +283,7 @@ Demo & QA:
 - `PRIVACY_POLICY_DRAFT.md` — Privacy policy draft (11 sections, current MVP Alpha data collection: none, future production data handling, App Store privacy label preparation)
 - `APP_STORE_METADATA_DRAFT.md` — App Store metadata draft (name, subtitle, keywords, description, category, review notes, TestFlight tester instructions, what NOT to claim)
 - `PRIVACY_POLICY_HOSTING_PLAN.md` — GitHub Pages hosting plan for privacy policy (12 sections, step-by-step setup, 16-item validation checklist)
-- `docs/privacy-policy.html` — Static privacy policy page (ready for GitHub Pages hosting; requires manual Pages enablement)
+- `docs/privacy-policy.html` — Static privacy policy page (✅ live at `https://allengwong-droid.github.io/ai-food-passport/privacy-policy.html`)
 
 ## Run Locally
 
