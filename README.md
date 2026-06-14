@@ -202,6 +202,10 @@ Safety docs:
 - `backend/SECURITY_AND_SECRETS.md`
 - `REAL_PROVIDER_READINESS_CHECKLIST.md`
 
+Demo & QA:
+
+- `MVP_ALPHA_DEMO_RUNBOOK.md` — step-by-step demo script and manual QA runbook for MVP Alpha
+
 ## Run Locally
 
 Flutter only:

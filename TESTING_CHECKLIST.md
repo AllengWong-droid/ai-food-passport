@@ -576,6 +576,7 @@ Invoke-RestMethod `
 - [ ] Confirm no secrets or API keys committed.
 - [ ] Confirm `backend/.env` is untracked and in `.gitignore`.
 - [x] Phase 14A MVP Alpha freeze readiness audit complete; all 6 audit areas pass; 42/42 Flutter tests pass; git status/check clean.
+- [x] Phase 14B MVP Alpha demo script & manual QA runbook created (`MVP_ALPHA_DEMO_RUNBOOK.md`); demo setup, walkthrough, QA checklist, caveats documented.
 - [x] Flutter widget test overflow fix (Phase 13D verification): wrapped OnboardingScreen `Column` in `SingleChildScrollView`, removed `Spacer()`, all 42 tests pass.
 
 ## Known Environment Issues
