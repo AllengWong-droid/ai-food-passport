@@ -22,6 +22,8 @@ The MVP Alpha is ready to demo against the live Render mock backend. No real API
 
 > **Portfolio Showcase**: [MVP_ALPHA_DEMO_SHOWCASE.md](MVP_ALPHA_DEMO_SHOWCASE.md) — a polished walkthrough with all 7 screenshots, system status, and demo instructions.
 >
+> **Portfolio Handoff**: [PORTFOLIO_HANDOFF.md](PORTFOLIO_HANDOFF.md) — pitch, talking points, what to claim (and not), and next engineering steps.
+>
 > **Frozen Alpha baseline**: [MVP_ALPHA_RELEASE_SNAPSHOT.md](MVP_ALPHA_RELEASE_SNAPSHOT.md) (commit `d097239`, tag `phase-17a-mvp-alpha-demo-packaging`).
 
 ### Quick Start

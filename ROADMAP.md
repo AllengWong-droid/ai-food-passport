@@ -66,6 +66,8 @@
 - Phase 18B0: Screenshot Data Source Alignment (backendMockModeProvider fix + OCR language fix, 1 Flutter file)
 - Phase 18B: MVP Alpha Screenshot Capture (7 screenshots in docs/screenshots/mvp-alpha/)
 - Phase 18C: MVP Alpha Portfolio Demo Showcase (MVP_ALPHA_DEMO_SHOWCASE.md, polished portfolio showcase)
+- Phase 18D: Public Repo Final QA and Portfolio Handoff Audit (2 misleading items fixed, 0 secrets found, all 8 checklist items pass)
+- Phase 19A: Portfolio Handoff Packet (PORTFOLIO_HANDOFF.md — pitch, talking points, claim boundaries, next engineering steps)
 
 ## Current MVP Alpha
 
