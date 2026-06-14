@@ -102,6 +102,8 @@ Scanning any menu image produces **2 deterministic mock dishes**:
 | [PHASE_15C_MANUAL_SMOKE_TEST.md](PHASE_15C_MANUAL_SMOKE_TEST.md) | Post-polish manual smoke test checklist |
 | [REAL_PROVIDER_PREFLIGHT_PLAN.md](REAL_PROVIDER_PREFLIGHT_PLAN.md) | Real provider safety gates and enablement plan |
 | [PHASE_16B0_DRY_RUN_REPORT.md](PHASE_16B0_DRY_RUN_REPORT.md) | Real provider gate dry-run verification |
+| [MVP_ALPHA_RELEASE_SNAPSHOT.md](MVP_ALPHA_RELEASE_SNAPSHOT.md) | Frozen Alpha baseline snapshot (commit `d097239`) |
+| [MVP_ALPHA_SCREENSHOT_PLAN.md](MVP_ALPHA_SCREENSHOT_PLAN.md) | Screenshot capture plan and portfolio description |
 | [ROADMAP.md](ROADMAP.md) | Full phase history and future plans |
 | [backend/DEPLOYMENT_READINESS.md](backend/DEPLOYMENT_READINESS.md) | Backend deployment readiness checklist |
 

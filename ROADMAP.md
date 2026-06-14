@@ -62,6 +62,7 @@
 - Phase 16B0: Real Provider Preflight Dry Run (documentation/verification only)
 - Phase 17A: MVP Alpha Demo Packaging (README, MVP_ALPHA_STATUS.md, documentation)
 - Phase 17B: MVP Alpha Release Snapshot (MVP_ALPHA_RELEASE_SNAPSHOT.md, frozen baseline)
+- Phase 18A: Demo Screenshot and Portfolio Package Plan (MVP_ALPHA_SCREENSHOT_PLAN.md, documentation plan only)
 
 ## Current MVP Alpha
 

@@ -266,6 +266,7 @@ Demo & QA:
 - `PHASE_16B0_DRY_RUN_REPORT.md` — real provider gate dry-run verification
 - `MVP_ALPHA_STATUS.md` — one-page MVP Alpha status overview
 - `MVP_ALPHA_RELEASE_SNAPSHOT.md` — frozen Alpha baseline snapshot (commit `d097239`)
+- `MVP_ALPHA_SCREENSHOT_PLAN.md` — screenshot capture plan and portfolio description (7 screens)
 
 ## Run Locally
 
