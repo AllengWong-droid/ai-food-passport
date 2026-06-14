@@ -282,6 +282,7 @@ Demo & QA:
 - `APP_IDENTITY_DECISION.md` — App identity decision document (name options, Bundle ID, category, icon/launch screen direction, final decision table)
 - `PRIVACY_POLICY_DRAFT.md` — Privacy policy draft (11 sections, current MVP Alpha data collection: none, future production data handling, App Store privacy label preparation)
 - `APP_STORE_METADATA_DRAFT.md` — App Store metadata draft (name, subtitle, keywords, description, category, review notes, TestFlight tester instructions, what NOT to claim)
+- `PRIVACY_POLICY_HOSTING_PLAN.md` — GitHub Pages hosting plan for privacy policy (12 sections, step-by-step setup, 16-item validation checklist)
 
 ## Run Locally
 
