@@ -430,6 +430,7 @@ Do NOT proceed with icon generation or launch screen editing until:
 | Step | Action | Tool | Phase |
 |---|---|---|---|
 | 1 | Create vector icon concept matching this spec | Figma / Illustrator / Sketch | Future: visual design phase |
+| 1a | **Use the prompt pack** — Ready-to-use AI image generation prompts for icon candidates are available in `APP_ICON_PROMPT_PACK.md` (Phase 21J). Generate 4-8 candidates per concept, then review against the acceptance checklist. | Image generation tool (DALL-E, Midjourney, Stable Diffusion, ImageGen) | Future: visual design phase |
 | 2 | Export 1024x1024 PNG (opaque, sRGB) | Design tool export | Future: visual design phase |
 | 3 | Verify legibility at all sizes (zoom test) | Manual review | Future: visual design phase |
 | 4 | Configure `flutter_launcher_icons` in `pubspec.yaml` | Flutter | Future: Flutter config phase |

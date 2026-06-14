@@ -285,6 +285,7 @@ Demo & QA:
 - `PRIVACY_POLICY_HOSTING_PLAN.md` — GitHub Pages hosting plan for privacy policy (12 sections, step-by-step setup, 16-item validation checklist)
 - `docs/privacy-policy.html` — Static privacy policy page (✅ live at `https://allengwong-droid.github.io/ai-food-passport/privacy-policy.html`)
 - `APP_ICON_LAUNCH_SCREEN_SPEC.md` — App icon, launch screen, and screenshot visual identity design spec (Phase 21I)
+- `APP_ICON_PROMPT_PACK.md` — AI image generation prompt pack for app icon, launch screen, and visual assets (Phase 21J)
 
 ## Run Locally
 
