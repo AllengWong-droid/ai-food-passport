@@ -74,6 +74,7 @@
 - Phase 21B: TestFlight Preparation Plan (TESTFLIGHT_PREPARATION_PLAN.md — 54-item checklist, 3 decision gates, 10-risk table, do not spend money yet)
 - Phase 21C: iOS Build Readiness Audit (IOS_BUILD_READINESS_AUDIT.md — 16-section audit, 4 blockers identified, 10 free actions now)
 - Phase 21D: App Identity Decision (APP_IDENTITY_DECISION.md — name options, Bundle ID, category, subtitle, icon/launch screen direction, final decision table)
+- Phase 21E: Privacy Policy & App Metadata Draft (PRIVACY_POLICY_DRAFT.md — 11 sections, current MVP Alpha data collection: none; APP_STORE_METADATA_DRAFT.md — 14 sections, name, subtitle, keywords, description, category, review notes, TestFlight tester instructions, what NOT to claim)
 
 ## Current MVP Alpha
 

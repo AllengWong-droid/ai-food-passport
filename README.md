@@ -280,6 +280,8 @@ Demo & QA:
 - `TESTFLIGHT_PREPARATION_PLAN.md` — Step-by-step TestFlight roadmap (54-item checklist, 3 decision gates, 10-risk table)
 - `IOS_BUILD_READINESS_AUDIT.md` — iOS build readiness audit (16 sections, 4 blockers identified, 10 free actions now)
 - `APP_IDENTITY_DECISION.md` — App identity decision document (name options, Bundle ID, category, icon/launch screen direction, final decision table)
+- `PRIVACY_POLICY_DRAFT.md` — Privacy policy draft (11 sections, current MVP Alpha data collection: none, future production data handling, App Store privacy label preparation)
+- `APP_STORE_METADATA_DRAFT.md` — App Store metadata draft (name, subtitle, keywords, description, category, review notes, TestFlight tester instructions, what NOT to claim)
 
 ## Run Locally
 
