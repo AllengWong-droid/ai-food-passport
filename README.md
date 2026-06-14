@@ -275,6 +275,7 @@ Demo & QA:
 - `PHASE_18B0_REPORT.md` — screenshot data source alignment report
 - `PORTFOLIO_HANDOFF.md` — portfolio pitch, talking points, claim boundaries, next steps
 - `DEMO_WALKTHROUGH_SCRIPT.md` — recording scripts (30s/90s/3min), narration, recording checklist
+- `RELEASE_NOTES_MVP_ALPHA.md` — MVP Alpha release notes, GitHub release body, portfolio/LinkedIn blurbs
 
 ## Run Locally
 
