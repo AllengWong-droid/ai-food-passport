@@ -83,6 +83,7 @@
 - Phase 21K: TestFlight Readiness Gap Closure Plan (TESTFLIGHT_GAP_CLOSURE_PLAN.md — 18 blocking gaps identified, 14 technical gaps, 42-item milestone checklist, 8-item "do not do yet" list, order of operations by resource type, decision matrix, 3-gate framework, 3 recommended next phases; no code/config changed)
 - Phase 22A: App Icon Candidate Review & Selection Record (APP_ICON_CANDIDATE_REVIEW.md — selected Candidate 1 recolored version: royal/cobalt blue passport, gold fork/spoon, globe linework, cyan rim glow; 3 rejected candidates with rationale; 15/16 acceptance passed, 0/12 rejection hit; no binary assets committed, no code/config changed)
 - Phase 22B: App Icon Master Asset Intake (design/app-icon/source/ai-food-passport-selected-icon-master.png — 1254x1254 px PNG, 2,349,686 bytes, ingested as design-source only; APP_ICON_MASTER_ASSET_INTAKE.md, design/app-icon/README.md; icon NOT applied to Flutter/iOS yet; no code/config/secrets changed)
+- Phase 22C: App Icon QA & Small-Size Validation (APP_ICON_QA_SMALL_SIZE_VALIDATION.md — full QA report, 7 preview PNGs at 1024/512/180/120/60/40px + contact sheet under design/app-icon/preview/, 19/20 acceptance score as design-source asset, baked-in rounded corners flagged as MEDIUM severity for Phase 22D, small-size readable down to 60px acceptable/40px borderline; no code/config/secrets changed)
 
 ## Current MVP Alpha
 

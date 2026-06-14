@@ -478,6 +478,7 @@ Do NOT proceed with icon generation or launch screen editing until:
 | 10 | **No secrets, keys, or credentials added** | No API keys, tokens, Firebase config, or other credentials were introduced. | Phase 21I |
 | 11 | **Icon candidate selected** (Phase 22A) | Candidate 1, recolored version (royal/cobalt blue passport + gold fork/spoon + globe linework + cyan rim glow) was selected as the primary visual direction. 15/16 acceptance criteria passed, 0/12 rejection criteria hit. See `APP_ICON_CANDIDATE_REVIEW.md` for full review record. No binary assets committed yet. | Phase 22A |
 | 12 | **Icon master asset ingested** (Phase 22B) | Selected icon PNG copied to `design/app-icon/source/ai-food-passport-selected-icon-master.png` (1254x1254 px, ~2.24 MB) as design-source only. Asset is NOT applied to Flutter app, iOS config, pubspec.yaml, or launch screen. See `APP_ICON_MASTER_ASSET_INTAKE.md` for full intake record. | Phase 22B |
+| 13 | **App Icon QA & Small-Size Validation completed** (Phase 22C) | Generated 7 preview images (1024/512/180/120/60/40px + contact sheet). Full readability review: icon passes down to 60px acceptable / 40px borderline. Accepted as design-source asset (19/20 score). Key finding: source has baked-in rounded corners (MEDIUM severity) — must re-export as clean square before iOS application. See `APP_ICON_QA_SMALL_SIZE_VALIDATION.md` for complete report. No code/config/secrets changed. | Phase 22C |
 
 ---
 

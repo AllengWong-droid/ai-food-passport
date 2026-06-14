@@ -289,7 +289,8 @@ Demo & QA:
 - `TESTFLIGHT_GAP_CLOSURE_PLAN.md` — Comprehensive gap analysis and action plan from portfolio-ready to TestFlight-ready (Phase 21K)
 - `APP_ICON_CANDIDATE_REVIEW.md` — Selected app icon candidate review, selection rationale, safety audit, and acceptance checklist (Phase 22A)
 - `APP_ICON_MASTER_ASSET_INTAKE.md` — App icon master asset intake record: metadata, scope, safety review, future use plan (Phase 22B)
-- `design/app-icon/` — Design-source app icon directory: selected master PNG + README (Phase 22B)
+- `APP_ICON_QA_SMALL_SIZE_VALIDATION.md` — App icon QA & small-size validation report: per-size readability review (1024–40px), visual checks, risks (baked-in corners), 19/20 acceptance score as design-source asset (Phase 22C)
+- `design/app-icon/` — Design-source app icon directory: selected master PNG + 7 preview images (1024–40px + contact sheet) + README (Phases 22B–22C)
 
 ## Run Locally
 

@@ -11,6 +11,14 @@ design/app-icon/
   README.md                                          (this file)
   source/
     ai-food-passport-selected-icon-master.png        (selected icon — Candidate 1, recolored)
+  preview/
+    icon-preview-1024.png                            (1024x1024 — App Store master size)
+    icon-preview-512.png                             (512x512 — iTunes/iPad Pro size)
+    icon-preview-180.png                             (180x180 — iPhone @3x home screen)
+    icon-preview-120.png                             (120x120 — Spotlight/@2x size)
+    icon-preview-60.png                              (60x60 — Settings/@2x size)
+    icon-preview-40.png                              (40x40 — smallest common iOS size)
+    icon-small-size-contact-sheet.png                (1380x760 — all sizes in grid)
 ```
 
 ---
@@ -89,6 +97,7 @@ Steps 6-9 require macOS with Xcode.
 | `APP_ICON_CANDIDATE_REVIEW.md` | Candidate selection rationale, acceptance/rejection checklists |
 | `APP_ICON_LAUNCH_SCREEN_SPEC.md` | Full design specification (colors, shapes, forbidden imagery) |
 | `APP_ICON_PROMPT_PACK.md` | AI image generation prompts used to create candidates |
+| `APP_ICON_QA_SMALL_SIZE_VALIDATION.md` | Phase 22C QA report: per-size readability review, visual checks, risks, acceptance decision (19/20 score) |
 
 ---
 

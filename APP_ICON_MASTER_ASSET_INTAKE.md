@@ -199,6 +199,7 @@ The asset matches the accepted visual direction from `APP_ICON_CANDIDATE_REVIEW.
 | 3 | Asset stored under `design/`, NOT `ios/` or `assets/` | This is a design-source asset, not a production app asset. It does not belong in `ios/AppIcon.appiconset/` or Flutter's `assets/` directory. | Phase 22B |
 | 4 | No Flutter, iOS, backend, or config changes | This phase is asset intake only. The icon is NOT applied to the app. | Phase 22B |
 | 5 | No `pubspec.yaml` changes | No Flutter assets declaration, no `flutter_launcher_icons` config, no dependency additions. | Phase 22B |
+| 6 | Small-size validation performed in Phase 22C | Generated 7 preview images (1024–40 px + contact sheet), reviewed readability, accepted as design-source asset (19/20), flagged baked-in corners for resolution in Phase 22D. | Phase 22C |
 
 ---
 
