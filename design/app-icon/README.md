@@ -98,6 +98,7 @@ Steps 6-9 require macOS with Xcode.
 | `APP_ICON_LAUNCH_SCREEN_SPEC.md` | Full design specification (colors, shapes, forbidden imagery) |
 | `APP_ICON_PROMPT_PACK.md` | AI image generation prompts used to create candidates |
 | `APP_ICON_QA_SMALL_SIZE_VALIDATION.md` | Phase 22C QA report: per-size readability review, visual checks, risks, acceptance decision (19/20 score) |
+| `APP_ICON_CLEAN_SQUARE_REGENERATION_PLAN.md` | Phase 22D plan: why regeneration needed, 9-item criteria, AI prompt + negative prompt, 20-item acceptance + 12-item rejection checklist |
 
 ---
 

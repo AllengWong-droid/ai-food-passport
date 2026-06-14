@@ -290,7 +290,8 @@ Demo & QA:
 - `APP_ICON_CANDIDATE_REVIEW.md` — Selected app icon candidate review, selection rationale, safety audit, and acceptance checklist (Phase 22A)
 - `APP_ICON_MASTER_ASSET_INTAKE.md` — App icon master asset intake record: metadata, scope, safety review, future use plan (Phase 22B)
 - `APP_ICON_QA_SMALL_SIZE_VALIDATION.md` — App icon QA & small-size validation report: per-size readability review (1024–40px), visual checks, risks (baked-in corners), 19/20 acceptance score as design-source asset (Phase 22C)
-- `design/app-icon/` — Design-source app icon directory: selected master PNG + 7 preview images (1024–40px + contact sheet) + README (Phases 22B–22C)
+- `APP_ICON_CLEAN_SQUARE_REGENERATION_PLAN.md` — Clean square app icon master regeneration plan: why needed, 9-item criteria, AI generation prompt + negative prompt, 20-item acceptance + 12-item rejection checklist, next step workflow (Phase 22D)
+- `design/app-icon/` — Design-source app icon directory: selected master PNG + 7 preview images (1024–40px + contact sheet) + README (Phases 22B–22D)
 
 ## Run Locally
 
