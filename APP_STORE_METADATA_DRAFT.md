@@ -332,7 +332,7 @@ Thank you!
 
 | Asset | Status | Priority |
 |---|---|---|
-| **App icon** (custom, not Flutter default) | ❌ Missing — Design spec exists in `APP_ICON_LAUNCH_SCREEN_SPEC.md` | High (before TestFlight) |
+| **App icon** (custom, not Flutter default) | ⚠️ Design direction selected — Candidate 1 recolored version (royal/cobalt blue passport, gold fork/spoon, globe linework, cyan rim glow). Source PNG not yet exported/committed. See `APP_ICON_CANDIDATE_REVIEW.md` (Phase 22A). | High (before TestFlight) |
 | **Launch screen** (branded) | ❌ Missing — Design spec exists in `APP_ICON_LAUNCH_SCREEN_SPEC.md` | Medium (before TestFlight) |
 | **Screenshots** (3-10, real device frames) | ❌ Missing | High (before App Store) |
 | **Privacy policy page** (live URL) | ✅ Ready (`https://allengwong-droid.github.io/ai-food-passport/privacy-policy.html`) | High (before TestFlight) |

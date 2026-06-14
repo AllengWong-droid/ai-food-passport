@@ -476,6 +476,7 @@ Do NOT proceed with icon generation or launch screen editing until:
 | 8 | **Existing screenshots preserved** | The 7 MVP Alpha screenshots in `docs/screenshots/mvp-alpha/` are unchanged. This spec provides future guidance only. | Phase 21I |
 | 9 | **App Store metadata draft updated** | `APP_STORE_METADATA_DRAFT.md` Section 13 (Required Assets) now references this spec for the icon and launch screen rows. | Phase 21I |
 | 10 | **No secrets, keys, or credentials added** | No API keys, tokens, Firebase config, or other credentials were introduced. | Phase 21I |
+| 11 | **Icon candidate selected** (Phase 22A) | Candidate 1, recolored version (royal/cobalt blue passport + gold fork/spoon + globe linework + cyan rim glow) was selected as the primary visual direction. 15/16 acceptance criteria passed, 0/12 rejection criteria hit. See `APP_ICON_CANDIDATE_REVIEW.md` for full review record. No binary assets committed yet. | Phase 22A |
 
 ---
 

@@ -356,6 +356,7 @@ If a candidate hits ANY of these rejection criteria, discard it immediately.
 | 8 | Rejection checklist: 12 hard-stop criteria | Immediate discard if any hit. Prevents wasting time on unsuitable candidates. |
 | 9 | No code, config, or assets changed | All existing files, Flutter code, iOS config, and screenshots remain unmodified. |
 | 10 | Cross-references added to `APP_ICON_LAUNCH_SCREEN_SPEC.md` and `README.md` | Navigation convenience — readers can find the prompt pack from the design spec. |
+| 11 | **Candidate selected using these prompts** (Phase 22A) | Candidate 1, recolored version (royal/cobalt blue passport, gold fork/spoon, globe linework, cyan rim glow) was selected as the primary visual direction. See `APP_ICON_CANDIDATE_REVIEW.md` for the full review record, rejected candidates, and acceptance/rejection checklist results. |
 
 ---
 
