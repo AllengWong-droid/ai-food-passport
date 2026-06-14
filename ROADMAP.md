@@ -70,6 +70,10 @@
 - Phase 19A: Portfolio Handoff Packet (PORTFOLIO_HANDOFF.md — pitch, talking points, claim boundaries, next engineering steps)
 - Phase 19B: Demo Walkthrough Script & Recording Checklist (DEMO_WALKTHROUGH_SCRIPT.md — 30s/90s/3min scripts, narration, recording checklist, video title)
 - Phase 19C: GitHub Release Notes Draft (RELEASE_NOTES_MVP_ALPHA.md — release title, summary, GitHub release body, LinkedIn blurbs)
+- Phase 21A: App Store Readiness Audit (APP_STORE_READINESS_AUDIT.md — 12-section audit, 0/15 TestFlight items ready, DO NOT submit)
+- Phase 21B: TestFlight Preparation Plan (TESTFLIGHT_PREPARATION_PLAN.md — 54-item checklist, 3 decision gates, 10-risk table, do not spend money yet)
+- Phase 21C: iOS Build Readiness Audit (IOS_BUILD_READINESS_AUDIT.md — 16-section audit, 4 blockers identified, 10 free actions now)
+- Phase 21D: App Identity Decision (APP_IDENTITY_DECISION.md — name options, Bundle ID, category, subtitle, icon/launch screen direction, final decision table)
 
 ## Current MVP Alpha
 
