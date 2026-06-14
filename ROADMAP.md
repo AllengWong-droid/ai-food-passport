@@ -60,6 +60,7 @@
 - Phase 15C: Post-polish Manual Demo Smoke Test (manual verification checklist ready)
 - Phase 16A: Real Provider Preflight Plan (documentation/safety plan only)
 - Phase 16B0: Real Provider Preflight Dry Run (documentation/verification only)
+- Phase 17A: MVP Alpha Demo Packaging (README, MVP_ALPHA_STATUS.md, documentation)
 
 ## Current MVP Alpha
 

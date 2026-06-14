@@ -16,6 +16,60 @@ Phase 10C adds logging redaction and safe error response utilities. Phase 11A ad
 
 No real OCR, Qwen, DeepSeek, OpenAI, Firebase, subscriptions, production authentication, real exchange rates, API keys, or secrets are implemented. Production deployment is not yet ready (`productionReady: false`).
 
+## MVP Alpha Demo (Phase 17A)
+
+The MVP Alpha is ready to demo against the live Render mock backend. No real API keys, providers, or Firebase are required.
+
+### Quick Start
+
+```bash
+cd AI-Food-Passport
+flutter run -d web-server --web-hostname=127.0.0.1 --web-port=8081 --dart-define=BACKEND_BASE_URL=https://ai-food-passport.onrender.com
+```
+
+### Expected Demo Results
+
+Scanning any menu image (or just tapping the scan button) produces 2 mock dishes:
+
+| Dish | Price | Allergens | Reason |
+|---|---|---|---|
+| **Tonkotsu Ramen** | ¥980 | Wheat, Egg | Rich pork broth ramen — a hearty classic. Mild spice level, generally safe for most travelers. |
+| **Miso Katsu Skewers** | ¥800 | Soy, Wheat, Egg | Crispy fried skewers with savory miso glaze. Contains soy and wheat — check your allergy settings. |
+
+Home currency conversion works for all supported currencies (USD, EUR, GBP, JPY, CNY, etc.).
+
+### System Status
+
+| Component | Status |
+|---|---|
+| Render Backend | Live at `https://ai-food-passport.onrender.com` |
+| OCR Provider | `mock_ocr` (real providers disabled) |
+| Analysis Provider | `mock_ai` (real providers disabled) |
+| `realProvidersEnabled` | `false` |
+| `realOcrEnabled` | `false` |
+| `realAnalysisEnabled` | `false` |
+| `productionReady` | `false` |
+| API Keys Configured | None |
+| Firebase | Not added |
+
+### Known Limitations
+
+- **Mock-only**: All results are deterministic mock data — no real OCR or AI analysis.
+- **Render sleep**: Free-tier instances spin down after inactivity. First request after sleep may take 30-60 seconds.
+- **No homepage**: `GET /` returns 404 by design. Use `GET /health` or `POST /api/analyze-menu`.
+- **No real providers**: Qwen OCR and Qwen Analysis are implemented behind safety gates but not enabled. See [Real Provider Preflight Plan](REAL_PROVIDER_PREFLIGHT_PLAN.md).
+- **Developer controls**: Hidden in release builds. Use `--dart-define=SHOW_DEVELOPER_CONTROLS=true` for debug builds.
+
+### Related Docs
+
+| Document | Purpose |
+|---|---|
+| [MVP_ALPHA_DEMO_RUNBOOK.md](MVP_ALPHA_DEMO_RUNBOOK.md) | Step-by-step demo script and manual QA runbook |
+| [PHASE_15C_MANUAL_SMOKE_TEST.md](PHASE_15C_MANUAL_SMOKE_TEST.md) | Post-polish manual smoke test checklist |
+| [REAL_PROVIDER_PREFLIGHT_PLAN.md](REAL_PROVIDER_PREFLIGHT_PLAN.md) | Real provider safety gates and enablement plan |
+| [PHASE_16B0_DRY_RUN_REPORT.md](PHASE_16B0_DRY_RUN_REPORT.md) | Real provider gate dry-run verification report |
+| [ROADMAP.md](ROADMAP.md) | Full phase history and future plans |
+
 ## MVP Alpha Capabilities
 
 - Scanner-style Scan screen works with or without selecting an image.
@@ -205,6 +259,10 @@ Safety docs:
 Demo & QA:
 
 - `MVP_ALPHA_DEMO_RUNBOOK.md` — step-by-step demo script and manual QA runbook for MVP Alpha
+- `PHASE_15C_MANUAL_SMOKE_TEST.md` — post-polish manual demo smoke test checklist
+- `REAL_PROVIDER_PREFLIGHT_PLAN.md` — real provider safety gates and enablement plan
+- `PHASE_16B0_DRY_RUN_REPORT.md` — real provider gate dry-run verification
+- `MVP_ALPHA_STATUS.md` — one-page MVP Alpha status overview
 
 ## Run Locally
 
@@ -257,3 +315,11 @@ git diff --check
 - Phase 9E: Flutter Provider Mode Routing Visibility
 - Phase 10A: Secret Handling and Real Provider Readiness Plan
 - Phase 10B: Backend Provider Timeout, Rate Limit, and Cost Guard Skeleton
+- Phase 10C: Backend Logging Redaction and Error Hygiene Skeleton
+- Phase 11A-11F: Backend Mock Contract Tests, Deployment Readiness, CORS Enforcement, Flutter Backend URL Config, Developer Controls Release Gating, Flutter Config Unit Tests
+- Phase 12A-12H: OCR/Analysis Provider Contracts, Qwen Adapters, Real Transport Behind Safety Gates, Provider Gate Dry-Run Tests (509 tests)
+- Phase 13A-13E: Render Deployment Target, Config Dry Run, Mock Backend Deployed, Flutter Build Config, Web Debug Smoke Test
+- Phase 14A-14B: MVP Alpha Freeze Readiness Audit, Demo Script & Manual QA Runbook
+- Phase 15B-15C: MVP Alpha Demo Polish (copy/UI), Post-polish Manual Smoke Test
+- Phase 16A-16B0: Real Provider Preflight Plan, Preflight Dry Run (226 gate tests verified)
+- Phase 17A: MVP Alpha Demo Packaging (README, MVP_ALPHA_STATUS.md, documentation)
