@@ -53,6 +53,8 @@
 - Phase 13B: Render Deployment Config Dry Run
 - Phase 13C: Render Manual Deploy Execution — Mock Backend Verified
 - Phase 13D: Flutter Internal Build Points to Deployed Render Backend (Flutter widget test overflow fixed)
+- Phase 13E: Flutter Web Debug Smoke Test Against Render Backend (manual verified)
+- Phase 14A: MVP Alpha Freeze Readiness Audit (audit/documentation complete)
 
 ## Current MVP Alpha
 
