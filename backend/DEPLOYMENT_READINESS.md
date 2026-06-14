@@ -267,6 +267,18 @@ Before attempting the first deployment:
 - [ ] Verify cost tracking works
 - [ ] Only after all checks pass → consider setting `productionReady=true`
 
+### Phase 16A Note: Real Provider Preflight Plan
+
+> See `REAL_PROVIDER_PREFLIGHT_PLAN.md` (created Phase 16A) for the complete preflight plan including:
+> - Detailed prerequisite checklist before any real provider testing
+> - Exact Render Dashboard env var settings for Qwen OCR and Qwen Analysis
+> - 10 forbidden actions (no keys in Flutter, Git, or render.yaml; no combined enablement)
+> - 5-step rollback plan with verification commands
+> - 8-scenario test matrix (mock baseline → both enabled)
+> - Phase boundaries: 16B (OCR only) → 16C (analysis only) → 16D (combined)
+>
+> The checklist above (Phases 1-4) is the operational guide. `REAL_PROVIDER_PREFLIGHT_PLAN.md` is the safety framework.
+
 ---
 
 ## Flutter Configuration

@@ -213,3 +213,16 @@ Use this checklist before enabling any real OCR, Qwen, DeepSeek, OpenAI, Google 
 - [ ] Flutter default local mock flow remains unaffected.
 - [ ] Incident notes include how to rotate keys.
 - [ ] Provider dashboard access and key rotation owners are identified.
+
+## Phase 16A: Real Provider Preflight Plan
+
+- [ ] `REAL_PROVIDER_PREFLIGHT_PLAN.md` created and committed.
+- [ ] Prerequisites section documents: API key availability, Render env var understanding, rollback readiness, mock baseline verification, log safety.
+- [ ] Exact Qwen OCR env gates documented (`OCR_PROVIDER=qwen_ocr`, `QWEN_OCR_PROVIDER_ENABLED=true`, `QWEN_API_KEY`).
+- [ ] Exact Qwen analysis env gates documented (`ANALYSIS_PROVIDER=qwen_analysis`, `QWEN_ANALYSIS_PROVIDER_ENABLED=true`, `QWEN_API_KEY`).
+- [ ] 10 forbidden actions explicitly listed (no keys in Flutter/Git/render.yaml, no combined provider enablement, productionReady remains false, etc.).
+- [ ] 5-step rollback plan documented with verification commands.
+- [ ] Preflight test matrix with 8 scenarios: mock baseline, missing key, placeholder key, gate disabled, OCR only, analysis only, both enabled, rollback verification.
+- [ ] Decision points: Phase 16B (OCR only), Phase 16C (analysis only), Phase 16D (both). Each requires prior phase completion.
+- [ ] Verification commands documented for after every test matrix row.
+- [ ] No real providers enabled. No API keys added. `productionReady` remains `false`.
