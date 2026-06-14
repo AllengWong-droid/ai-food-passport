@@ -30,6 +30,23 @@ design/app-icon/
     icon-clean-square-preview-40.png                 (40x40 — smallest common iOS size)
     icon-clean-square-vs-rounded-comparison.png      (1644x652 — old vs new at all sizes)
     clean-square-master-contact-sheet.png            (620x520 — clean square master preview grid, Phase 22E)
+  export/
+    design-only/                                     (Phase 22F: design-only export set, NOT applied to app)
+      icon-1024.png                                  (1024x1024 — App Store master size)
+      icon-512.png                                   (512x512 — iTunes/iPad Pro size)
+      icon-180.png                                   (180x180 — iPhone @3x home screen)
+      icon-167.png                                   (167x167 — iPad @2x home screen)
+      icon-152.png                                   (152x152 — iPad @2x settings/Spotlight)
+      icon-120.png                                   (120x120 — iPhone @2x Spotlight)
+      icon-87.png                                    (87x87 — iPhone @3x settings)
+      icon-80.png                                    (80x80 — iPhone @2x settings)
+      icon-76.png                                    (76x76 — iPad settings)
+      icon-60.png                                    (60x60 — iPhone @2x home screen, legacy)
+      icon-58.png                                    (58x58 — iPhone @2x settings, legacy)
+      icon-40.png                                    (40x40 — Spotlight, legacy)
+      icon-29.png                                    (29x29 — Settings, legacy)
+      icon-20.png                                    (20x20 — Notification, legacy)
+      icon-export-contact-sheet.png                  (900x1020 — all exported sizes in grid, Phase 22F)
 ```
 
 ---
@@ -114,6 +131,8 @@ Steps 6-9 require macOS with Xcode.
 | `APP_ICON_QA_SMALL_SIZE_VALIDATION.md` | Phase 22C QA report: per-size readability review, visual checks, risks, acceptance decision (19/20 score) |
 | `APP_ICON_CLEAN_SQUARE_REGENERATION_PLAN.md` | Phase 22D plan: why regeneration needed, 9-item criteria, AI prompt + negative prompt, 20-item acceptance + 12-item rejection checklist |
 | `APP_ICON_CLEAN_SQUARE_MASTER_INTAKE.md` | Phase 22E intake & QA: 21/21 validation pass (square opaque, no baked-in corners), accepted as preferred export source |
+| `APP_ICON_DESIGN_ONLY_EXPORT_SET.md` | Phase 22F export set: 14 iOS sizes from clean square master, design-only review assets, not applied to app |
+| `PHASE_22F_REPORT.md` | Phase 22F report: export set generation, verification, scope confirmation |
 
 ---
 
