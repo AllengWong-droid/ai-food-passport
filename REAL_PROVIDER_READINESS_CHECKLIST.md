@@ -183,6 +183,29 @@ Use this checklist before enabling any real OCR, Qwen, DeepSeek, OpenAI, Google 
 - [ ] All 509 local tests pass.
 - [ ] `git diff --check` passes.
 
+## Phase 13D: Flutter Internal Build Configuration
+
+- [ ] `lib/features/shared/data/ai/backend_endpoint_config.dart` already supports `BACKEND_BASE_URL` via dart-define.
+- [ ] Default Flutter behavior unchanged without dart-define (local mock, no backend required).
+- [ ] Release developer controls hidden by default (`DeveloperControlsConfig.areVisible`).
+- [ ] No provider API keys (`QWEN_API_KEY`, `DEEPSEEK_API_KEY`, etc.) in Flutter code.
+- [ ] Deployed backend URL (`https://ai-food-passport.onrender.com`) is not treated as a secret.
+- [ ] Exact internal test command documented:
+  ```bash
+  flutter run -d chrome --dart-define=BACKEND_BASE_URL=https://ai-food-passport.onrender.com
+  ```
+- [ ] `BACKEND_BASE_URL` configurable only via dart-define, never hardcoded.
+- [ ] `GET /` returns 404 on deployed backend (no homepage route — by design).
+- [ ] `POST /api/analyze-menu` without trailing slash works; trailing slash undefined.
+- [ ] `productionReady` remains `false` on deployed backend.
+- [ ] Render backend remains mock-only (no real provider calls).
+- [ ] `flutter test` passes (existing config tests).
+- [ ] `git diff --check` passes.
+- [ ] `git status --short` shows only documentation files changed.
+- [ ] No backend `src/` files changed.
+- [ ] No Flutter runtime code changed.
+- [ ] No secrets or API keys committed.
+
 ## Rollback Plan
 
 - [ ] Real provider can be disabled quickly.

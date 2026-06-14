@@ -549,6 +549,34 @@ Invoke-RestMethod `
 - [ ] Confirm all Phase 13C docs updated: ROADMAP.md, TESTING_CHECKLIST.md, DEPLOYMENT_READINESS.md, RENDER_DEPLOYMENT_DRY_RUN.md, backend/README.md, README.md, REAL_PROVIDER_READINESS_CHECKLIST.md, TECH_ARCHITECTURE.md.
 - [ ] Confirm no deployment secrets (dashboard screenshots, tokens, private service metadata) committed.
 
+## Phase 13D: Flutter Internal Build Points to Deployed Render Backend
+- [ ] Confirm `lib/features/shared/data/ai/backend_endpoint_config.dart` already supports `BACKEND_BASE_URL` via dart-define.
+- [ ] Confirm default Flutter behavior remains unchanged without dart-define (local mock, no backend required).
+- [ ] Confirm release developer controls remain hidden by default (`DeveloperControlsConfig.areVisible`).
+- [ ] Confirm no provider API keys (`QWEN_API_KEY`, `DEEPSEEK_API_KEY`, etc.) exist in Flutter code.
+- [ ] Confirm deployed backend URL (`https://ai-food-passport.onrender.com`) is not treated as a secret.
+- [ ] Run Flutter Web debug pointing to deployed backend:
+  ```bash
+  flutter run -d chrome --dart-define=BACKEND_BASE_URL=https://ai-food-passport.onrender.com
+  ```
+- [ ] Confirm Flutter app starts and Backend Mock Mode can reach the deployed backend.
+- [ ] Confirm `GET /health` via debug shows `activeOcrProvider: mock_ocr`, `activeAnalysisProvider: mock_ai`.
+- [ ] Confirm `POST /api/analyze-menu` returns mock dishes from deployed backend.
+- [ ] Confirm default behavior (no dart-define) still uses local mock without any backend.
+- [ ] Confirm `BACKEND_BASE_URL` is configurable only via dart-define, never hardcoded.
+- [ ] Confirm `GET /` returns 404 on deployed backend (no homepage route — by design).
+- [ ] Confirm `/api/analyze-menu` without trailing slash works; trailing slash is undefined.
+- [ ] Confirm `productionReady` remains `false` on deployed backend.
+- [ ] Confirm Render backend remains mock-only (no real provider calls).
+- [ ] Run `flutter test` — confirm all Flutter tests pass.
+- [ ] Run `git diff --check` — confirm pass (no whitespace errors).
+- [ ] Run `git status --short` — confirm only documentation files changed.
+- [ ] Confirm no backend `src/` files changed.
+- [ ] Confirm no Flutter runtime code changed.
+- [ ] Confirm no secrets or API keys committed.
+- [ ] Confirm `backend/.env` is untracked and in `.gitignore`.
+- [x] Flutter widget test overflow fix (Phase 13D verification): wrapped OnboardingScreen `Column` in `SingleChildScrollView`, removed `Spacer()`, all 42 tests pass.
+
 ## Known Environment Issues
 
 - On some local Codex/Windows shells, Flutter and Dart commands may hang due to cache/permission restrictions.

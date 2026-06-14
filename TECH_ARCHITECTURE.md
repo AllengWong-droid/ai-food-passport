@@ -505,3 +505,43 @@ Phase 11C implements CORS enforcement and request body limit enforcement:
 - Flutter files unchanged. No real provider keys or secrets committed.
 - `mock_ocr` remains default active provider. Qwen OCR stays disabled by default.
 - All existing tests pass (contract: 102, OCR contract: 80, Qwen adapter: 34, Qwen transport: 34 = 250 total).
+
+## Phase 13D: Flutter Internal Build Points to Deployed Render Backend
+
+**Status**: Documentation only. No Flutter runtime code changed.
+
+`BackendEndpointConfig` (`lib/features/shared/data/ai/backend_endpoint_config.dart`) already supports `BACKEND_BASE_URL` via dart-define. No code changes needed.
+
+### Exact Internal Testing Commands
+
+```bash
+# Flutter Web debug pointing to deployed Render backend (mock-only):
+flutter run -d chrome --dart-define=BACKEND_BASE_URL=https://ai-food-passport.onrender.com
+
+# Flutter app debug with local backend:
+flutter run -d web-server --dart-define=BACKEND_BASE_URL=http://127.0.0.1:8787
+
+# Default (no dart-define) — local mock, no backend required:
+flutter run -d web-server
+```
+
+### Safety Documentation
+
+| Rule | Status |
+|------|--------|
+| `BACKEND_BASE_URL` is **not a secret** | ✅ Documented — safe to log/display in debug UI |
+| Provider API keys must **never** be in Flutter | ✅ Enforced — zero provider keys in Flutter code |
+| Default behavior unchanged without dart-define | ✅ Local mock remains default |
+| Release developer controls hidden by default | ✅ `DeveloperControlsConfig.areVisible` |
+| Deployed backend remains mock-only | ✅ `realProvidersEnabled: false` |
+| `productionReady` remains `false` | ✅ Unchanged |
+| Real providers remain disabled | ✅ All gates `false` |
+
+### Verification
+
+- [ ] `flutter run -d chrome --dart-define=BACKEND_BASE_URL=https://ai-food-passport.onrender.com` starts successfully
+- [ ] Backend Mock Mode can reach deployed backend
+- [ ] Default (no dart-define) still uses local mock without backend
+- [ ] No `QWEN_API_KEY` or provider keys in Flutter code
+- [ ] `git diff --check` passes
+- [ ] `git status --short` shows only documentation files changed

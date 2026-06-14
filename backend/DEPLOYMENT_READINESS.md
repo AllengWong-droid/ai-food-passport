@@ -338,8 +338,67 @@ const String BACKEND_BASE_URL = 'https://your-app.onrender.com';
 | `ALLOWED_ORIGINS` | Safe testing origins |
 | `PUBLIC_BACKEND_URL` | `https://ai-food-passport.onrender.com` |
 
-> **Note**: `GET /` returns 404 by design because no homepage route exists.
-> **Note**: `POST /api/analyze-menu` must not include a trailing slash (`/api/analyze-menu/` is undefined).
+---
+
+## Phase 13D: Flutter Internal Build Points to Deployed Render Backend
+
+> **Status**: Documentation only. No Flutter runtime code changed.
+> **Date**: 2026-06-14
+> **Phase**: 13D
+> **Deployed URL**: `https://ai-food-passport.onrender.com`
+
+### Flutter Backend URL Configuration
+
+The Flutter app uses `BackendEndpointConfig` (`lib/features/shared/data/ai/backend_endpoint_config.dart`) which already supports `BACKEND_BASE_URL` via dart-define. **No Flutter runtime code changes were needed.**
+
+### Exact Internal Testing Commands
+
+```bash
+# Flutter Web debug pointing to deployed Render backend (mock-only):
+flutter run -d chrome --dart-define=BACKEND_BASE_URL=https://ai-food-passport.onrender.com
+
+# Flutter app debug with local backend:
+flutter run -d web-server --dart-define=BACKEND_BASE_URL=http://127.0.0.1:8787
+
+# Default (no dart-define) — local mock, no backend required:
+flutter run -d web-server
+```
+
+### Safety Documentation
+
+| Rule | Status |
+|------|--------|
+| `BACKEND_BASE_URL` is **not a secret** | ✅ Documented — safe to log/display in debug UI |
+| Provider API keys must **never** be in Flutter | ✅ Enforced — zero provider keys in Flutter code |
+| Default behavior unchanged without dart-define | ✅ Local mock remains default |
+| Release developer controls hidden by default | ✅ `DeveloperControlsConfig.areVisible` |
+| Deployed backend remains mock-only | ✅ `realProvidersEnabled: false` |
+| `productionReady` remains `false` | ✅ Unchanged |
+| Real providers remain disabled | ✅ All gates `false` |
+
+### Verification Checklist
+
+- [ ] `flutter run -d chrome --dart-define=BACKEND_BASE_URL=https://ai-food-passport.onrender.com` starts successfully
+- [ ] Backend Mock Mode can reach deployed backend
+- [ ] `GET /health` on deployed backend shows `mock_ocr`, `mock_ai`, `realProvidersEnabled: false`
+- [ ] `POST /api/analyze-menu` returns mock dishes from deployed backend
+- [ ] Default (no dart-define) still uses local mock without backend
+- [ ] No `QWEN_API_KEY` or provider keys in Flutter code
+- [ ] `flutter test` passes (existing config tests)
+- [ ] `git diff --check` passes
+- [ ] `git status --short` shows only documentation files changed
+
+### What Phase 13D Does NOT Do
+
+- ❌ No Flutter runtime code changed
+- ❌ No backend `src/` files changed
+- ❌ No real API keys added
+- ❌ No `QWEN_API_KEY` set anywhere
+- ❌ No real provider calls made
+- ❌ `productionReady` remains `false`
+- ❌ No deployment performed (Phase 13C already deployed)
+
+---
 
 ## What This Phase Does NOT Do
 

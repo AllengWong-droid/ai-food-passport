@@ -52,6 +52,7 @@
 - Phase 13A: Production Backend Deployment Target Prep
 - Phase 13B: Render Deployment Config Dry Run
 - Phase 13C: Render Manual Deploy Execution — Mock Backend Verified
+- Phase 13D: Flutter Internal Build Points to Deployed Render Backend (Flutter widget test overflow fixed)
 
 ## Current MVP Alpha
 
@@ -59,6 +60,7 @@
 - GET /health: `ok: true`, `activeOcrProvider: mock_ocr`, `activeAnalysisProvider: mock_ai`, `realProvidersEnabled: false`, `productionReady: false`
 - POST /api/analyze-menu: `ok: true`, 2 mock dishes returned
 - All real providers remain disabled; no API keys or secrets configured.
+- Flutter can point to deployed backend via `BACKEND_BASE_URL` dart-define (Phase 13D).
 - GET / returns 404 (no homepage route); `/api/analyze-menu` must not include trailing slash.
 
 The normal app flow remains local mock by default:

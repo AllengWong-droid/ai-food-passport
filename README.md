@@ -12,7 +12,7 @@ The backend also has OCR and analysis provider registries plus a provider routin
 
 Phase 10A adds secret-handling and real-provider readiness documentation. Future provider environment variables are placeholder-only in `backend/.env.example`; real keys must stay backend-only and must never be committed.
 
-Phase 10C adds logging redaction and safe error response utilities. Phase 11A adds 86 automated backend contract tests. Phase 11B adds runtime deployment config, CORS skeleton, and deployment readiness documentation (`backend/DEPLOYMENT_READINESS.md`). Phase 11C implements CORS enforcement and request body limit enforcement on the backend (102 contract tests passing). Phase 11D adds Flutter backend endpoint configuration via dart-define — compile-time `BACKEND_BASE_URL` lets production builds point to a deployed backend without embedding secrets. Phase 11E gates all developer-only UI controls (Backend Mock Mode, Backend Scenario, AI Provider Mode, AI Debug/OCR Debug panels) behind `DeveloperControlsConfig`, hidden by default in release builds, overridable with `SHOW_DEVELOPER_CONTROLS=true`. Phase 11F adds 41 Flutter config unit tests (URL validation, secret-pattern rejection, developer controls gating) with pure helper functions for testability. Phase 13A adds deployment target comparison (`backend/DEPLOYMENT_TARGETS.md`) recommending Render as the first hosted backend MVP platform, and updates deployment readiness docs with full production env var documentation and a future smoke checklist. Phase 13B adds Render-specific deployment configuration (`backend/render.yaml` Blueprint template with safe placeholder-only values) and a comprehensive dry-run checklist (`backend/RENDER_DEPLOYMENT_DRY_RUN.md`) covering local preflight, Dashboard setup, first-deploy smoke tests, and rollback steps. Phase 13C completes the mock-backend deployment: the backend is live at `https://ai-food-passport.onrender.com` with mock providers only. Health and analyze-menu endpoints verified. All real providers remain disabled (`realProvidersEnabled: false`). No API keys are configured. `productionReady` remains `false`.
+Phase 10C adds logging redaction and safe error response utilities. Phase 11A adds 86 automated backend contract tests. Phase 11B adds runtime deployment config, CORS skeleton, and deployment readiness documentation (`backend/DEPLOYMENT_READINESS.md`). Phase 11C implements CORS enforcement and request body limit enforcement on the backend (102 contract tests passing). Phase 11D adds Flutter backend endpoint configuration via dart-define — compile-time `BACKEND_BASE_URL` lets production builds point to a deployed backend without embedding secrets. Phase 11E gates all developer-only UI controls (Backend Mock Mode, Backend Scenario, AI Provider Mode, AI Debug/OCR Debug panels) behind `DeveloperControlsConfig`, hidden by default in release builds, overridable with `SHOW_DEVELOPER_CONTROLS=true`. Phase 11F adds 41 Flutter config unit tests (URL validation, secret-pattern rejection, developer controls gating) with pure helper functions for testability. Phase 13A adds deployment target comparison (`backend/DEPLOYMENT_TARGETS.md`) recommending Render as the first hosted backend MVP platform, and updates deployment readiness docs with full production env var documentation and a future smoke checklist. Phase 13B adds Render-specific deployment configuration (`backend/render.yaml` Blueprint template with safe placeholder-only values) and a comprehensive dry-run checklist (`backend/RENDER_DEPLOYMENT_DRY_RUN.md`) covering local preflight, Dashboard setup, first-deploy smoke tests, and rollback steps. Phase 13C completes the mock-backend deployment: the backend is live at `https://ai-food-passport.onrender.com` with mock providers only. Health and analyze-menu endpoints verified. All real providers remain disabled (`realProvidersEnabled: false`). No API keys are configured. `productionReady` remains `false`. Phase 13D documents exact Flutter internal build commands to point to the deployed Render backend via `BACKEND_BASE_URL` dart-define. No Flutter runtime code changed. Default local/mock behavior remains unchanged.
 
 No real OCR, Qwen, DeepSeek, OpenAI, Firebase, subscriptions, production authentication, real exchange rates, API keys, or secrets are implemented. Production deployment is not yet ready (`productionReady: false`).
 
@@ -75,14 +75,17 @@ The Flutter app uses a centralized `BackendEndpointConfig` in `lib/features/shar
 # Local testing with a running backend:
 flutter run -d web-server --dart-define=BACKEND_BASE_URL=http://127.0.0.1:8787
 
+# Point to deployed Render mock backend (Phase 13C):
+flutter run -d chrome --dart-define=BACKEND_BASE_URL=https://ai-food-passport.onrender.com
+
 # Production web build:
 flutter build web --dart-define=BACKEND_BASE_URL=https://api.foodpassport.example.com
 ```
 
 Rules:
 - `BACKEND_BASE_URL` is **not a secret**. It is safe to log and display in debug UI.
-- Flutter production builds **must** use a deployed HTTPS backend URL.
-- Flutter **must never** contain provider API keys.
+- Flutter **must never** contain provider API keys (`QWEN_API_KEY`, `DEEPSEEK_API_KEY`, etc.).
+- Provider API keys live ONLY in backend deployment environment variables.
 - Empty or invalid `BACKEND_BASE_URL` values fall back to the local dev URL.
 - URLs containing userinfo (`user:pass@host`) or known secret patterns are rejected.
 - Backend Mock Mode remains **disabled by default** regardless of the URL.
