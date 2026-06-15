@@ -80,6 +80,7 @@ Home currency conversion works for all supported currencies (USD, EUR, GBP, JPY,
 | [PHASE_22G_REPORT.md](PHASE_22G_REPORT.md) | Phase 22G report: design line closure / handoff |
 | [PHASE_23A_REPORT.md](PHASE_23A_REPORT.md) | Phase 23A report: local scan history feature |
 | [PHASE_23B_REPORT.md](PHASE_23B_REPORT.md) | Phase 23B report: scan history feature tests (73/73 passing) |
+| [PHASE_24A_REPORT.md](PHASE_24A_REPORT.md) | Phase 24A report: dietary preferences and allergen settings (96/96 passing) |
 | [ROADMAP.md](ROADMAP.md) | Full phase history and future plans |
 
 ## MVP Alpha Capabilities

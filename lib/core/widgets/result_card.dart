@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../app/theme/app_colors.dart';
 import '../../features/shared/domain/models/dish_analysis_model.dart';
 import '../../features/shared/domain/models/price_intelligence_model.dart';
 import '../../features/shared/presentation/localized_result_copy.dart';
+import '../../features/shared/data/dietary_preferences_provider.dart';
 import 'score_badge.dart';
 
-class ResultCard extends StatelessWidget {
+class ResultCard extends ConsumerWidget {
   const ResultCard({
     required this.dish,
     required this.onTap,
@@ -21,10 +23,15 @@ class ResultCard extends StatelessWidget {
   final LocalizedResultCopy copy;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final safetyTone = dish.safetyScore >= 85 ? ScoreBadgeTone.safe : ScoreBadgeTone.warning;
     final matchTone = dish.tasteScore >= 90 ? ScoreBadgeTone.match : ScoreBadgeTone.muted;
     final price = dish.priceIntelligence;
+
+    // Check if dish allergens match user's dietary preferences
+    final dietaryPreferences = ref.watch(dietaryPreferencesProvider);
+    final hasAllergenMatch = dietaryPreferences.matchesDishAllergens(dish.allergens);
+    final matchingAllergens = dietaryPreferences.getMatchingAllergens(dish.allergens);
 
     return Material(
       color: Colors.transparent,
@@ -138,9 +145,46 @@ class ResultCard extends StatelessWidget {
                       tone: ScoreBadgeTone.warning,
                       icon: Icons.warning_amber_rounded,
                     ),
+                  // Show warning if dish contains user's selected allergens
+                  if (hasAllergenMatch)
+                    ScoreBadge(
+                      label: 'Matches your avoid list',
+                      tone: ScoreBadgeTone.warning,
+                      icon: Icons.warning_amber_rounded,
+                    ),
                 ],
               ),
               const SizedBox(height: 12),
+              // Allergen match warning
+              if (hasAllergenMatch)
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFFFF8E1),
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: const Color(0xFFFFE082)),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Icon(Icons.warning_amber_rounded,
+                          color: Color(0xFFF57F17), size: 16),
+                      const SizedBox(width: 6),
+                      Flexible(
+                        child: Text(
+                          'Contains: ${matchingAllergens.join(', ')}',
+                          style: const TextStyle(
+                            color: Color(0xFFF57F17),
+                            fontSize: 12,
+                            fontWeight: FontWeight.w700,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              if (hasAllergenMatch) const SizedBox(height: 8),
               Text(
                 dish.recommendationReason,
                 maxLines: 2,

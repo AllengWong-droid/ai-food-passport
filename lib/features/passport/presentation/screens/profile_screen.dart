@@ -160,6 +160,11 @@ class ProfileScreen extends ConsumerWidget {
               subtitle: 'View past menu analyses',
               onTap: () => context.pushNamed(RouteNames.history),
             ),
+            _PreferenceTile(
+              title: 'Dietary Preferences',
+              subtitle: 'Allergens and dietary restrictions',
+              onTap: () => context.pushNamed(RouteNames.dietaryPreferences),
+            ),
             const SizedBox(height: 34),
             const SectionHeader('Stamps Collected'),
             const SizedBox(height: 20),

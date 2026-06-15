@@ -10,4 +10,5 @@ class RouteNames {
   static const dishDetail = 'dishDetail';
   static const profile = 'profile';
   static const history = 'history';
+  static const dietaryPreferences = 'dietaryPreferences';
 }
