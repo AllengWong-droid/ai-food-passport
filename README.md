@@ -5,6 +5,8 @@
 > **Status:** MVP Alpha — portfolio-ready, not production-ready. Backend deployed on Render (mock-only). 97/97 Flutter tests passing. No real OCR/AI providers enabled. No API keys in Flutter.
 >
 > **Latest Release:** [v0.2.0 Portfolio Demo Ready](https://github.com/AllengWong-droid/ai-food-passport/releases/tag/v0.2.0-portfolio-demo-ready) (2026-06-15) — public web demo live, dietary preferences, allergen warnings, scan history, full QA verified. [Verification report →](RELEASE_V0_2_0_VERIFICATION.md)
+>
+> For a complete documentation map, see **[PROJECT_INDEX.md](PROJECT_INDEX.md)**.
 
 ---
 
