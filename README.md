@@ -478,6 +478,12 @@ flutter analyze
 git diff --check
 ```
 
+## License
+
+This project is licensed under the MIT License. See [LICENSE](LICENSE) for details.
+
+---
+
 ## Current Verified Phases
 
 - Phase 1: Project Architecture
