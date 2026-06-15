@@ -1,6 +1,128 @@
 # AI Food Passport
 
-AI Food Passport is a Flutter MVP Alpha that helps travelers understand menus, compare prices in their home currency, and choose dishes that fit their taste and safety profile.
+**Flutter MVP** — AI menu analysis for international travelers. Snap a menu photo, get dish recommendations with home-currency pricing, and see personalized allergen warnings based on your saved dietary preferences. Built with mock-safe architecture: the full product flow works without any paid APIs.
+
+> **Status:** MVP Alpha — portfolio-ready, not production-ready. Backend deployed on Render (mock-only). 97/97 Flutter tests passing. No real OCR/AI providers enabled. No API keys in Flutter.
+
+---
+
+## Current MVP Features
+
+| Feature | Type | Detail |
+|---|---|---|
+| **Menu Scan & Analysis** | Mock-safe | Capture menu images, get dish recommendations and pricing |
+| **Personalized Allergen Warnings** | Real UX | "Contains [allergen]" badges on matching dishes |
+| **Dietary Preferences** | Real persistence | 8 allergens + 5 dietary restrictions, saved locally |
+| **Price Intelligence** | Real UX | Home currency conversion for 6+ currencies |
+| **Scan History** | Session-local | View past analyses, restore results without backend re-call |
+| **Traveler Settings** | Real persistence | Home country, currency, output language |
+| **Mock Backend API** | Deployed | Render free tier at `ai-food-passport.onrender.com` |
+| **Privacy Policy** | Live | GitHub Pages hosted |
+| **Demo/QA Package** | Complete | Demo scripts, QA checklist, recording guide |
+
+---
+
+## Demo Flow
+
+Ready to present or record. See:
+
+| Resource | Description |
+|---|---|
+| [DEMO_PRODUCT_FLOW_SCRIPT.md](DEMO_PRODUCT_FLOW_SCRIPT.md) | 6-act demo with 60s / 2min / detailed narration scripts |
+| [MANUAL_QA_CHECKLIST.md](MANUAL_QA_CHECKLIST.md) | 74-point manual QA checklist (8 sections) |
+| [DEMO_RECORDING_SHOT_LIST.md](DEMO_RECORDING_SHOT_LIST.md) | 10-shot recording guide, 81 seconds total |
+| [PORTFOLIO_DEMO_PACKAGE.md](PORTFOLIO_DEMO_PACKAGE.md) | Complete portfolio overview with architecture and talking points |
+
+**Quick recording run:**
+1. Open app → Profile → Dietary Preferences → select Wheat, Egg, Soy
+2. Scan menu → see personalized allergen badges on results
+3. Profile → Scan History → restore past scan → clear history
+
+---
+
+## What is Real vs Mock
+
+| Component | Status |
+|---|---|
+| **Flutter UI & State** | ✅ Real — production-quality Flutter/Dart code |
+| **Dietary Preferences Persistence** | ✅ Real — saved to shared_preferences, survives app restart |
+| **Scan History Behavior** | ✅ Real — entries created, restored, cleared without backend |
+| **Allergen Warning Logic** | ✅ Real — case-insensitive matching, badge rendering |
+| **OCR / Image Recognition** | ❌ Mock-only — deterministic dish data, no real image processing |
+| **AI Dish Analysis** | ❌ Mock-only — 2 hardcoded mock dishes per scan |
+| **Backend /menu-analyze** | ❌ Mock-only — Render mock backend, no real provider calls |
+| **Exchange Rates** | ❌ Mock-only — hardcoded rates, not live FX data |
+| **TestFlight / App Store** | ❌ Not ready — requires macOS + Apple Developer membership |
+
+---
+
+## Safety and Limitations
+
+**This is an MVP Alpha. It is not production-ready.**
+
+- **No allergy safety guarantee** — the app provides information for reference only
+- **Not medical advice** — always verify ingredients with restaurant staff
+- **Not TestFlight/App Store-ready** — no iOS build, no Apple certificates
+- **Mock-only backend** — all dish analysis uses deterministic mock data
+- **Session-only scan history** — history is lost on app restart
+- **Free-tier Render** — backend may take 30-60 seconds on cold start after inactivity
+- **No real providers** — Qwen OCR and Qwen Analysis are implemented behind safety gates but not enabled
+- **No real exchange rates** — currency conversion uses hardcoded mock rates
+
+For full details, see:
+
+| Document | Purpose |
+|---|---|
+| [MANUAL_QA_CHECKLIST.md](MANUAL_QA_CHECKLIST.md) | Safety wording QA and known limitations |
+| [REAL_PROVIDER_PREFLIGHT_PLAN.md](REAL_PROVIDER_PREFLIGHT_PLAN.md) | Real provider safety gates and enablement plan |
+
+---
+
+## How to Run
+
+### Quickstart (Flutter only, local mock)
+
+```bash
+flutter pub get
+flutter run -d web-server
+```
+
+### With live Render mock backend
+
+```bash
+flutter run -d web-server --web-hostname=127.0.0.1 --web-port=8081 \
+  --dart-define=BACKEND_BASE_URL=https://ai-food-passport.onrender.com
+```
+
+### Run tests
+
+```bash
+flutter test          # 97/97 passing
+dart analyze          # 54 pre-existing info-level, zero warnings/errors
+```
+
+### Start backend locally (optional)
+
+```bash
+cd backend
+npm run dev           # starts at http://localhost:8787
+```
+
+---
+
+## Portfolio Value
+
+This project demonstrates:
+
+- **Product thinking** — identified a real traveler pain point and designed a 3-in-1 solution (scan → price → allergens)
+- **Flutter engineering** — clean architecture with Riverpod state management, GoRouter navigation, and shared_preferences persistence
+- **Backend integration boundary** — mock-first approach with provider registry, safety gates, and API contract testing
+- **Safe provider architecture** — real API keys are server-side only, never embedded in Flutter
+- **Test coverage** — 97/97 Flutter tests (model + provider + widget level), 102 backend contract tests
+- **Demo readiness** — complete demo scripts, QA checklist, and recording guide
+- **Documentation quality** — 25+ phase reports, portfolio package, GitHub showcase checklist
+
+---
 
 ## Current Status
 
@@ -85,6 +207,8 @@ Home currency conversion works for all supported currencies (USD, EUR, GBP, JPY,
 | [DEMO_PRODUCT_FLOW_SCRIPT.md](DEMO_PRODUCT_FLOW_SCRIPT.md) | Phase 25A: demo product flow script (60s, 2min, detailed versions) |
 | [MANUAL_QA_CHECKLIST.md](MANUAL_QA_CHECKLIST.md) | Phase 25A: 74-point manual QA checklist |
 | [DEMO_RECORDING_SHOT_LIST.md](DEMO_RECORDING_SHOT_LIST.md) | Phase 25A: recording shot list for demo video (10 shots, 81s total) |
+| [PORTFOLIO_DEMO_PACKAGE.md](PORTFOLIO_DEMO_PACKAGE.md) | Phase 25B: complete portfolio demo package (pitch, architecture, talking points) |
+| [GITHUB_REPO_SHOWCASE_CHECKLIST.md](GITHUB_REPO_SHOWCASE_CHECKLIST.md) | Phase 25B: GitHub repository showcase checklist |
 | [ROADMAP.md](ROADMAP.md) | Full phase history and future plans |
 
 ## MVP Alpha Capabilities
