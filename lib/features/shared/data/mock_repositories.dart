@@ -111,6 +111,10 @@ final dishByIdProvider =
   );
 });
 
+final scanHistoryProvider = StateProvider<List<ScanHistoryEntry>>((ref) {
+  return [];
+});
+
 class MockAuthRepository implements AuthRepository {
   @override
   UserModel currentUser() => mockUser;

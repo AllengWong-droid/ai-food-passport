@@ -290,6 +290,19 @@ class _ScanScreenState extends ConsumerState<ScanScreen> {
         return;
       }
 
+      // Add to scan history
+      final historyEntry = ScanHistoryEntry.fromAnalysisState(
+        scan: scan,
+        ocrResult: ocrResult,
+        aiAnalysisRequest: analysisRequest,
+        dishAnalyses: ref.read(dishAnalysesProvider),
+        sourceMode: useBackendMock ? 'Backend Mock' : 'Mock AI',
+      );
+      ref.read(scanHistoryProvider.notifier).state = [
+        historyEntry,
+        ...ref.read(scanHistoryProvider),
+      ];
+
       await _showProcessingStage('Comparing local prices');
       await _showProcessingStage('Preparing recommendations');
 

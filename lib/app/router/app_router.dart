@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../core/widgets/bottom_nav_shell.dart';
 import '../../features/auth/presentation/screens/auth_screen.dart';
 import '../../features/home/presentation/screens/home_screen.dart';
+import '../../features/history/presentation/screens/scan_history_screen.dart';
 import '../../features/onboarding/presentation/screens/onboarding_screen.dart';
 import '../../features/passport/presentation/screens/passport_setup_screen.dart';
 import '../../features/passport/presentation/screens/profile_screen.dart';
@@ -47,6 +48,11 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         builder: (context, state) {
           return DishDetailScreen(dishId: state.pathParameters['dishId']!);
         },
+      ),
+      GoRoute(
+        path: '/history',
+        name: RouteNames.history,
+        builder: (context, state) => const ScanHistoryScreen(),
       ),
       StatefulShellRoute.indexedStack(
         builder: (context, state, navigationShell) {
