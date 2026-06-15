@@ -12,6 +12,12 @@
 
 ---
 
+## Public Repo Boundary
+
+**This repository is the public portfolio demo version.** Future App Store, subscription, real provider, and production backend work should live in a separate private codebase — not here. See [PUBLIC_REPO_FREEZE_NOTICE.md](PUBLIC_REPO_FREEZE_NOTICE.md) for the full boundary definition.
+
+---
+
 ## Current MVP Features
 
 | Feature | Type | Detail |

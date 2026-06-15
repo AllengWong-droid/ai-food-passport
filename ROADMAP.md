@@ -105,6 +105,7 @@
 - Phase 29B: Public Documentation Index (PROJECT_INDEX.md — 10-section curated documentation map: quick links, reading order, 50+ docs indexed across 4 categories, honest limitations; README.md — added 1-line link to index; PHASE_29B_REPORT.md — full phase report; ROADMAP.md updated; documentation-only — zero code changes; dart analyze 54 info-level only; flutter test 97/97; no lib/ios/backend/pubspec/secrets/provider changes; productionReady remains false)
 - Phase 30A: Portfolio Feedback Collection Pack (PUBLIC_FEEDBACK_GUIDE.md — 7-section master guide; USER_TESTING_SCRIPT.md — 5-min + 10-min scripts with cold start handling; FEEDBACK_FORM_QUESTIONS.md — short 8Q + full 20Q + 3 role-specific question sets; FEEDBACK_INVITATION_MESSAGES.md — 7 templates in CN/EN for classmates, mentors, recruiters, technical reviewers, all with honest checklist; PHASE_30A_REPORT.md — full phase report; README.md — added feedback link; PROJECT_INDEX.md — added Feedback Collection section; ROADMAP.md updated; documentation-only — zero code changes; dart analyze 54 info-level only; flutter test 97/97; no lib/ios/backend/pubspec/secrets/provider changes; productionReady remains false)
 - Phase 30B: Actual Feedback Outreach (FEEDBACK_OUTREACH_LOG.md — outreach tracking table with 10 placeholder rows across 5 categories, feedback themes section, next-version action candidates; FEEDBACK_OUTREACH_CHECKLIST.md — min 3 / recommended 5 outreach targets, suggested first batch with 5 channels, copy-paste references, what to send/record, 4 completion criteria, outreach tips; PHASE_30B_REPORT.md — full phase report; PROJECT_INDEX.md — added section 6.6; ROADMAP.md updated; documentation-only — zero code changes; dart analyze 54 info-level only; flutter test 97/97; no lib/ios/backend/pubspec/secrets/provider changes; productionReady remains false; outreach NOT yet sent — pending user action; zero invented testers or feedback)
+- Phase 31A: Public Repo Freeze Notice (PUBLIC_REPO_FREEZE_NOTICE.md — 8-section boundary notice: repo identity as portfolio demo, what stays public, what is intentionally excluded, future commercial boundary, license note, safety note, final verdict; README.md — added concise "Public Repo Boundary" section; PROJECT_INDEX.md — added freeze notice under Safety & Legal; ROADMAP.md updated; documentation-only — zero code changes; dart analyze 54 info-level only; flutter test 97/97; no lib/ios/backend/pubspec/secrets/provider changes; productionReady remains false; no commercial architecture, no subscription plans, no sensitive implementation; future commercial work marked as private-repo)
 
 ## Current MVP Alpha
 
@@ -131,16 +132,20 @@ Backend Mock Mode is disabled by default. Provider mode remains informational on
 
 ## Next
 
-- **Phase 16B**: Qwen OCR real smoke test — requires a real test API key (backend-only). Blocked until key exists.
-- **Phase 16C**: Qwen Analysis real smoke test — requires Phase 16B completed.
-- **Phase 16D**: Combined OCR + Analysis real smoke test — requires 16B and 16C completed.
-- **Firebase integration**: Authentication, cloud sync, persistence.
-- **Real exchange-rate API**: Replace mock currency conversion.
-- **Production deployment**: Real production backend with provider keys, security hardening.
-- **App Store preparation**: Screenshots, metadata, compliance review.
-- **Saved scan history**: Persistent scan records.
+> **Public / Private Boundary** (Phase 31A): As of the [Public Repo Freeze Notice](PUBLIC_REPO_FREEZE_NOTICE.md), future commercial, subscription, real provider, and production work should happen in a separate private repository — not here. This public repo remains the portfolio demo version. The items listed below are public roadmap entries only; detailed implementation specifics belong in a private codebase.
+
+- **Phase 16B**: Qwen OCR real smoke test — requires a real test API key (backend-only). Blocked until key exists. (Note: real provider integration and any API key handling should remain private.)
+- **Phase 16C**: Qwen Analysis real smoke test — requires Phase 16B completed. (Note: same private boundary as 16B.)
+- **Phase 16D**: Combined OCR + Analysis real smoke test — requires 16B and 16C completed. (Note: same private boundary.)
+- **Firebase integration**: Authentication, cloud sync, persistence. (Note: Firebase config and implementation details should remain private.)
+- **Real exchange-rate API**: Replace mock currency conversion. (Note: API key and integration details should remain private.)
+- **Production deployment**: Real production backend with provider keys, security hardening. (Note: all production architecture, security logic, and key management should remain private.)
+- **App Store preparation**: Screenshots, metadata, compliance review. (Note: commercial release-specific details should remain private.)
+- **Saved scan history**: Persistent scan records. (Note: commercial implementation details should remain private.)
 
 ## Later Product Expansion
+
+> These items are listed for portfolio context only. Detailed commercial product expansion plans, subscription architecture, monetization specifics, and production implementation belong in a private codebase.
 
 - Cloud sync for traveler settings
 - Travel history and country stamps

@@ -120,6 +120,7 @@ For a first-time visitor, read in this order:
 | [PRIVACY_POLICY_HOSTING_PLAN.md](PRIVACY_POLICY_HOSTING_PLAN.md) | How the privacy policy is hosted |
 | [REAL_PROVIDER_READINESS_CHECKLIST.md](REAL_PROVIDER_READINESS_CHECKLIST.md) | What must happen before enabling real providers |
 | [backend/SECURITY_AND_SECRETS.md](backend/SECURITY_AND_SECRETS.md) | Backend security and secrets management |
+| [PUBLIC_REPO_FREEZE_NOTICE.md](PUBLIC_REPO_FREEZE_NOTICE.md) | Public repo boundary — portfolio demo freeze notice |
 
 ### Phase Reports (recent / noteworthy)
 
