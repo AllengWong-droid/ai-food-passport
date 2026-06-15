@@ -1,7 +1,6 @@
 import 'package:ai_food_passport/core/widgets/result_card.dart';
 import 'package:ai_food_passport/features/shared/data/dietary_preferences_provider.dart';
 import 'package:ai_food_passport/features/shared/domain/models/dish_analysis_model.dart';
-import 'package:ai_food_passport/features/shared/domain/models/dietary_preferences_model.dart';
 import 'package:ai_food_passport/features/shared/domain/models/price_intelligence_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -63,8 +62,9 @@ void main() {
         ),
       );
 
-      // Should not show "Matches your avoid list" badge
-      expect(find.text('Matches your avoid list'), findsNothing);
+      // Should not show any personalized allergen warning
+      expect(find.text('Contains gluten'), findsNothing);
+      expect(find.text('Contains: gluten, dairy'), findsNothing);
     });
 
     testWidgets('shows allergen warning when dish matches user preferences',
@@ -88,8 +88,35 @@ void main() {
 
       await tester.pumpAndSettle();
 
-      // Should show "Matches your avoid list" badge
-      expect(find.text('Matches your avoid list'), findsOneWidget);
+      // Should show personalized allergen badge with matching allergen name
+      expect(find.text('Contains gluten'), findsOneWidget);
+    });
+
+    testWidgets(
+        'shows multi-allergen warning when multiple preferences match',
+        (WidgetTester tester) async {
+      // Set multiple allergen preferences
+      final container = ProviderContainer();
+      final notifier = container.read(dietaryPreferencesProvider.notifier);
+      notifier.toggleAllergen('gluten');
+      notifier.toggleAllergen('dairy');
+
+      await tester.pumpWidget(
+        ProviderScope(
+          child: MaterialApp(
+            home: Scaffold(
+              body: createTestCard(
+                allergens: ['gluten', 'dairy'],
+              ),
+            ),
+          ),
+        ),
+      );
+
+      await tester.pumpAndSettle();
+
+      // Should show multi-allergen badge
+      expect(find.text('Contains: gluten, dairy'), findsOneWidget);
     });
   });
 }

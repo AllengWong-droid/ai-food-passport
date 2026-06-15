@@ -50,7 +50,7 @@ class ScanHistoryScreen extends ConsumerWidget {
 
             // History list or empty state
             if (history.isEmpty) ...[
-              _EmptyHistoryState(),
+              const _EmptyHistoryState(),
             ] else ...[
               // Clear history button
               _ClearHistoryButton(
@@ -121,7 +121,7 @@ class _EmptyHistoryState extends StatelessWidget {
           Icon(
             Icons.history,
             size: 64,
-            color: AppColors.softInk.withOpacity(0.5),
+            color: AppColors.softInk.withValues(alpha: 0.5),
           ),
           const SizedBox(height: 24),
           Text(
@@ -132,10 +132,10 @@ class _EmptyHistoryState extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 12),
-          Text(
+          const Text(
             'Scan a menu to see your analysis history here.',
             textAlign: TextAlign.center,
-            style: const TextStyle(
+            style: TextStyle(
               color: AppColors.softInk,
               fontSize: 15,
               height: 1.4,

@@ -148,43 +148,15 @@ class ResultCard extends ConsumerWidget {
                   // Show warning if dish contains user's selected allergens
                   if (hasAllergenMatch)
                     ScoreBadge(
-                      label: 'Matches your avoid list',
+                      label: matchingAllergens.length == 1
+                          ? 'Contains ${matchingAllergens.first}'
+                          : 'Contains: ${matchingAllergens.join(', ')}',
                       tone: ScoreBadgeTone.warning,
                       icon: Icons.warning_amber_rounded,
                     ),
                 ],
               ),
               const SizedBox(height: 12),
-              // Allergen match warning
-              if (hasAllergenMatch)
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFFFF8E1),
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: const Color(0xFFFFE082)),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const Icon(Icons.warning_amber_rounded,
-                          color: Color(0xFFF57F17), size: 16),
-                      const SizedBox(width: 6),
-                      Flexible(
-                        child: Text(
-                          'Contains: ${matchingAllergens.join(', ')}',
-                          style: const TextStyle(
-                            color: Color(0xFFF57F17),
-                            fontSize: 12,
-                            fontWeight: FontWeight.w700,
-                          ),
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              if (hasAllergenMatch) const SizedBox(height: 8),
               Text(
                 dish.recommendationReason,
                 maxLines: 2,

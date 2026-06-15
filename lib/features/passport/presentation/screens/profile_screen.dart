@@ -10,6 +10,7 @@ import '../../../../core/widgets/passport_card.dart';
 import '../../../../core/widgets/section_header.dart';
 import '../../../shared/config/developer_controls_config.dart';
 import '../../../shared/data/ai/backend_endpoint_config.dart';
+import '../../../shared/data/dietary_preferences_provider.dart';
 import '../../../shared/data/mock_repositories.dart';
 import '../../../shared/domain/models/models.dart';
 
@@ -136,34 +137,51 @@ class ProfileScreen extends ConsumerWidget {
             _ResetTravelerSettingsButton(
               onTap: () => _resetTravelerSettings(ref),
             ),
+            const SizedBox(height: 34),
+            const SectionHeader('Quick Actions'),
+            const SizedBox(height: 14),
+            _PreferenceTile(
+              icon: Icons.shield_outlined,
+              title: 'Dietary Preferences',
+              subtitle: ref.watch(dietaryPreferencesProvider).hasPreferences
+                  ? '${ref.watch(dietaryPreferencesProvider).selectedAllergens.length} allergens avoided'
+                  : 'Allergens and dietary restrictions',
+              onTap: () => context.pushNamed(RouteNames.dietaryPreferences),
+            ),
+            _PreferenceTile(
+              icon: Icons.history,
+              title: 'Scan History',
+              subtitle: ref.watch(scanHistoryProvider).isEmpty
+                  ? 'No scans yet'
+                  : '${ref.watch(scanHistoryProvider).length} past scans',
+              onTap: () => context.pushNamed(RouteNames.history),
+            ),
             const SizedBox(height: 28),
             _PreferenceTile(
+              icon: Icons.food_bank_outlined,
               title: 'Taste & Allergies',
               subtitle:
                   '${passport.allergies.length} allergens - ${passport.tastePreferences.length} preferences',
             ),
             _PreferenceTile(
+              icon: Icons.currency_exchange_outlined,
               title: 'Home Currency',
               subtitle: '${user.homeCurrency} - ${user.homeCountry}',
             ),
             const _PreferenceTile(
+              icon: Icons.flight_outlined,
               title: 'Travel History',
               subtitle: 'Tokyo, Lisbon, Mexico City...',
             ),
-            const _PreferenceTile(title: 'Notifications', subtitle: 'On'),
+            const _PreferenceTile(
+              icon: Icons.notifications_outlined,
+              title: 'Notifications',
+              subtitle: 'On',
+            ),
             _PreferenceTile(
+              icon: Icons.email_outlined,
               title: 'Email',
               subtitle: user.email,
-            ),
-            _PreferenceTile(
-              title: 'Scan History',
-              subtitle: 'View past menu analyses',
-              onTap: () => context.pushNamed(RouteNames.history),
-            ),
-            _PreferenceTile(
-              title: 'Dietary Preferences',
-              subtitle: 'Allergens and dietary restrictions',
-              onTap: () => context.pushNamed(RouteNames.dietaryPreferences),
             ),
             const SizedBox(height: 34),
             const SectionHeader('Stamps Collected'),
@@ -292,7 +310,7 @@ class _DeveloperToggleTile extends StatelessWidget {
           ),
           Switch.adaptive(
             value: value,
-            activeColor: AppColors.accent,
+            activeTrackColor: AppColors.accent,
             onChanged: onChanged,
           ),
         ],
@@ -439,11 +457,13 @@ class _SettingsDropdownTile<T> extends StatelessWidget {
 
 class _PreferenceTile extends StatelessWidget {
   const _PreferenceTile({
+    required this.icon,
     required this.title,
     required this.subtitle,
     this.onTap,
   });
 
+  final IconData icon;
   final String title;
   final String subtitle;
   final VoidCallback? onTap;
@@ -462,6 +482,8 @@ class _PreferenceTile extends StatelessWidget {
         ),
         child: Row(
           children: [
+            Icon(icon, color: AppColors.mutedInk, size: 24),
+            const SizedBox(width: 16),
             Expanded(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,

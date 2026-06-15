@@ -49,13 +49,13 @@ class DietaryPreferencesScreen extends ConsumerWidget {
             const SizedBox(height: 34),
 
             // Disclaimer
-            _DisclaimerBanner(),
+            const _DisclaimerBanner(),
             const SizedBox(height: 28),
 
             // Allergens section
             const SectionHeader('Allergens to Avoid'),
             const SizedBox(height: 14),
-            Text(
+            const Text(
               'Dishes containing these allergens will be marked in your scan results.',
               style: TextStyle(
                 color: AppColors.mutedInk,
@@ -71,7 +71,7 @@ class DietaryPreferencesScreen extends ConsumerWidget {
             // Dietary restrictions section
             const SectionHeader('Dietary Restrictions'),
             const SizedBox(height: 14),
-            Text(
+            const Text(
               'Optional dietary preferences for personalized recommendations.',
               style: TextStyle(
                 color: AppColors.mutedInk,
@@ -272,7 +272,7 @@ class _RestrictionToggle extends StatelessWidget {
             Expanded(
               child: Text(
                 option.label,
-                style: TextStyle(
+                style: const TextStyle(
                   color: AppColors.ink,
                   fontSize: 16,
                   fontWeight: FontWeight.w700,
@@ -371,12 +371,12 @@ class _DisclaimerBanner extends StatelessWidget {
         borderRadius: BorderRadius.circular(14),
         border: Border.all(color: const Color(0xFFFFE082)),
       ),
-      child: Row(
+      child: const Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Icon(Icons.info_outline, color: Color(0xFFF57F17), size: 20),
-          const SizedBox(width: 10),
-          const Expanded(
+          Icon(Icons.info_outline, color: Color(0xFFF57F17), size: 20),
+          SizedBox(width: 10),
+          Expanded(
             child: Text(
               'This app provides information for reference only. Always verify ingredients and consult with restaurant staff about allergens. This is not a medical diagnosis.',
               style: TextStyle(
