@@ -87,6 +87,15 @@ For a first-time visitor, read in this order:
 
 ---
 
+## 6.6. Feedback Outreach Tracking
+
+| Document | Description |
+|----------|-------------|
+| [FEEDBACK_OUTREACH_LOG.md](FEEDBACK_OUTREACH_LOG.md) | Outreach tracking table (10 placeholder rows), feedback themes, action candidates |
+| [FEEDBACK_OUTREACH_CHECKLIST.md](FEEDBACK_OUTREACH_CHECKLIST.md) | Step-by-step outreach checklist, 5-channel first batch, completion criteria |
+
+---
+
 ## 7. Technical / Safety Documents
 
 ### Core Technical
