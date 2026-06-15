@@ -40,6 +40,30 @@ Ready to present or record. See:
 
 ---
 
+## Public Web Demo
+
+**Try the app live in your browser — no installation required.**
+
+🔗 **[Launch Public Web Demo](https://allengwong-droid.github.io/ai-food-passport/demo/)**
+
+> **Caveats:** This web demo connects to a mock-safe Render backend. No real OCR or AI analysis is performed. Dish results are deterministic mock data. Not production-ready. No allergy safety guarantee.
+
+**What to expect:**
+1. Open the demo → Profile → Dietary Preferences → select Wheat, Egg, Soy
+2. Scan a menu (any image, or just tap the scan button)
+3. See 2 mock dishes with personalized allergen warnings and price intelligence
+4. Check Profile → Scan History to view, restore, or clear past scans
+
+**Related docs:**
+- [DEMO_PRODUCT_FLOW_SCRIPT.md](DEMO_PRODUCT_FLOW_SCRIPT.md) — 60s / 2min / detailed narration scripts
+- [MANUAL_QA_CHECKLIST.md](MANUAL_QA_CHECKLIST.md) — Manual verification checklist
+- [PORTFOLIO_DEMO_PACKAGE.md](PORTFOLIO_DEMO_PACKAGE.md) — Portfolio overview with architecture and talking points
+- [PUBLIC_WEB_DEMO_DEPLOYMENT.md](PUBLIC_WEB_DEMO_DEPLOYMENT.md) — Deployment details and rebuild instructions
+
+**Known limitations:** Render free-tier backend may take 30-60 seconds on cold start. Scan history is session-local (lost on page refresh). GitHub Pages may take 1-3 minutes to reflect updates.
+
+---
+
 ## What is Real vs Mock
 
 | Component | Status |
