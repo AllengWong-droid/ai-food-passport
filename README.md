@@ -81,6 +81,10 @@ Home currency conversion works for all supported currencies (USD, EUR, GBP, JPY,
 | [PHASE_23A_REPORT.md](PHASE_23A_REPORT.md) | Phase 23A report: local scan history feature |
 | [PHASE_23B_REPORT.md](PHASE_23B_REPORT.md) | Phase 23B report: scan history feature tests (73/73 passing) |
 | [PHASE_24A_REPORT.md](PHASE_24A_REPORT.md) | Phase 24A report: dietary preferences and allergen settings (96/96 passing) |
+| [PHASE_24B_REPORT.md](PHASE_24B_REPORT.md) | Phase 24B report: UX polish and product smoke test (97/97 passing) |
+| [DEMO_PRODUCT_FLOW_SCRIPT.md](DEMO_PRODUCT_FLOW_SCRIPT.md) | Phase 25A: demo product flow script (60s, 2min, detailed versions) |
+| [MANUAL_QA_CHECKLIST.md](MANUAL_QA_CHECKLIST.md) | Phase 25A: 74-point manual QA checklist |
+| [DEMO_RECORDING_SHOT_LIST.md](DEMO_RECORDING_SHOT_LIST.md) | Phase 25A: recording shot list for demo video (10 shots, 81s total) |
 | [ROADMAP.md](ROADMAP.md) | Full phase history and future plans |
 
 ## MVP Alpha Capabilities
