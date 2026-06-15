@@ -14,7 +14,7 @@
 | **Personalized Allergen Warnings** | Real UX | "Contains [allergen]" badges on matching dishes |
 | **Dietary Preferences** | Real persistence | 8 allergens + 5 dietary restrictions, saved locally |
 | **Price Intelligence** | Real UX | Home currency conversion for 6+ currencies |
-| **Scan History** | Session-local | View past analyses, restore results without backend re-call |
+| **Scan History** | Session-local | View past analyses; cleared when the app restarts |
 | **Traveler Settings** | Real persistence | Home country, currency, output language |
 | **Mock Backend API** | Deployed | Render free tier at `ai-food-passport.onrender.com` |
 | **Privacy Policy** | Live | GitHub Pages hosted |
@@ -46,7 +46,7 @@ Ready to present or record. See:
 |---|---|
 | **Flutter UI & State** | ✅ Real — production-quality Flutter/Dart code |
 | **Dietary Preferences Persistence** | ✅ Real — saved to shared_preferences, survives app restart |
-| **Scan History Behavior** | ✅ Real — entries created, restored, cleared without backend |
+| **Scan History Behavior** | ✅ Real — session-local (in-memory), restored without backend |
 | **Allergen Warning Logic** | ✅ Real — case-insensitive matching, badge rendering |
 | **OCR / Image Recognition** | ❌ Mock-only — deterministic dish data, no real image processing |
 | **AI Dish Analysis** | ❌ Mock-only — 2 hardcoded mock dishes per scan |
