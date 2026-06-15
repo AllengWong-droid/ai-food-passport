@@ -3,6 +3,8 @@
 **Flutter MVP** — AI menu analysis for international travelers. Snap a menu photo, get dish recommendations with home-currency pricing, and see personalized allergen warnings based on your saved dietary preferences. Built with mock-safe architecture: the full product flow works without any paid APIs.
 
 > **Status:** MVP Alpha — portfolio-ready, not production-ready. Backend deployed on Render (mock-only). 97/97 Flutter tests passing. No real OCR/AI providers enabled. No API keys in Flutter.
+>
+> **Latest Release:** [v0.2.0 Portfolio Demo Ready](RELEASE_V0_2_0_PORTFOLIO_DEMO_READY.md) (2026-06-15) — public web demo live, dietary preferences, allergen warnings, scan history, full QA verified.
 
 ---
 
