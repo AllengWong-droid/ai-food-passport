@@ -7,6 +7,8 @@
 > **Latest Release:** [v0.2.0 Portfolio Demo Ready](https://github.com/AllengWong-droid/ai-food-passport/releases/tag/v0.2.0-portfolio-demo-ready) (2026-06-15) — public web demo live, dietary preferences, allergen warnings, scan history, full QA verified. [Verification report →](RELEASE_V0_2_0_VERIFICATION.md)
 >
 > For a complete documentation map, see **[PROJECT_INDEX.md](PROJECT_INDEX.md)**.
+>
+> **Feedback welcome!** Try the [public demo](https://allengwong-droid.github.io/ai-food-passport/demo/) and share your thoughts — see [feedback guide](PUBLIC_FEEDBACK_GUIDE.md).
 
 ---
 

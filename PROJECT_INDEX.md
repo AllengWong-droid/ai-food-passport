@@ -76,6 +76,17 @@ For a first-time visitor, read in this order:
 
 ---
 
+## 6.5. Feedback Collection
+
+| Document | Description |
+|----------|-------------|
+| [PUBLIC_FEEDBACK_GUIDE.md](PUBLIC_FEEDBACK_GUIDE.md) | Feedback collection guide: who, what, how |
+| [USER_TESTING_SCRIPT.md](USER_TESTING_SCRIPT.md) | 5-min and 10-min structured testing scripts |
+| [FEEDBACK_FORM_QUESTIONS.md](FEEDBACK_FORM_QUESTIONS.md) | Short (~8Q) and full (~20Q) feedback forms |
+| [FEEDBACK_INVITATION_MESSAGES.md](FEEDBACK_INVITATION_MESSAGES.md) | 7 invitation templates (CN/EN, multiple audiences) |
+
+---
+
 ## 7. Technical / Safety Documents
 
 ### Core Technical
